@@ -17,13 +17,15 @@ Route::group(
         Route::middleware('auth:admin')->group(function () {
             Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
-            Route::get('/index', 'HomeController@showIndex')->name('index.show');
+            Route::get('/index', 'HomeController@showIndex')->name('index');
 
             // 管理员用户管理
-            Route::get('/admin_user/index', 'AdminUserController@index')->name('adminUser.index');
-            Route::get('/admin_user/list', 'AdminUserController@list')->name('adminUser.list');
-            Route::get('/admin_user/add', 'AdminUserController@showAdd')->name('adminUser.add.show');
-            Route::post('/admin_user/add', 'AdminUserController@add')->name('adminUser.add');
+            Route::get('/admin_users', 'AdminUserController@index')->name('adminUser.index');
+            Route::get('/admin_users/list', 'AdminUserController@list')->name('adminUser.list');
+            Route::get('/admin_users/create', 'AdminUserController@create')->name('adminUser.create');
+            Route::post('/admin_users', 'AdminUserController@save')->name('adminUser.save');
+            Route::get('/admin_users/{id}/edit', 'AdminUserController@edit')->name('adminUser.edit');
+            Route::put('/admin_user/{id}', 'AdminUserController@update')->name('adminUser.update');
         });
     }
 );

@@ -2,9 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>@yield('title') - {{ config('app.name') }}</title>
     <link rel="stylesheet" href="/public/vendor/layui-v2.4.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="/public/admin/css/lightCMSAdmin.css" media="all">
     @yield('css')
 </head>
 <body class="layui-layout-body">
@@ -28,15 +30,15 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:;">
-                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-                    贤心
+                    <i class="layui-icon layui-icon-username" style="font-size: 20px; color: #009688;"></i>
+                    {{ \Auth::guard('admin')->user()->name }}
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">基本资料</a></dd>
                     <dd><a href="">安全设置</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="">退了</a></li>
+            <li class="layui-nav-item"><a href="{{ route('admin::logout') }}">退了</a></li>
         </ul>
     </div>
 

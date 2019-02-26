@@ -12,5 +12,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class AdminUser extends Authenticatable
 {
-    protected $fillable = ['name', 'password'];
+    const STATUS_ENABLE = 1;
+    const STATUS_DISABLE = 0;
+
+    protected $guarded = [];
 }

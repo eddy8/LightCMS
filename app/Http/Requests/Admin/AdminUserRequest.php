@@ -3,8 +3,10 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Model\Admin\AdminUser;
+use Illuminate\Validation\Rule;
 
-class AdminLoginRequest extends FormRequest
+class AdminUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +25,16 @@ class AdminLoginRequest extends FormRequest
      */
     public function rules()
     {
+        $status_in = [
+            AdminUser::STATUS_DISABLE,
+            AdminUser::STATUS_ENABLE,
+        ];
         return [
-            'name' => 'required',
-            'password' => 'required',
-            'captcha' => 'required|captcha'
+            'name' => 'required|max:50',
+            'password' => $this->method() == 'PUT' ? '' : 'required|min:6|max:18',
+            'status' => [
+                Rule::in($status_in),
+            ],
         ];
     }
 
@@ -40,8 +48,6 @@ class AdminLoginRequest extends FormRequest
         return [
             'name.required' => '用户名不能为空',
             'password.required' => '密码不能为空',
-            'captcha.required' => '图形验证码不能为空',
-            'captcha.captcha' => '图形验证码错误',
         ];
     }
 }
