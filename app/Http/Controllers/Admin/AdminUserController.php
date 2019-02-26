@@ -12,11 +12,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminUserRequest;
 use App\Model\Admin\AdminUser;
 use App\Repository\Admin\AdminUserRepository;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminUserController extends Controller
 {
-    protected $formNames = ['id', 'name', 'password', 'status'];
+    protected $formNames = ['name', 'password', 'status'];
 
     public function __construct()
     {
@@ -38,7 +40,7 @@ class AdminUserController extends Controller
     /**
      * 管理员列表数据
      *
-     * @package Request $request
+     * @param Request $request
      */
     public function list(Request $request)
     {
@@ -62,16 +64,24 @@ class AdminUserController extends Controller
      * 保存管理员用户
      *
      * @param AdminUserRequest $request
+     * @return array
      */
     public function save(AdminUserRequest $request)
     {
-        AdminUserRepository::add($request->only($this->formNames));
-
-        return [
-            'code' => 0,
-            'msg' => '新增成功',
-            'redirect' => route('admin::adminUser.index')
-        ];
+        try {
+            AdminUserRepository::add($request->only($this->formNames));
+            return [
+                'code' => 0,
+                'msg' => '新增成功',
+                'redirect' => route('admin::adminUser.index')
+            ];
+        } catch (QueryException $e) {
+            return [
+                'code' => 1,
+                'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前用户已存在' : '其它错误'),
+                'redirect' => route('admin::adminUser.index')
+            ];
+        }
     }
 
     /**
@@ -103,12 +113,19 @@ class AdminUserController extends Controller
             unset($data['password']);
         }
 
-        AdminUserRepository::update($id, $data);
-
-        return [
-            'code' => 0,
-            'msg' => '编辑成功',
-            'redirect' => route('admin::adminUser.index')
-        ];
+        try {
+            AdminUserRepository::update($id, $data);
+            return [
+                'code' => 0,
+                'msg' => '编辑成功',
+                'redirect' => route('admin::adminUser.index')
+            ];
+        } catch (QueryException $e) {
+            return [
+                'code' => 1,
+                'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前用户已存在' : '其它错误'),
+                'redirect' => route('admin::adminUser.index')
+            ];
+        }
     }
 }
