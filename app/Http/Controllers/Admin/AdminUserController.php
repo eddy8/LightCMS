@@ -34,7 +34,7 @@ class AdminUserController extends Controller
     public function index()
     {
         $this->breadcrumb[] = ['title' => '管理员列表', 'url' => ''];
-        return view('admin.adminUser.index', ['title' => '管理员列表', 'breadcrumb' => $this->breadcrumb]);
+        return view('admin.adminUser.index', ['breadcrumb' => $this->breadcrumb]);
     }
 
     /**

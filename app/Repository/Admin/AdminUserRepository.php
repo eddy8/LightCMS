@@ -9,32 +9,17 @@
 namespace App\Repository\Admin;
 
 use App\Model\Admin\AdminUser;
-use Carbon\Carbon;
+use App\Repository\Searchable;
 
 class AdminUserRepository
 {
+    use Searchable;
+
     public static function list($perPage, $condition = [])
     {
         $data = AdminUser::query()
-            ->where(function (\Illuminate\Database\Eloquent\Builder $query) use ($condition) {
-                foreach ($condition as $k => $v) {
-                    $v = trim($v);
-                    if ($v === '') {
-                        continue;
-                    }
-
-                    if ($k === 'created_at' || $k === 'updated_at') {
-                        $dates = explode(' ~ ', $v);
-                        if (count($dates) === 2) {
-                            $query->whereBetween($k, [
-                                Carbon::parse($dates[0])->startOfDay(),
-                                Carbon::parse($dates[1])->endOfDay(),
-                            ]);
-                        }
-                    } else {
-                        $query->where($k, 'like', "%{$v}%");
-                    }
-                }
+            ->where(function ($query) use ($condition) {
+                Searchable::buildQuery($query, $condition);
             })->paginate($perPage);
         $data->transform(function ($item) {
             $item->editUrl = route('admin::adminUser.edit', ['id' => $item->id]);
