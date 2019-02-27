@@ -45,7 +45,8 @@ class AdminUserController extends Controller
     public function list(Request $request)
     {
         $perPage = (int) $request->get('limit', 50);
-        $data = AdminUserRepository::list($perPage);
+        $condition = $request->only($this->formNames);
+        $data = AdminUserRepository::list($perPage, $condition);
 
         return $data;
     }
