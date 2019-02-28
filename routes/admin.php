@@ -26,6 +26,14 @@ Route::group(
             Route::post('/admin_users', 'AdminUserController@save')->name('adminUser.save');
             Route::get('/admin_users/{id}/edit', 'AdminUserController@edit')->name('adminUser.edit');
             Route::put('/admin_user/{id}', 'AdminUserController@update')->name('adminUser.update');
+
+            // 菜单管理
+            Route::get('/menus', 'MenuController@index')->name('menu.index');
+            Route::get('/menus/list', 'MenuController@list')->name('menu.list');
+            Route::get('/menus/create', 'MenuController@create')->name('menu.create');
+            Route::post('/menus', 'MenuController@save')->name('menu.save');
+            Route::get('/menus/{id}/edit', 'MenuController@edit')->name('menu.edit');
+            Route::put('/menus/{id}', 'MenuController@update')->name('menu.update');
         });
     }
 );

@@ -17,6 +17,7 @@ class CreateAdminUserTable extends Migration
             $table->increments('id');
             $table->string('name', 50)->unique();
             $table->string('password');
+            $table->tinyInteger('status');
             $table->rememberToken();
             $table->timestamps();
         });

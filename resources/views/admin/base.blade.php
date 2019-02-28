@@ -15,17 +15,9 @@
         <div class="layui-logo">{{ config('app.name') }} 管理后台</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="">控制台</a></li>
-            <li class="layui-nav-item"><a href="">商品管理</a></li>
-            <li class="layui-nav-item"><a href="">用户</a></li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">其它系统</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="">邮件管理</a></dd>
-                    <dd><a href="">消息管理</a></dd>
-                    <dd><a href="">授权管理</a></dd>
-                </dl>
-            </li>
+            @foreach(App\Repository\Admin\MenuRepository::allRoot() as $v)
+                <li class="layui-nav-item"><a href="{{ route($v->route) }}">{{ $v->name }}</a></li>
+            @endforeach
         </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
@@ -46,23 +38,20 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                @isset($light_menu['children'])
+                @foreach($light_menu['children']->groupBy('group') as $k => $menu)
+                    @if($k != '')
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">管理员管理</a>
+                    <a class="" href="javascript:;">{{ $k }}</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="{{ route('admin::adminUser.index') }}">用户列表</a></dd>
-                        <dd><a href="javascript:;">新增用户</a></dd>
+                        @foreach($menu as $sub)
+                        <dd><a href="{{ route($sub['route']) }}">{{ $sub['name'] }}</a></dd>
+                        @endforeach
                     </dl>
                 </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">解决方案</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">列表一</a></dd>
-                        <dd><a href="javascript:;">列表二</a></dd>
-                        <dd><a href="">超链接</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item"><a href="">云市场</a></li>
-                <li class="layui-nav-item"><a href="">发布商品</a></li>
+                    @endif
+                @endforeach
+                @endisset
             </ul>
         </div>
     </div>
