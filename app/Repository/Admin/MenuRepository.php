@@ -55,10 +55,15 @@ class MenuRepository
         return Menu::query()->find($id);
     }
 
+    public static function exist($route)
+    {
+        return Menu::query()->where('route', $route)->first();
+    }
+
     public static function tree($pid = 0, $allMenus = null, $level = 0, $path = [])
     {
         if (is_null($allMenus)) {
-            $allMenus = Menu::select('id', 'pid', 'name', 'route', 'group')->get();
+            $allMenus = Menu::select('id', 'pid', 'name', 'route', 'group', 'status')->get();
         }
         return $allMenus->where('pid', $pid)
             ->map(function (Menu $menu) use ($allMenus, $level, $path) {
@@ -70,6 +75,7 @@ class MenuRepository
                     'path' => $path,
                     'route' => $menu->route,
                     'group' => $menu->group,
+                    'status' => $menu->status,
                 ];
 
                 $child = $allMenus->where('pid', $menu->id);

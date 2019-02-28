@@ -16,7 +16,7 @@
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
             @foreach(App\Repository\Admin\MenuRepository::allRoot() as $v)
-                <li class="layui-nav-item"><a href="{{ route($v->route) }}">{{ $v->name }}</a></li>
+                <li class="layui-nav-item @if(!empty($light_menu) && $v->id == $light_menu['id']) layui-this @endif"><a href="{{ route($v->route) }}">{{ $v->name }}</a></li>
             @endforeach
         </ul>
         <ul class="layui-nav layui-layout-right">
@@ -45,7 +45,9 @@
                     <a class="" href="javascript:;">{{ $k }}</a>
                     <dl class="layui-nav-child">
                         @foreach($menu as $sub)
-                        <dd><a href="{{ route($sub['route']) }}">{{ $sub['name'] }}</a></dd>
+                            @if($sub['status'] === App\Model\Admin\Menu::STATUS_ENABLE)
+                        <dd @if($sub['route'] == $light_cur_route) class="layui-this" @endif><a href="{{ route($sub['route']) }}">{{ $sub['name'] }}</a></dd>
+                            @endif
                         @endforeach
                     </dl>
                 </li>

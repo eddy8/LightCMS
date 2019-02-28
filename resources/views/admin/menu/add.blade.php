@@ -20,6 +20,7 @@
                         <label class="layui-form-label">上级菜单</label>
                         <div class="layui-input-block" style="width: 400px">
                             <select name="pid" lay-verify="required">
+                                <option value="0">顶级菜单</option>
                                 @foreach(App\Repository\Admin\MenuRepository::tree() as $v)
                                     @include('admin.menu', $v)
                                 @endforeach
@@ -36,7 +37,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">排序</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="order" required lay-verify="required" autocomplete="off" class="layui-input">
+                        <input type="text" name="order" autocomplete="off" class="layui-input" value="{{ $model->order ?? 1  }}">
                     </div>
                     <div class="layui-form-mid layui-word-aux">值越小排序越靠前</div>
                 </div>

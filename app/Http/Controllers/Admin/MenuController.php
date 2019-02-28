@@ -147,4 +147,22 @@ class MenuController extends Controller
             ];
         }
     }
+
+    public function discovery()
+    {
+        $num = 0;
+
+        foreach (Route::getRoutes()->getRoutesByName() as $k => $v) {
+            if (Str::contains($k, 'admin::') && !MenuRepository::exist($k)) {
+                MenuRepository::add(['route' => $k, 'name' => $v->uri]);
+                $num++;
+            }
+        }
+
+        return [
+            'code' => 0,
+            'msg' => '更新成功。新增菜单数：' . $num,
+            'redirect' => route('admin::menu.index')
+        ];
+    }
 }

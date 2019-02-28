@@ -26,10 +26,13 @@ class Controller extends BaseController
 
         // 菜单
         $route = request()->route()->getName();
+        View::share('light_cur_route', $route);
         if (is_null($currentRootMenu = MenuRepository::root($route))) {
-            throw new \RuntimeException("当前路由（{$route}）未注册。请在菜单管理中添加/修改当前路由对应菜单。");
+            View::share('light_menu', []);
+        } else {
+            View::share('light_menu', $currentRootMenu);
         }
+
         Debugbar::info($currentRootMenu);
-        View::share('light_menu', $currentRootMenu);
     }
 }

@@ -13,6 +13,12 @@
                     <input type="text" name="name" autocomplete="off" class="layui-input" value="{{ request()->get('name') }}">
                 </div>
             </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">路由</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="route" autocomplete="off" class="layui-input" value="{{ request()->get('route') }}">
+                    </div>
+                </div>
             <div class="layui-inline">
                 <label class="layui-form-label">创建日期</label>
                 <div class="layui-input-inline">
@@ -27,7 +33,7 @@
             </form>
         </div>
         <div class="layui-card-body">
-            <table class="layui-table" lay-data="{url:'{{ route('admin::menu.list') }}?{{ request()->getQueryString() }}', page:true, id:'test', toolbar:'<div><a href=\'{{ route('admin::menu.create') }}\'><i class=\'layui-icon layui-icon-add-1\'></i>新增菜单</a></div>'}" lay-filter="test">
+            <table class="layui-table" lay-data="{url:'{{ route('admin::menu.list') }}?{{ request()->getQueryString() }}', page:true, limit:50, id:'test', toolbar:'<div><a href=\'{{ route('admin::menu.create') }}\'><i class=\'layui-icon layui-icon-add-1\'></i>新增菜单</a><a href=\'javascript:;\' style=\'margin-left:15px\' id=\'discovery\'><i class=\'layui-icon layui-icon-refresh\'></i>自动更新菜单</a></div>'}" lay-filter="test">
                 <thead>
                 <tr>
                     <th lay-data="{field:'id', width:80, sort: true}">ID</th>
@@ -65,6 +71,26 @@
         laydate.render({
             elem: '#created_at',
             range: '~'
+        });
+        $('#discovery').click(function () {
+            $.ajax({
+                url: '{{ route("admin::menu.discovery") }}',
+                data: {},
+                success: function (result) {
+                    if (result.code !== 0) {
+                        layer.msg(result.msg, {shift: 6});
+                        return false;
+                    }
+                    layer.msg(result.msg, {icon: 1}, function () {
+                        if (result.reload) {
+                            location.reload();
+                        }
+                        if (result.redirect) {
+                            location.href = result.redirect;
+                        }
+                    });
+                }
+            });
         });
     </script>
 @endsection
