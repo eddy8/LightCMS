@@ -37,6 +37,14 @@ Route::group(
             Route::get('/menus/{id}/edit', 'MenuController@edit')->name('menu.edit');
             Route::put('/menus/{id}', 'MenuController@update')->name('menu.update');
             Route::post('/menus/discovery', 'MenuController@discovery')->name('menu.discovery');
+
+            // 角色管理
+            Route::get('/roles', 'RoleController@index')->name('role.index');
+            Route::get('/roles/list', 'RoleController@list')->name('role.list');
+            Route::get('/roles/create', 'RoleController@create')->name('role.create');
+            Route::post('/roles', 'RoleController@save')->name('role.save');
+            Route::get('/roles/{id}/edit', 'RoleController@edit')->name('role.edit');
+            Route::put('/roles/{id}', 'RoleController@update')->name('role.update');
         });
     }
 );

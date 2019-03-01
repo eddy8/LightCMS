@@ -21,6 +21,8 @@ class MenuRepository
             ->where(function ($query) use ($condition) {
                 Searchable::buildQuery($query, $condition);
             })
+            ->orderBy('status', 'desc')
+            ->orderBy('id', 'desc')
             ->with('parent')
             ->paginate($perPage);
         $data->transform(function ($item) {

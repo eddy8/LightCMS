@@ -19,10 +19,12 @@ class CreateMenuTable extends Migration
             $table->unsignedInteger('pid')->default(0);
             $table->tinyInteger('status')->default(1);
             $table->unsignedInteger('order')->default(1);
-            $table->string('route', 100)->unique();
-            $table->string('group', 50)->default('默认分组');
+            $table->string('route', 100)->default('');
+            $table->string('group', 50)->default('');
             $table->string('remark')->default('');
             $table->timestamps();
+
+            $table->unique(['route', 'name']);
         });
     }
 

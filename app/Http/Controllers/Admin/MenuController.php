@@ -154,7 +154,12 @@ class MenuController extends Controller
 
         foreach (Route::getRoutes()->getRoutesByName() as $k => $v) {
             if (Str::contains($k, 'admin::') && !MenuRepository::exist($k)) {
-                MenuRepository::add(['route' => $k, 'name' => $v->uri]);
+                if (in_array('GET', $v->methods) && !Str::contains($v->uri, '{')) {
+                    $data = ['route' => $k, 'name' => $v->uri, 'status' => Menu::STATUS_ENABLE];
+                } else {
+                    $data = ['route' => $k, 'name' => $v->uri, 'status' => Menu::STATUS_DISABLE];
+                }
+                MenuRepository::add($data);
                 $num++;
             }
         }

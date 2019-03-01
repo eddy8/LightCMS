@@ -21,9 +21,12 @@ class AdminUserRepository
             ->select('id', 'name', 'created_at', 'updated_at', 'status')
             ->where(function ($query) use ($condition) {
                 Searchable::buildQuery($query, $condition);
-            })->paginate($perPage);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($perPage);
         $data->transform(function ($item) {
             $item->editUrl = route('admin::adminUser.edit', ['id' => $item->id]);
+            $item->roleUrl = route('admin::adminUser.edit', ['id' => $item->id]);
             $item->statusText = $item->status == AdminUser::STATUS_ENABLE ?
                     '<span class="layui-badge layui-bg-green">启用</span>' :
                     '<span class="layui-badge">禁用</span>';

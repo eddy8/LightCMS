@@ -9,11 +9,16 @@
 namespace App\Model\Admin;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 class AdminUser extends Authenticatable
 {
+    use HasRoles;
+
     const STATUS_ENABLE = 1;
     const STATUS_DISABLE = 0;
 
     protected $guarded = [];
+
+    protected $guard_name = 'admin';
 }

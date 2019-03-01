@@ -3,10 +3,9 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Model\Admin\Menu;
 use Illuminate\Validation\Rule;
 
-class MenuRequest extends FormRequest
+class RoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,18 +24,8 @@ class MenuRequest extends FormRequest
      */
     public function rules()
     {
-        $status_in = [
-            Menu::STATUS_DISABLE,
-            Menu::STATUS_ENABLE,
-        ];
         return [
             'name' => 'required|max:50',
-            'route' => 'required|max:100',
-            'group' => 'max:50',
-            'remark' => 'max:255',
-            'status' => [
-                Rule::in($status_in),
-            ],
         ];
     }
 

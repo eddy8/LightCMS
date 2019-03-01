@@ -1,7 +1,5 @@
 @extends('admin.base')
 
-@section('title', 'qwe')
-
 @section('content')
     <div class="layui-card">
 
