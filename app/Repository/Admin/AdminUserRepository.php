@@ -26,7 +26,7 @@ class AdminUserRepository
             ->paginate($perPage);
         $data->transform(function ($item) {
             $item->editUrl = route('admin::adminUser.edit', ['id' => $item->id]);
-            $item->roleUrl = route('admin::adminUser.edit', ['id' => $item->id]);
+            $item->roleUrl = route('admin::adminUser.role.edit', ['id' => $item->id]);
             $item->statusText = $item->status == AdminUser::STATUS_ENABLE ?
                     '<span class="layui-badge layui-bg-green">启用</span>' :
                     '<span class="layui-badge">禁用</span>';
@@ -58,5 +58,10 @@ class AdminUserRepository
     public static function find($id)
     {
         return AdminUser::query()->find($id);
+    }
+
+    public static function roles(AdminUser $user)
+    {
+        return $user->roles();
     }
 }

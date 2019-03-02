@@ -42,7 +42,8 @@
     </div>
 @endsection
 <script type="text/html" id="action">
-    <a href="<% d.editUrl %>" class="layui-table-link"><i class="layui-icon layui-icon-edit"></i></a>
+    <a href="<% d.editUrl %>" class="layui-table-link" title="编辑角色"><i class="layui-icon layui-icon-edit"></i></a>
+    <a href="<% d.permissionUrl %>" class="layui-table-link" style="margin-left: 10px" title="分配权限"><i class="layui-icon layui-icon-auz"></i></a>
 </script>
 
 @section('js')

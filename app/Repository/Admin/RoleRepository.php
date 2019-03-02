@@ -25,6 +25,7 @@ class RoleRepository
             ->paginate($perPage);
         $data->transform(function ($item) {
             $item->editUrl = route('admin::role.edit', ['id' => $item->id]);
+            $item->permissionUrl = route('admin::role.permission.edit', ['id' => $item->id]);
             return $item;
         });
 
@@ -49,6 +50,11 @@ class RoleRepository
     public static function find($id)
     {
         return Role::query()->find($id);
+    }
+
+    public static function all()
+    {
+        return Role::all();
     }
 
     public static function exist($name)

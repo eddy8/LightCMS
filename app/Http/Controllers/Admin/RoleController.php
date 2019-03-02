@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RoleRequest;
+use App\Repository\Admin\MenuRepository;
 use App\Repository\Admin\RoleRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class RoleController extends Controller
     }
 
     /**
-     * 角色列表
+     * 角色管理-角色列表
      *
      */
     public function index()
@@ -38,7 +39,7 @@ class RoleController extends Controller
     }
 
     /**
-     * 角色列表数据接口
+     * 角色管理-角色列表数据接口
      *
      * @param Request $request
      * @return array
@@ -54,7 +55,7 @@ class RoleController extends Controller
     }
 
     /**
-     * 新增角色
+     * 角色管理-新增角色
      *
      */
     public function create()
@@ -64,7 +65,7 @@ class RoleController extends Controller
     }
 
     /**
-     * 保存角色
+     * 角色管理-保存角色
      *
      * @param RoleRequest $request
      * @return array
@@ -90,7 +91,7 @@ class RoleController extends Controller
     }
 
     /**
-     * 编辑角色
+     * 角色管理-编辑角色
      *
      * @param int $id
      * @return View
@@ -104,7 +105,7 @@ class RoleController extends Controller
     }
 
     /**
-     * 更新角色
+     * 角色管理-更新角色
      *
      * @param RoleRequest $request
      * @param int $id
@@ -125,6 +126,50 @@ class RoleController extends Controller
                 'code' => 1,
                 'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前角色已存在' : '其它错误'),
                 'redirect' => route('admin::role.index')
+            ];
+        }
+    }
+
+    /**
+     * 角色管理-分配权限
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function permission($id)
+    {
+        $this->breadcrumb[] = ['title' => '分配权限', 'url' => ''];
+
+        $role = RoleRepository::find($id);
+        return view('admin.role.permission', [
+            'id' => $id,
+            'breadcrumb' => $this->breadcrumb,
+            'rolePermissions' => $role->permissions,
+        ]);
+    }
+
+    /**
+     * 角色管理-更新权限
+     *
+     * @param Request $request
+     * @param $id
+     * @return array
+     */
+    public function updatePermission(Request $request, $id)
+    {
+        try {
+            $role = RoleRepository::find($id);
+            $permissions = $request->input('permission');
+            $role->syncPermissions(MenuRepository::get(array_keys($permissions)));
+            return [
+                'code' => 0,
+                'msg' => '操作成功',
+                'redirect' => route('admin::adminUser.index')
+            ];
+        } catch (\Throwable $e) {
+            return [
+                'code' => 1,
+                'msg' => '操作失败',
             ];
         }
     }

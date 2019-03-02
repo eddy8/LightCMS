@@ -12,11 +12,17 @@ use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
+    /**
+     * 首页
+     */
     public function showIndex()
     {
         return view('admin.home.index');
     }
 
+    /**
+     * 测试
+     */
     public function test()
     {
         return view('admin.home.index');

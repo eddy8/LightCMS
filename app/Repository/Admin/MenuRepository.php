@@ -57,6 +57,11 @@ class MenuRepository
         return Menu::query()->find($id);
     }
 
+    public static function get(array $ids)
+    {
+        return Menu::query()->whereIn('id', $ids)->get();
+    }
+
     public static function exist($route)
     {
         return Menu::query()->where('route', $route)->first();

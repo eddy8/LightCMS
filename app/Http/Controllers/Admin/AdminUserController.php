@@ -12,9 +12,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminUserRequest;
 use App\Model\Admin\AdminUser;
 use App\Repository\Admin\AdminUserRepository;
+use App\Repository\Admin\RoleRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Auth;
 
 class AdminUserController extends Controller
 {
@@ -28,7 +30,7 @@ class AdminUserController extends Controller
     }
 
     /**
-     * 管理员列表
+     * 管理员管理-管理员列表
      *
      */
     public function index()
@@ -38,7 +40,7 @@ class AdminUserController extends Controller
     }
 
     /**
-     * 管理员列表数据
+     * 管理员管理-管理员列表数据
      *
      * @param Request $request
      */
@@ -52,7 +54,7 @@ class AdminUserController extends Controller
     }
 
     /**
-     * 新增管理员用户
+     * 管理员管理-新增管理员
      *
      */
     public function create()
@@ -62,7 +64,7 @@ class AdminUserController extends Controller
     }
 
     /**
-     * 保存管理员用户
+     * 管理员管理-保存管理员
      *
      * @param AdminUserRequest $request
      * @return array
@@ -86,7 +88,7 @@ class AdminUserController extends Controller
     }
 
     /**
-     * 编辑管理员用户
+     * 管理员管理-编辑管理员
      *
      * @param int $id
      */
@@ -99,7 +101,7 @@ class AdminUserController extends Controller
     }
 
     /**
-     * 更新管理员用户
+     * 管理员管理-更新管理员
      *
      * @param AdminUserRequest $request
      * @param int $id
@@ -126,6 +128,51 @@ class AdminUserController extends Controller
                 'code' => 1,
                 'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前用户已存在' : '其它错误'),
                 'redirect' => route('admin::adminUser.index')
+            ];
+        }
+    }
+
+    /**
+     * 管理员管理-分配角色
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function role($id)
+    {
+        $this->breadcrumb[] = ['title' => '分配角色', 'url' => ''];
+
+        $roles = RoleRepository::all();
+        $userRoles = AdminUserRepository::find($id)->getRoleNames();
+        return view('admin.adminUser.role', [
+            'id' => $id,
+            'roles' => $roles,
+            'breadcrumb' => $this->breadcrumb,
+            'userRoles' => $userRoles,
+        ]);
+    }
+
+    /**
+     * 管理员管理-更新角色
+     *
+     * @param Request $request
+     * @param $id
+     * @return array
+     */
+    public function updateRole(Request $request, $id)
+    {
+        try {
+            $user = AdminUserRepository::find($id);
+            $user->syncRoles(array_values($request->input('role')));
+            return [
+                'code' => 0,
+                'msg' => '操作成功',
+                'redirect' => route('admin::adminUser.index')
+            ];
+        } catch (\Throwable $e) {
+            return [
+                'code' => 1,
+                'msg' => '操作失败',
             ];
         }
     }

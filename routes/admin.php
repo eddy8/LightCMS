@@ -14,7 +14,7 @@ Route::group(
         Route::get('/login', 'Auth\LoginController@showLogin')->name('login.show');
         Route::post('/login', 'Auth\LoginController@login')->name('login');
 
-        Route::middleware('auth:admin')->group(function () {
+        Route::middleware('auth:admin', 'authorization:admin')->group(function () {
             Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
             Route::get('/index', 'HomeController@showIndex')->name('index');
@@ -28,6 +28,9 @@ Route::group(
             Route::post('/admin_users', 'AdminUserController@save')->name('adminUser.save');
             Route::get('/admin_users/{id}/edit', 'AdminUserController@edit')->name('adminUser.edit');
             Route::put('/admin_user/{id}', 'AdminUserController@update')->name('adminUser.update');
+
+            Route::get('/admin_users/{id}/role', 'AdminUserController@role')->name('adminUser.role.edit');
+            Route::put('/admin_user/{id}/role', 'AdminUserController@updateRole')->name('adminUser.role.update');
 
             // 菜单管理
             Route::get('/menus', 'MenuController@index')->name('menu.index');
@@ -45,6 +48,9 @@ Route::group(
             Route::post('/roles', 'RoleController@save')->name('role.save');
             Route::get('/roles/{id}/edit', 'RoleController@edit')->name('role.edit');
             Route::put('/roles/{id}', 'RoleController@update')->name('role.update');
+
+            Route::get('/roles/{id}/permission', 'RoleController@permission')->name('role.permission.edit');
+            Route::put('/roles/{id}/permission', 'RoleController@updatePermission')->name('role.permission.update');
         });
     }
 );

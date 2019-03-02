@@ -6,25 +6,13 @@
         @include('admin.breadcrumb')
 
         <div class="layui-card-body">
-            <form class="layui-form" action="@if(isset($id)){{ route('admin::adminUser.update', ['id' => $id]) }}@else{{ route('admin::adminUser.save') }}@endif" method="post">
-                @if(isset($id)) {{ method_field('PUT') }} @endif
+            <form class="layui-form" action="{{ route('admin::role.permission.update', ['id' => $id]) }}" method="post">
+                {{ method_field('PUT') }}
                 <div class="layui-form-item">
-                    <label class="layui-form-label">用户名</label>
                     <div class="layui-input-block">
-                        <input type="text" name="name" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input" value="{{ $user->name ?? ''  }}">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">密码</label>
-                    <div class="layui-input-inline">
-                        <input type="password" name="password" @if(!isset($id)) required lay-verify="required" @endif placeholder="请输入密码" autocomplete="off" class="layui-input">
-                    </div>
-                    @if(isset($id))<div class="layui-form-mid layui-word-aux">密码留空则不修改密码</div>@endif
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">是否启用</label>
-                    <div class="layui-input-block">
-                        <input type="checkbox" name="status" lay-skin="switch" lay-text="启用|禁用" value="1" @if(isset($user) && $user->status == App\Model\Admin\AdminUser::STATUS_ENABLE) checked @endif>
+                        @foreach(App\Repository\Admin\MenuRepository::tree() as $v)
+                            @include('admin.permission', $v)
+                        @endforeach
                     </div>
                 </div>
                 <div class="layui-form-item">

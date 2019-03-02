@@ -30,7 +30,7 @@ class MenuController extends Controller
     }
 
     /**
-     * 菜单列表
+     * 菜单管理-菜单列表
      *
      */
     public function index()
@@ -40,7 +40,7 @@ class MenuController extends Controller
     }
 
     /**
-     * 菜单列表数据
+     * 菜单管理-菜单列表数据
      *
      * @param Request $request
      */
@@ -64,7 +64,7 @@ class MenuController extends Controller
     }
 
     /**
-     * 新增菜单
+     * 菜单管理-新增菜单
      *
      */
     public function create()
@@ -75,7 +75,7 @@ class MenuController extends Controller
     }
 
     /**
-     * 保存菜单
+     * 菜单管理-保存菜单
      *
      * @param MenuRequest $request
      * @return array
@@ -107,7 +107,7 @@ class MenuController extends Controller
     }
 
     /**
-     * 编辑菜单
+     * 菜单管理-编辑菜单
      *
      * @param int $id
      */
@@ -120,7 +120,7 @@ class MenuController extends Controller
     }
 
     /**
-     * 更新菜单
+     * 菜单管理-更新菜单
      *
      * @param MenuRequest $request
      * @param int $id
@@ -148,25 +148,62 @@ class MenuController extends Controller
         }
     }
 
+    /**
+     * 菜单管理-自动更新菜单
+     *
+     * @return array
+     * @throws \ReflectionException
+     */
     public function discovery()
     {
-        $num = 0;
+        $addNum = 0;
+        $updateNum = 0;
 
         foreach (Route::getRoutes()->getRoutesByName() as $k => $v) {
-            if (Str::contains($k, 'admin::') && !MenuRepository::exist($k)) {
-                if (in_array('GET', $v->methods) && !Str::contains($v->uri, '{')) {
-                    $data = ['route' => $k, 'name' => $v->uri, 'status' => Menu::STATUS_ENABLE];
-                } else {
-                    $data = ['route' => $k, 'name' => $v->uri, 'status' => Menu::STATUS_DISABLE];
+            if (Str::startsWith($k, 'admin::')) {
+                // 取方法的第一行注释作为菜单的名称、分组名。格式：分组名称-菜单名称。未写分组名称，则注释直接作为菜单名称。未写注释则选用uri作为菜单名称。
+                $action = explode('@', $v->getActionName());
+                if (!method_exists($action[0], $action[1])) {
+                    continue;
                 }
-                MenuRepository::add($data);
-                $num++;
+                $reflection = new \ReflectionMethod($action[0], $action[1]);
+                $comment = trim(array_get(explode("\n", $reflection->getDocComment()), 1, ''), " \t\n\r\0\x0B*");
+                if ($comment === '') {
+                    $data['name'] = $v->uri;
+                    $data['group'] = '';
+                } else {
+                    if (Str::contains($comment, '-')) {
+                        $arr = explode('-', $comment);
+                        $data['name'] = trim($arr[1]);
+                        $data['group'] = trim($arr[0]);
+                    } else {
+                        $data['name'] = trim($comment);
+                        $data['group'] = '';
+                    }
+                }
+
+                $data['route'] = $k;
+                if (in_array('GET', $v->methods) && !Str::contains($v->uri, '{')) {
+                    $data['status'] = Menu::STATUS_ENABLE;
+                } else {
+                    $data['status'] = Menu::STATUS_DISABLE;
+                }
+
+                $model = MenuRepository::exist($k);
+                if ($model) {
+                    unset($data['status']);
+                    MenuRepository::update($model->id, $data);
+                    $updateNum++;
+                } else {
+                    MenuRepository::add($data);
+                    $addNum++;
+                }
             }
         }
 
         return [
             'code' => 0,
-            'msg' => '更新成功。新增菜单数：' . $num,
+            'msg' => "更新成功。新增菜单数：{$addNum}，更新菜单数：{$updateNum}。",
             'redirect' => route('admin::menu.index')
         ];
     }
