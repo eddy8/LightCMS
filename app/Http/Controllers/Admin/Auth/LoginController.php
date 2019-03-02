@@ -41,11 +41,17 @@ class LoginController extends Controller
         $this->middleware('guest:' . $this->guard)->except('logout');
     }
 
+    /**
+     * 用户登录页面
+     */
     public function showLogin()
     {
         return view('admin.auth.login');
     }
 
+    /**
+     * 用户登录
+     */
     public function login(AdminLoginRequest $request)
     {
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
@@ -69,6 +75,9 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
+    /**
+     * 退出登录
+     */
     public function logout(Request $request)
     {
         $this->guard($this->guard)->logout();

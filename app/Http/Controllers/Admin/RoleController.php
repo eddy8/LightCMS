@@ -16,6 +16,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Log;
 
 class RoleController extends Controller
 {
@@ -139,12 +140,12 @@ class RoleController extends Controller
     public function permission($id)
     {
         $this->breadcrumb[] = ['title' => '分配权限', 'url' => ''];
-
         $role = RoleRepository::find($id);
         return view('admin.role.permission', [
             'id' => $id,
             'breadcrumb' => $this->breadcrumb,
             'rolePermissions' => $role->permissions,
+            'role' => $role,
         ]);
     }
 
@@ -164,9 +165,10 @@ class RoleController extends Controller
             return [
                 'code' => 0,
                 'msg' => '操作成功',
-                'redirect' => route('admin::adminUser.index')
+                'redirect' => route('admin::role.index'),
             ];
         } catch (\Throwable $e) {
+            Log::debug($e);
             return [
                 'code' => 1,
                 'msg' => '操作失败',

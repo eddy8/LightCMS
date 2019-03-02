@@ -102,6 +102,16 @@ class MenuRepository
     }
 
     /**
+     * 根据分组名称进行数据分组
+     *
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public static function group()
+    {
+        return Menu::all()->groupBy('group');
+    }
+
+    /**
      * 根据指定路由名获取根菜单
      *
      * @param string $route
