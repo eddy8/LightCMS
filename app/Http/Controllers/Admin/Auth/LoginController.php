@@ -42,7 +42,7 @@ class LoginController extends Controller
     }
 
     /**
-     * 用户登录页面
+     * 基础功能-用户登录页面
      */
     public function showLogin()
     {
@@ -50,7 +50,7 @@ class LoginController extends Controller
     }
 
     /**
-     * 用户登录
+     * 基础功能-用户登录
      */
     public function login(AdminLoginRequest $request)
     {
@@ -76,7 +76,7 @@ class LoginController extends Controller
     }
 
     /**
-     * 退出登录
+     * 基础功能-退出登录
      */
     public function logout(Request $request)
     {

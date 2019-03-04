@@ -7,6 +7,7 @@
         <div class="layui-form layui-card-header light-search">
             <form>
                 <input type="hidden" name="action" value="search">
+                @include('admin.searchField', ['data' => App\Model\Admin\Menu::$searchField])
             <div class="layui-inline">
                 <label class="layui-form-label">名称</label>
                 <div class="layui-input-inline">

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMenuTable extends Migration
+class CreateConfigTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateMenuTable extends Migration
      */
     public function up()
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('configs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 50)->default('');
-            $table->unsignedInteger('pid')->default(0);
-            $table->tinyInteger('status')->default(1);
-            $table->unsignedInteger('order')->default(1);
-            $table->string('route', 100)->default('')->unique();
+            $table->string('key', 100)->default('')->unique();
+            $table->string('value', 2048)->default('');
+            $table->tinyInteger('type')->default(0);
             $table->string('group', 50)->default('');
             $table->string('remark')->default('');
             $table->timestamps();
@@ -33,6 +32,6 @@ class CreateMenuTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('menus');
+        Schema::dropIfExists('configs');
     }
 }

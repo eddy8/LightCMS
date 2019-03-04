@@ -8,7 +8,6 @@
 
 namespace App\Model\Admin;
 
-use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Contracts\Permission as PermissionContract;
 use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

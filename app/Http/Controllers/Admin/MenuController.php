@@ -183,7 +183,7 @@ class MenuController extends Controller
                 }
 
                 $data['route'] = $k;
-                $data['guard'] = 'admin';
+                $data['guard_name'] = 'admin';
                 if (in_array('GET', $v->methods) && !Str::contains($v->uri, '{')) {
                     $data['status'] = Menu::STATUS_ENABLE;
                 } else {

@@ -1,0 +1,50 @@
+<?php
+/**
+ * @author  Eddy <cumtsjh@163.com>
+ */
+
+namespace App\Repository\Admin;
+
+use App\Model\Admin\Config;
+use App\Repository\Searchable;
+
+class ConfigRepository
+{
+    use Searchable;
+
+    public static function list($perPage, $condition = [])
+    {
+        $data = Config::query()
+            ->where(function ($query) use ($condition) {
+                Searchable::buildQuery($query, $condition);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($perPage);
+        $data->transform(function ($item) {
+            $item->editUrl = route('admin::config.edit', ['id' => $item->id]);
+            return $item;
+        });
+
+        return [
+            'code' => 0,
+            'msg' => '',
+            'count' => $data->total(),
+            'data' => $data->items(),
+        ];
+    }
+
+    public static function add($data)
+    {
+        return Config::query()->create($data);
+    }
+
+    public static function update($id, $data)
+    {
+        return Config::query()->where('id', $id)->update($data);
+    }
+
+    public static function find($id)
+    {
+        return Config::query()->find($id);
+    }
+}

@@ -51,6 +51,14 @@ Route::group(
 
             Route::get('/roles/{id}/permission', 'RoleController@permission')->name('role.permission.edit');
             Route::put('/roles/{id}/permission', 'RoleController@updatePermission')->name('role.permission.update');
+
+            // 配置管理
+            Route::get('/configs', 'ConfigController@index')->name('config.index');
+            Route::get('/configs/list', 'ConfigController@list')->name('config.list');
+            Route::get('/configs/create', 'ConfigController@create')->name('config.create');
+            Route::post('/configs', 'ConfigController@save')->name('config.save');
+            Route::get('/configs/{id}/edit', 'ConfigController@edit')->name('config.edit');
+            Route::put('/configs/{id}', 'ConfigController@update')->name('config.update');
         });
     }
 );

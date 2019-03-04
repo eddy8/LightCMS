@@ -1,0 +1,400 @@
+/**
+ * 替换变量说明
+ *
+ * $model               模型名称                user
+ * $model_plural        模型名称复数              users
+ * $model_uc_first      模型名称首字母大写       User
+ * $model_chinese_name  模型中文名               用户
+ */
+
+
+!startroute=admin_{{-$model-}}.php
+Route::get('/{{-$model_plural-}}', '{{-$model_uc_first-}}Controller@index')->name('{{-$model-}}.index');
+Route::get('/{{-$model_plural-}}/list', '{{-$model_uc_first-}}Controller@list')->name('{{-$model-}}.list');
+Route::get('/{{-$model_plural-}}/create', '{{-$model_uc_first-}}Controller@create')->name('{{-$model-}}.create');
+Route::post('/{{-$model_plural-}}', '{{-$model_uc_first-}}Controller@save')->name('{{-$model-}}.save');
+Route::get('/{{-$model_plural-}}/{id}/edit', '{{-$model_uc_first-}}Controller@edit')->name('{{-$model-}}.edit');
+Route::put('/{{-$model_plural-}}/{id}', '{{-$model_uc_first-}}Controller@update')->name('{{-$model-}}.update');
+!endroute
+
+!startview=views/admin/{{-$model-}}/index.blade.php
+@extends('admin.base')
+
+@section('content')
+    @include('admin.breadcrumb')
+
+    <div class="layui-card">
+        <div class="layui-form layui-card-header light-search">
+            <form>
+                <input type="hidden" name="action" value="search">
+            @include('admin.searchField', ['data' => App\Model\Admin\{{-$model_uc_first-}}::$searchField])
+            <div class="layui-inline">
+                <label class="layui-form-label">创建日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="created_at" class="layui-input" id="created_at" value="{{ request()->get('created_at') }}">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <button class="layui-btn layuiadmin-btn-list" lay-filter="form-search" id="submitBtn">
+                    <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                </button>
+            </div>
+            </form>
+        </div>
+        <div class="layui-card-body">
+            <table class="layui-table" lay-data="{url:'{{ route('admin::{{-$model-}}.list') }}?{{ request()->getQueryString() }}', page:true, limit:50, id:'test', toolbar:'<div><a href=\'{{ route('admin::{{-$model-}}.create') }}\'><i class=\'layui-icon layui-icon-add-1\'></i>新增{{-$model_chinese_name-}}</a></div>'}" lay-filter="test">
+                <thead>
+                <tr>
+                    <th lay-data="{field:'id', width:80, sort: true}">ID</th>
+                    @include('admin.listHead', ['data' => App\Model\Admin\{{-$model_uc_first-}}::$listField])
+                    <th lay-data="{field:'created_at'}">添加时间</th>
+                    <th lay-data="{field:'updated_at'}">更新时间</th>
+                    <th lay-data="{width:200, templet:'#action'}">操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+@endsection
+<script type="text/html" id="action">
+    <a href="<% d.editUrl %>" class="layui-table-link"><i class="layui-icon layui-icon-edit"></i></a>
+</script>
+
+@section('js')
+    <script>
+        var laytpl = layui.laytpl;
+        laytpl.config({
+            open: '<%',
+            close: '%>'
+        });
+
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#created_at',
+            range: '~'
+        });
+    </script>
+@endsection
+!endview
+
+!startview=views/admin/{{-$model-}}/add.blade.php
+@extends('admin.base')
+
+@section('content')
+    <div class="layui-card">
+
+        @include('admin.breadcrumb')
+
+        <div class="layui-card-body">
+            <form class="layui-form" action="@if(isset($id)){{ route('admin::{{-$model-}}.update', ['id' => $id]) }}@else{{ route('admin::{{-$model-}}.save') }}@endif" method="post">
+                @if(isset($id)) {{ method_field('PUT') }} @endif
+                <div class="layui-form-item">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" required  lay-verify="required" autocomplete="off" class="layui-input" value="{{ $model->name ?? ''  }}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formAdminUser" id="submitBtn">提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+
+@section('js')
+    <script>
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formAdminUser)', function(data){
+            window.form_submit = $('#submitBtn');
+            form_submit.prop('disabled', true);
+            $.ajax({
+                url: data.form.action,
+                data: data.field,
+                success: function (result) {
+                    if (result.code !== 0) {
+                        form_submit.prop('disabled', false);
+                        layer.msg(result.msg, {shift: 6});
+                        return false;
+                    }
+                    layer.msg(result.msg, {icon: 1}, function () {
+                        if (result.reload) {
+                            location.reload();
+                        }
+                        if (result.redirect) {
+                            location.href = result.redirect;
+                        }
+                    });
+                }
+            });
+
+            return false;
+        });
+    </script>
+@endsection
+!endview
+
+
+!startrepository=Repository/Admin/{{-$model_uc_first-}}Repository.php
+<?php
+/**
+ * @author  Eddy <cumtsjh@163.com>
+ */
+
+namespace App\Repository\Admin;
+
+use App\Model\Admin\{{-$model_uc_first-}};
+use App\Repository\Searchable;
+
+class {{-$model_uc_first-}}Repository
+{
+    use Searchable;
+
+    public static function list($perPage, $condition = [])
+    {
+        $data = {{-$model_uc_first-}}::query()
+            ->where(function ($query) use ($condition) {
+                Searchable::buildQuery($query, $condition);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($perPage);
+        $data->transform(function ($item) {
+            $item->editUrl = route('admin::{{-$model-}}.edit', ['id' => $item->id]);
+            $item->statusText = $item->status == {{-$model_uc_first-}}::STATUS_ENABLE ?
+                    '<span class="layui-badge layui-bg-green">启用</span>' :
+                    '<span class="layui-badge">禁用</span>';
+            return $item;
+        });
+
+        return [
+            'code' => 0,
+            'msg' => '',
+            'count' => $data->total(),
+            'data' => $data->items(),
+        ];
+    }
+
+    public static function add($data)
+    {
+        return {{-$model_uc_first-}}::query()->create($data);
+    }
+
+    public static function update($id, $data)
+    {
+        return {{-$model_uc_first-}}::query()->where('id', $id)->update($data);
+    }
+
+    public static function find($id)
+    {
+        return {{-$model_uc_first-}}::query()->find($id);
+    }
+}
+!endrepository
+
+
+!startrequest=Http/Requests/Admin/{{-$model_uc_first-}}Request.php
+<?php
+
+namespace App\Http\Requests\Admin;
+
+use Illuminate\Foundation\Http\FormRequest;
+use App\Model\Admin\{{-$model_uc_first-}};
+use Illuminate\Validation\Rule;
+
+class {{-$model_uc_first-}}Request extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        $status_in = [
+            {{-$model_uc_first-}}::STATUS_DISABLE,
+            {{-$model_uc_first-}}::STATUS_ENABLE,
+        ];
+        return [
+            'name' => 'required|max:50',
+            'status' => [
+                Rule::in($status_in),
+            ],
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'name.required' => '名称不能为空',
+            'name.max' => '名称长度不能大于50',
+        ];
+    }
+}
+!endrequest
+
+
+!startcontroller=Http/Controllers/Admin/{{-$model_uc_first-}}Controller.php
+<?php
+/**
+ * @author  Eddy <cumtsjh@163.com>
+ */
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\{{-$model_uc_first-}}Request;
+use App\Repository\Admin\{{-$model_uc_first-}}Repository;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+
+class {{-$model_uc_first-}}Controller extends Controller
+{
+    protected $formNames = [];
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->breadcrumb[] = ['title' => '{{-$model_chinese_name-}}列表', 'url' => route('admin::{{-$model-}}.index')];
+    }
+
+    /**
+     * {{-$model_chinese_name-}}列表
+     *
+     */
+    public function index()
+    {
+        $this->breadcrumb[] = ['title' => '{{-$model_chinese_name-}}列表', 'url' => ''];
+        return view('admin.{{-$model-}}.index', ['breadcrumb' => $this->breadcrumb]);
+    }
+
+    /**
+     * {{-$model_chinese_name-}}列表数据接口
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function list(Request $request)
+    {
+        $perPage = (int) $request->get('limit', 50);
+        $condition = $request->only($this->formNames);
+
+        $data = {{-$model_uc_first-}}Repository::list($perPage, $condition);
+
+        return $data;
+    }
+
+    /**
+     * 新增{{-$model_chinese_name-}}
+     *
+     */
+    public function create()
+    {
+        $this->breadcrumb[] = ['title' => '新增{{-$model_chinese_name-}}', 'url' => ''];
+        return view('admin.{{-$model-}}.add', ['breadcrumb' => $this->breadcrumb]);
+    }
+
+    /**
+     * 保存{{-$model_chinese_name-}}
+     *
+     * @param {{-$model_uc_first-}}Request $request
+     * @return array
+     */
+    public function save({{-$model_uc_first-}}Request $request)
+    {
+        try {
+            {{-$model_uc_first-}}Repository::add($request->only($this->formNames));
+            return [
+                'code' => 0,
+                'msg' => '新增成功',
+                'redirect' => route('admin::{{-$model-}}.index')
+            ];
+        } catch (QueryException $e) {
+            return [
+                'code' => 1,
+                'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前{{-$model_chinese_name-}}已存在' : '其它错误'),
+                'redirect' => route('admin::{{-$model-}}.index')
+            ];
+        }
+    }
+
+    /**
+     * 编辑{{-$model_chinese_name-}}
+     *
+     * @param int $id
+     * @return View
+     */
+    public function edit($id)
+    {
+        $this->breadcrumb[] = ['title' => '编辑{{-$model_chinese_name-}}', 'url' => ''];
+
+        $model = {{-$model_uc_first-}}Repository::find($id);
+        return view('admin.{{-$model-}}.add', ['id' => $id, 'model' => $model, 'breadcrumb' => $this->breadcrumb]);
+    }
+
+    /**
+     * 更新{{-$model_chinese_name-}}
+     *
+     * @param {{-$model_uc_first-}}Request $request
+     * @param int $id
+     * @return array
+     */
+    public function update({{-$model_uc_first-}}Request $request, $id)
+    {
+        $data = $request->only($this->formNames);
+        try {
+            {{-$model_uc_first-}}Repository::update($id, $data);
+            return [
+                'code' => 0,
+                'msg' => '编辑成功',
+                'redirect' => route('admin::{{-$model-}}.index')
+            ];
+        } catch (QueryException $e) {
+            return [
+                'code' => 1,
+                'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前{{-$model_chinese_name-}}已存在' : '其它错误'),
+                'redirect' => route('admin::{{-$model-}}.index')
+            ];
+        }
+    }
+}
+!endcontroller
+
+!startmodel=Model/Admin/{{-$model_uc_first-}}.php
+<?php
+/**
+ * @author  Eddy <cumtsjh@163.com>
+ */
+
+namespace App\Model\Admin;
+
+class {{-$model_uc_first-}} extends Model
+{
+    const STATUS_ENABLE = 1;
+    const STATUS_DISABLE = 0;
+
+    protected $guarded = [];
+}
+!endmodel
