@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\ConfigRequest;
 use App\Repository\Admin\ConfigRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -70,6 +71,7 @@ class ConfigController extends Controller
     {
         try {
             ConfigRepository::add($request->only($this->formNames));
+            Cache::forget(config('light.cache_key.config'));
             return [
                 'code' => 0,
                 'msg' => '新增成功',
@@ -110,6 +112,7 @@ class ConfigController extends Controller
         $data = $request->only($this->formNames);
         try {
             ConfigRepository::update($id, $data);
+            Cache::forget(config('light.cache_key.config'));
             return [
                 'code' => 0,
                 'msg' => '编辑成功',

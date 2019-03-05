@@ -7,6 +7,7 @@ namespace App\Repository\Admin;
 
 use App\Model\Admin\Config;
 use App\Repository\Searchable;
+use Illuminate\Support\Facades\Cache;
 
 class ConfigRepository
 {
@@ -46,5 +47,19 @@ class ConfigRepository
     public static function find($id)
     {
         return Config::query()->find($id);
+    }
+
+    public static function all()
+    {
+        return Cache::rememberForever(config('light.cache_key.config'), function () {
+            $value = Config::query()->select(['key', 'value'])->get();
+            if ($value->isEmpty()) {
+                return [];
+            }
+
+            return $value->mapWithKeys(function ($item) {
+                return [$item->key => $item->value];
+            })->all();
+        });
     }
 }

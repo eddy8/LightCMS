@@ -165,9 +165,6 @@ class {{-$model_uc_first-}}Repository
             ->paginate($perPage);
         $data->transform(function ($item) {
             $item->editUrl = route('admin::{{-$model-}}.edit', ['id' => $item->id]);
-            $item->statusText = $item->status == {{-$model_uc_first-}}::STATUS_ENABLE ?
-                    '<span class="layui-badge layui-bg-green">启用</span>' :
-                    '<span class="layui-badge">禁用</span>';
             return $item;
         });
 
