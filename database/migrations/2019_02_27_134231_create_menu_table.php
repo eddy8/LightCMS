@@ -21,6 +21,7 @@ class CreateMenuTable extends Migration
             $table->unsignedInteger('order')->default(1);
             $table->string('route', 100)->default('')->unique();
             $table->string('group', 50)->default('');
+            $table->string('guard_name', 50)->default('admin');
             $table->string('remark')->default('');
             $table->timestamps();
         });
