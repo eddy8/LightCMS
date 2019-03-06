@@ -14,7 +14,7 @@ Route::group(
         Route::get('/login', 'Auth\LoginController@showLogin')->name('login.show');
         Route::post('/login', 'Auth\LoginController@login')->name('login');
 
-        Route::middleware('auth:admin', 'authorization:admin')->group(function () {
+        Route::middleware('log:admin', 'auth:admin', 'authorization:admin')->group(function () {
             Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
             Route::get('/index', 'HomeController@showIndex')->name('index');
@@ -59,6 +59,11 @@ Route::group(
             Route::post('/configs', 'ConfigController@save')->name('config.save');
             Route::get('/configs/{id}/edit', 'ConfigController@edit')->name('config.edit');
             Route::put('/configs/{id}', 'ConfigController@update')->name('config.update');
+
+            // 日志
+            Route::get('/logs', 'LogController@index')->name('log.index');
+            Route::get('/logs/list', 'LogController@list')->name('log.list');
+            Route::get('/logs/create', 'LogController@create')->name('log.create');
         });
     }
 );

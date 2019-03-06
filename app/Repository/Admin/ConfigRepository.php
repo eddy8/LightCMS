@@ -23,6 +23,7 @@ class ConfigRepository
             ->paginate($perPage);
         $data->transform(function ($item) {
             $item->editUrl = route('admin::config.edit', ['id' => $item->id]);
+            $item->type = Config::$types[$item->type];
             return $item;
         });
 

@@ -25,6 +25,7 @@ class HomeController extends Controller
      */
     public function test()
     {
+        dd(config('light_config.SITE_NAME'), true);
         return view('admin.home.index');
     }
 }
