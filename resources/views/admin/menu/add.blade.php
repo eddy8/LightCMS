@@ -31,6 +31,12 @@
                             <input type="text" name="route" required  lay-verify="required" autocomplete="off" class="layui-input" value="{{ $model->route ?? ''  }}">
                         </div>
                     </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">URL</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="url" autocomplete="off" class="layui-input" value="{{ $model->url ?? ''  }}">
+                        </div>
+                    </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">排序</label>

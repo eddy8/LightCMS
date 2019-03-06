@@ -14,13 +14,14 @@ use App\Model\Admin\Menu;
 use App\Repository\Admin\MenuRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Exceptions\UrlGenerationException;
 use Illuminate\Support\Str;
 use Log;
 use Route;
 
 class MenuController extends Controller
 {
-    protected $formNames = ['name', 'pid', 'status', 'order', 'route', 'group', 'remark'];
+    protected $formNames = ['name', 'pid', 'status', 'order', 'route', 'group', 'remark', 'url'];
 
     public function __construct()
     {
@@ -83,8 +84,6 @@ class MenuController extends Controller
     public function save(MenuRequest $request)
     {
         try {
-            // 路由是否有效
-            route($request->get('route'));
             MenuRepository::add($request->only($this->formNames));
             return [
                 'code' => 0,
@@ -95,12 +94,6 @@ class MenuController extends Controller
             return [
                 'code' => 1,
                 'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前菜单已存在' : '其它错误'),
-                'redirect' => route('admin::menu.index')
-            ];
-        } catch (\InvalidArgumentException $e) {
-            return [
-                'code' => 2,
-                'msg' => '新增失败：' . '无效路由',
                 'redirect' => route('admin::menu.index')
             ];
         }
@@ -188,6 +181,11 @@ class MenuController extends Controller
                     $data['status'] = Menu::STATUS_ENABLE;
                 } else {
                     $data['status'] = Menu::STATUS_DISABLE;
+                }
+                try {
+                    $data['url'] = route($k, [], false);
+                } catch (UrlGenerationException $e) {
+                    $data['url'] = '';
                 }
 
                 $model = MenuRepository::exist($k);

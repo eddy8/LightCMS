@@ -42,6 +42,7 @@
                     <th lay-data="{templet:'#menuName'}">名称</th>
                     <th lay-data="{field:'parentName'}">上级菜单</th>
                     <th lay-data="{field:'route'}">路由</th>
+                    <th lay-data="{field:'url'}">URL</th>
                     <th lay-data="{field:'order', sort: true}">排序</th>
                     <th lay-data="{field:'statusText', sort: true}">状态</th>
                     <th lay-data="{field:'created_at'}">添加时间</th>
