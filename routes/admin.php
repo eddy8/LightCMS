@@ -11,8 +11,10 @@ Route::group(
         'as' => 'admin::',
     ],
     function () {
-        Route::get('/login', 'Auth\LoginController@showLogin')->name('login.show');
-        Route::post('/login', 'Auth\LoginController@login')->name('login');
+        Route::middleware('log')->group(function () {
+            Route::get('/login', 'Auth\LoginController@showLogin')->name('login.show');
+            Route::post('/login', 'Auth\LoginController@login')->name('login');
+        });
 
         Route::middleware('log:admin', 'auth:admin', 'authorization:admin')->group(function () {
             Route::get('/logout', 'Auth\LoginController@logout')->name('logout');

@@ -16,7 +16,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        $this->loadConfig();
+        if (config('light.light_config') === true) {
+            $this->loadConfig();
+        }
     }
 
     /**

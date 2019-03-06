@@ -6,5 +6,7 @@ return [
     // 各类缓存KEY
     'cache_key' => [
         'config' => 'config'
-    ]
+    ],
+    // 加载数据库自定义配置
+    'light_config' => true,
 ];

@@ -28,7 +28,11 @@ class Log
         $data['url'] = $request->url();
         $data['ua'] = $request->userAgent();
         $data['ip'] = (string) $request->getClientIp();
-        $data['data'] = urldecode(build_query($request->all()));
+        $input = $request->all();
+        if (isset($input['password'])) {
+            $input['password'] = '******';
+        }
+        $data['data'] = build_query($input, false);
         LogRepository::add($data);
         return $next($request);
     }
