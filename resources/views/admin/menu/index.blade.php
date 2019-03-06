@@ -37,6 +37,7 @@
             <table class="layui-table" lay-data="{url:'{{ route('admin::menu.list') }}?{{ request()->getQueryString() }}', page:true, limit:50, id:'test', toolbar:'<div><a href=\'{{ route('admin::menu.create') }}\'><i class=\'layui-icon layui-icon-add-1\'></i>新增菜单</a><a href=\'javascript:;\' style=\'margin-left:15px\' id=\'discovery\'><i class=\'layui-icon layui-icon-refresh\'></i>自动更新菜单</a></div>'}" lay-filter="test">
                 <thead>
                 <tr>
+                    <th lay-data="{width:50, type:'checkbox'}"></th>
                     <th lay-data="{field:'id', width:80, sort: true}">ID</th>
                     <th lay-data="{templet:'#menuName'}">名称</th>
                     <th lay-data="{field:'parentName'}">上级菜单</th>
@@ -49,6 +50,28 @@
                 </tr>
                 </thead>
             </table>
+            <div>
+                <form class="layui-form" method="post" action="{{ route('admin::menu.batch') }}">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">操作类型</label>
+                        <div class="layui-input-inline">
+                            <select name="type">
+                                <option value="disable">禁用</option>
+                                <option value="enable">启用</option>
+                                <option value="parent">设置父级菜单</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <input type="text" name="params" value="" placeholder="操作相关参数" class="layui-input">
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-list" lay-filter="form-batch" id="batchBtn" lay-submit>
+                                执行批量操作
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 @endsection
@@ -92,6 +115,46 @@
                     });
                 }
             });
+        });
+
+        var form = layui.form,
+            table = layui.table;
+        form.on('submit(form-batch)', function(data){
+            var checkStatus = table.checkStatus('test'),
+                ids = [];
+
+            if (checkStatus.data.length === 0) {
+                layer.msg('未选中待操作的行数据');
+                return false;
+            }
+            checkStatus.data.forEach(function (item) {
+                ids.push(item.id);
+            });
+            data.field.ids = ids;
+
+            window.form_submit = $('#batchBtn');
+            form_submit.prop('disabled', true);
+            $.ajax({
+                url: data.form.action,
+                data: data.field,
+                success: function (result) {
+                    if (result.code !== 0) {
+                        form_submit.prop('disabled', false);
+                        layer.msg(result.msg, {shift: 6});
+                        return false;
+                    }
+                    layer.msg(result.msg, {icon: 1}, function () {
+                        if (result.reload) {
+                            location.reload();
+                        }
+                        if (result.redirect) {
+                            location.href = result.redirect;
+                        }
+                    });
+                }
+            });
+
+            return false;
         });
     </script>
 @endsection

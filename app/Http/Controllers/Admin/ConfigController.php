@@ -36,7 +36,7 @@ class ConfigController extends Controller
     }
 
     /**
-     * 配置列表数据接口
+     * 配置管理-配置列表数据接口
      *
      * @param Request $request
      * @return array
@@ -52,7 +52,7 @@ class ConfigController extends Controller
     }
 
     /**
-     * 新增配置
+     * 配置管理-新增配置
      *
      */
     public function create()
@@ -62,7 +62,7 @@ class ConfigController extends Controller
     }
 
     /**
-     * 保存配置
+     * 配置管理-保存配置
      *
      * @param ConfigRequest $request
      * @return array
@@ -87,7 +87,7 @@ class ConfigController extends Controller
     }
 
     /**
-     * 编辑配置
+     * 配置管理-编辑配置
      *
      * @param int $id
      * @return View
@@ -101,7 +101,7 @@ class ConfigController extends Controller
     }
 
     /**
-     * 更新配置
+     * 配置管理-更新配置
      *
      * @param ConfigRequest $request
      * @param int $id

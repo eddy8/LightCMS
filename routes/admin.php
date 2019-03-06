@@ -42,6 +42,7 @@ Route::group(
             Route::get('/menus/{id}/edit', 'MenuController@edit')->name('menu.edit');
             Route::put('/menus/{id}', 'MenuController@update')->name('menu.update');
             Route::post('/menus/discovery', 'MenuController@discovery')->name('menu.discovery');
+            Route::post('/menus/batch', 'MenuController@batch')->name('menu.batch');
 
             // 角色管理
             Route::get('/roles', 'RoleController@index')->name('role.index');

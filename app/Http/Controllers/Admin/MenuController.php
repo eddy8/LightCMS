@@ -208,4 +208,49 @@ class MenuController extends Controller
             'redirect' => route('admin::menu.index')
         ];
     }
+
+    /**
+     * 菜单管理-批量操作
+     */
+    public function batch(Request $request)
+    {
+        $type = $request->input('type', '');
+        $ids = $request->input('ids');
+        if (!is_array($ids)) {
+            return [
+                'code' => 1,
+                'msg' => '参数错误'
+            ];
+        }
+        $ids = array_map(function ($item) {
+            return intval($item);
+        }, $ids);
+
+        switch ($type) {
+            case 'disable':
+                Menu::query()->whereIn('id', $ids)->update(['status' => Menu::STATUS_DISABLE]);
+                break;
+            case 'enable':
+                Menu::query()->whereIn('id', $ids)->update(['status' => Menu::STATUS_ENABLE]);
+                break;
+            case 'parent':
+                $pid = intval($request->input('params', -1));
+                if ($pid < 0 || ($pid > 0 && !MenuRepository::find($pid))) {
+                    return [
+                        'code' => 2,
+                        'msg' => '父级菜单ID错误'
+                    ];
+                }
+                Menu::query()->whereIn('id', $ids)->update(['pid' => $pid]);
+                break;
+            default:
+                break;
+        }
+
+        return [
+            'code' => 0,
+            'msg' => '操作成功',
+            'reload' => true
+        ];
+    }
 }
