@@ -8,5 +8,5 @@ return [
         'config' => 'config'
     ],
     // 加载数据库自定义配置
-    'light_config' => true,
+    'light_config' => false,
 ];

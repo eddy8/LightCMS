@@ -52,6 +52,6 @@ INSERT INTO `menus` VALUES ('61', '批量操作', '40', '0', '1', 'admin::menu.b
 INSERT INTO `menus` VALUES ('62', '百度', '0', '1', '4', 'baidu', 'https://www.baidu.com', '', 'admin', '', '2019-03-06 17:01:30', '2019-03-07 08:41:52');
 INSERT INTO `menus` VALUES ('64', '删除菜单', '40', '0', '1', 'admin::menu.delete', '', '菜单管理', 'admin', '', '2019-03-07 09:45:17', '2019-03-07 09:45:43');
 EOL;
-        DB::statement($sql);
+        DB::unprepared($sql);
     }
 }
