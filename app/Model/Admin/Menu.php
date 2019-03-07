@@ -68,7 +68,7 @@ class Menu extends Model implements PermissionContract
         $permission = static::getPermissions(['id' => $id, 'guard_name' => $guardName])->first();
 
         if (! $permission) {
-            throw PermissionDoesNotExist::withId($id, $guardName);
+            throw PermissionDoesNotExist::withId($id);
         }
 
         return $permission;

@@ -73,5 +73,8 @@ class CreateModelRelatedFiles extends Command
                 }
             }
         }
+
+        echo 'Files created successful';
+        return;
     }
 }
