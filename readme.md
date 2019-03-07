@@ -6,6 +6,47 @@
 ## 系统环境
 `linux/windows & nginx/apache/iis & mysql 5.5+ & php 7.0+`
 
+## 系统部署
+
+### 获取代码并安装依赖
+首先请确保系统已安装好[composer](https://getcomposer.org/)。
+```bash
+cd /data/www
+git clone git_repository_url
+cd lightCMS
+composer install
+```
+### 系统配置并初始化
+新建一份环境配置，并配置好数据库等相关配置:
+```
+copy .env.example .env.pro
+```
+初始化系统：
+```
+php artisan migrate --seed
+```
+
+### 配置Web服务器（此处以`Nginx`为例）
+```
+server { 
+    listen 80;
+    server_name light.com;
+    root /data/www/lightCMS/public;
+    index index.php index.html index.htm;
+    
+    location / {  
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+    
+    location ~ \.php$ { 
+        fastcgi_pass 127.0.0.1:9000; 
+        fastcgi_index index.php; 
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; 
+        fastcgi_param   APP_ENV pro; #不同配置对应不同的环境配置文件。比如此处应用会加载.env.pro文件。
+        include fastcgi_params;
+    }
+}
+```
 ## 权限管理
 基于角色的权限管理。只需新建好角色，给对应的角色分配好相应的权限，最后给用户指定角色即可。`lightCMS`中权限的概念其实就是菜单，一条菜单对应一个`laravel`的路由，也就是一个具体的操作。
 
