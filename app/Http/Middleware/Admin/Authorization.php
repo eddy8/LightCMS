@@ -3,10 +3,9 @@
 namespace App\Http\Middleware\Admin;
 
 use App\Model\Admin\Menu;
-use App\Repository\Admin\MenuRepository;
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use Route;
+use Illuminate\Support\Facades\Route;
 
 class Authorization
 {

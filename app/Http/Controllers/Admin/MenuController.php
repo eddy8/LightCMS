@@ -84,7 +84,7 @@ class MenuController extends Controller
     public function save(MenuRequest $request)
     {
         try {
-            MenuRepository::add($request->only($this->formNames));
+            MenuRepository::add(array_merge($request->only($this->formNames), ['guard_name' => 'admin']));
             return [
                 'code' => 0,
                 'msg' => '新增成功',

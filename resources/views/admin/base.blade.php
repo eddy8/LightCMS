@@ -10,13 +10,19 @@
     @yield('css')
 </head>
 <body class="layui-layout-body">
+@php
+    $user = \Auth::guard('admin')->user();
+    $isSuperAdmin = in_array($user->id, config('light.superAdmin'));
+@endphp
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
         <div class="layui-logo">{{ config('app.name') }} 管理后台</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
             @foreach(App\Repository\Admin\MenuRepository::allRoot() as $v)
-                <li class="layui-nav-item @if(!empty($light_menu) && $v->id == $light_menu['id']) layui-this @endif"><a href="{{ $v->url }}">{{ $v->name }}</a></li>
+                @if($isSuperAdmin || $user->can($v->name))
+                    <li class="layui-nav-item @if(!empty($light_menu) && $v->id == $light_menu['id']) layui-this @endif"><a href="{{ $v->url }}">{{ $v->name }}</a></li>
+                @endif
             @endforeach
         </ul>
         <ul class="layui-nav layui-layout-right">
@@ -42,11 +48,17 @@
                 @foreach($light_menu['children']->groupBy('group') as $k => $menu)
                     @if($k != '')
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">{{ $k }}</a>
+                    @foreach($menu as $sub)
+                        @if($isSuperAdmin || ($sub['status'] === App\Model\Admin\Menu::STATUS_ENABLE && $user->can($sub['name'])))
+                            <a class="" href="javascript:;">{{ $k }}</a>
+                            @break
+                        @endif
+                    @endforeach
+
                     <dl class="layui-nav-child">
                         @foreach($menu as $sub)
-                            @if($sub['status'] === App\Model\Admin\Menu::STATUS_ENABLE)
-                        <dd @if($sub['route'] == $light_cur_route) class="layui-this" @endif><a href="{{ $sub['url'] }}">{{ $sub['name'] }}</a></dd>
+                            @if($isSuperAdmin || ($sub['status'] === App\Model\Admin\Menu::STATUS_ENABLE && $user->can($sub['name'])))
+                                <dd @if($sub['route'] == $light_cur_route) class="layui-this" @endif><a href="{{ $sub['url'] }}">{{ $sub['name'] }}</a></dd>
                             @endif
                         @endforeach
                     </dl>
