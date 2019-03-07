@@ -6,6 +6,8 @@
  * @version v1.0.0
  */
 
+use Illuminate\Support\Str;
+
 Route::group(
     [
         'as' => 'admin::',
@@ -73,7 +75,7 @@ Route::group(
                     continue;
                 }
                 $name = $f->getPathname();
-                if ($f->isFile()) {
+                if ($f->isFile() && Str::endsWith($name, '.php')) {
                     require $name;
                 }
             }
