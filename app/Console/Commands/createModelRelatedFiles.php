@@ -56,7 +56,7 @@ class CreateModelRelatedFiles extends Command
                         }
                         $file = resource_path() . '/' . str_replace('{{-$model-}}', $model, $v);
                     } elseif ($type === 'route') {
-                        $file = base_path('routes/auto' . str_replace('{{-$model-}}', $model, $v));
+                        $file = base_path('routes/auto/' . str_replace('{{-$model-}}', $model, $v));
                     } else {
                         $file = app_path() . '/' . str_replace('{{-$model_uc_first-}}', $modelUCFirst, $v);
                     }
