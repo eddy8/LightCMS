@@ -56,7 +56,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">操作类型</label>
                         <div class="layui-input-inline">
-                            <select name="type">
+                            <select name="type" lay-filter="action-type">
                                 <option value="disable">禁用</option>
                                 <option value="enable">启用</option>
                                 <option value="parent">设置父级菜单</option>
@@ -182,6 +182,14 @@
             });
 
             return false;
+        });
+
+        form.on('select(action-type)', function(data){
+            if (data.value === 'parent') {
+                $('input[name=params]').attr('placeholder', '请填写父级菜单的ID');
+            } else {
+                $('input[name=params]').attr('placeholder', '');
+            }
         });
     </script>
 @endsection
