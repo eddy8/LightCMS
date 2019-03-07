@@ -60,6 +60,7 @@
                                 <option value="disable">禁用</option>
                                 <option value="enable">启用</option>
                                 <option value="parent">设置父级菜单</option>
+                                <option value="delete">删除</option>
                             </select>
                         </div>
                         <div class="layui-input-inline">

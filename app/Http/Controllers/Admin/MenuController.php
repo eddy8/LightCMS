@@ -247,6 +247,9 @@ class MenuController extends Controller
             case 'enable':
                 Menu::query()->whereIn('id', $ids)->update(['status' => Menu::STATUS_ENABLE]);
                 break;
+            case 'delete':
+                Menu::query()->whereIn('id', $ids)->delete();
+                break;
             case 'parent':
                 $pid = intval($request->input('params', -1));
                 if ($pid < 0 || ($pid > 0 && !MenuRepository::find($pid))) {
