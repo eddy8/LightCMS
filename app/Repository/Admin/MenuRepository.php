@@ -27,6 +27,7 @@ class MenuRepository
             ->paginate($perPage);
         $data->transform(function ($item) {
             $item->editUrl = route('admin::menu.edit', ['id' => $item->id]);
+            $item->deleteUrl = route('admin::menu.delete', ['id' => $item->id]);
             $item->statusText = $item->status == Menu::STATUS_ENABLE ?
                         '<span class="layui-badge layui-bg-green">启用</span>' :
                         '<span class="layui-badge">禁用</span>';
@@ -55,6 +56,11 @@ class MenuRepository
     public static function find($id)
     {
         return Menu::query()->find($id);
+    }
+
+    public static function delete($id)
+    {
+        return Menu::destroy($id);
     }
 
     public static function get(array $ids)

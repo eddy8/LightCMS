@@ -21,8 +21,6 @@ Route::group(
 
             Route::get('/index', 'HomeController@showIndex')->name('index');
 
-            Route::get('/test', 'HomeController@test')->name('test');
-
             // 管理员用户管理
             Route::get('/admin_users', 'AdminUserController@index')->name('adminUser.index');
             Route::get('/admin_users/list', 'AdminUserController@list')->name('adminUser.list');
@@ -41,6 +39,7 @@ Route::group(
             Route::post('/menus', 'MenuController@save')->name('menu.save');
             Route::get('/menus/{id}/edit', 'MenuController@edit')->name('menu.edit');
             Route::put('/menus/{id}', 'MenuController@update')->name('menu.update');
+            Route::delete('/menus/{id}', 'MenuController@delete')->name('menu.delete');
             Route::post('/menus/discovery', 'MenuController@discovery')->name('menu.discovery');
             Route::post('/menus/batch', 'MenuController@batch')->name('menu.batch');
 

@@ -142,6 +142,22 @@ class MenuController extends Controller
     }
 
     /**
+     * 菜单管理-删除菜单
+     *
+     * @param Request $request
+     * @param int $id
+     */
+    public function delete(Request $request, $id)
+    {
+        MenuRepository::delete($id);
+        return [
+            'code' => 0,
+            'msg' => '删除成功',
+            'redirect' => route('admin::menu.index')
+        ];
+    }
+
+    /**
      * 菜单管理-自动更新菜单
      *
      * @return array
@@ -237,6 +253,12 @@ class MenuController extends Controller
                     return [
                         'code' => 2,
                         'msg' => '父级菜单ID错误'
+                    ];
+                }
+                if (in_array($pid, $ids)) {
+                    return [
+                        'code' => 3,
+                        'msg' => '不能将父级菜单指定为自身'
                     ];
                 }
                 Menu::query()->whereIn('id', $ids)->update(['pid' => $pid]);

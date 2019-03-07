@@ -47,7 +47,7 @@
                     <th lay-data="{field:'statusText', sort: true}">状态</th>
                     <th lay-data="{field:'created_at'}">添加时间</th>
                     <th lay-data="{field:'updated_at'}">更新时间</th>
-                    <th lay-data="{width:200, templet:'#action'}">操作</th>
+                    <th lay-data="{width:100, templet:'#action'}">操作</th>
                 </tr>
                 </thead>
             </table>
@@ -81,7 +81,8 @@
     <a href="?pid=<% d.id %>" class="layui-table-link"><% d.name %></a>
 </script>
 <script type="text/html" id="action">
-    <a href="<% d.editUrl %>" class="layui-table-link"><i class="layui-icon layui-icon-edit"></i></a>
+    <a href="<% d.editUrl %>" class="layui-table-link" title="编辑"><i class="layui-icon layui-icon-edit"></i></a>
+    <a href="javascript:;" class="layui-table-link" title="删除" style="margin-left: 10px" onclick="deleteMenu('<% d.deleteUrl %>')"><i class="layui-icon layui-icon-delete"></i></a>
 </script>
 
 @section('js')
@@ -117,6 +118,31 @@
                 }
             });
         });
+
+        function deleteMenu (url) {
+            layer.confirm('确定删除？', function(index){
+                $.ajax({
+                    url: url,
+                    data: {'_method': 'DELETE'},
+                    success: function (result) {
+                        if (result.code !== 0) {
+                            layer.msg(result.msg, {shift: 6});
+                            return false;
+                        }
+                        layer.msg(result.msg, {icon: 1}, function () {
+                            if (result.reload) {
+                                location.reload();
+                            }
+                            if (result.redirect) {
+                                location.href = result.redirect;
+                            }
+                        });
+                    }
+                });
+
+                layer.close(index);
+            });
+        }
 
         var form = layui.form,
             table = layui.table;

@@ -19,13 +19,4 @@ class HomeController extends Controller
     {
         return view('admin.home.index');
     }
-
-    /**
-     * 测试
-     */
-    public function test()
-    {
-        dd(config('light_config.SITE_NAME'), true);
-        return view('admin.home.index');
-    }
 }
