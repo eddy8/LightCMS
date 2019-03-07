@@ -66,6 +66,17 @@ Route::group(
             Route::get('/logs', 'LogController@index')->name('log.index');
             Route::get('/logs/list', 'LogController@list')->name('log.list');
             Route::get('/logs/create', 'LogController@create')->name('log.create');
+
+            // 自动加载生成的其它路由
+            foreach (new DirectoryIterator(base_path('routes/auto')) as $f) {
+                if ($f->isDot()) {
+                    continue;
+                }
+                $name = $f->getPathname();
+                if ($f->isFile()) {
+                    require $name;
+                }
+            }
         });
     }
 );

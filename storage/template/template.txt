@@ -8,7 +8,9 @@
  */
 
 
-!startroute=admin_{{-$model-}}.php
+!startroute={{-$model-}}.php
+<?php
+
 Route::get('/{{-$model_plural-}}', '{{-$model_uc_first-}}Controller@index')->name('{{-$model-}}.index');
 Route::get('/{{-$model_plural-}}/list', '{{-$model_uc_first-}}Controller@list')->name('{{-$model-}}.list');
 Route::get('/{{-$model_plural-}}/create', '{{-$model_uc_first-}}Controller@create')->name('{{-$model-}}.create');
@@ -228,9 +230,9 @@ class {{-$model_uc_first-}}Request extends FormRequest
         ];
         return [
             'name' => 'required|max:50',
-            'status' => [
-                Rule::in($status_in),
-            ],
+            //'status' => [
+            //    Rule::in($status_in),
+            //],
         ];
     }
 

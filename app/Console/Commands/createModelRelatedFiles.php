@@ -39,7 +39,7 @@ class CreateModelRelatedFiles extends Command
     public function handle()
     {
         $model = trim($this->argument('model'));
-        $modelChineseName = \mb_convert_encoding(trim($this->argument('chineseName')), 'utf-8', ['gbk', 'utf-8']);
+        $modelChineseName = \mb_convert_encoding(trim($this->argument('chineseName')), 'utf-8', ['utf-8', 'gbk']);
         $modelPlural = Str::plural($model);
         $modelUCFirst = Str::ucfirst($model);
 
@@ -56,7 +56,7 @@ class CreateModelRelatedFiles extends Command
                         }
                         $file = resource_path() . '/' . str_replace('{{-$model-}}', $model, $v);
                     } elseif ($type === 'route') {
-                        $file = base_path('routes/' . str_replace('{{-$model-}}', $model, $v));
+                        $file = base_path('routes/auto' . str_replace('{{-$model-}}', $model, $v));
                     } else {
                         $file = app_path() . '/' . str_replace('{{-$model_uc_first-}}', $modelUCFirst, $v);
                     }
@@ -74,7 +74,7 @@ class CreateModelRelatedFiles extends Command
             }
         }
 
-        echo 'Files created successful';
+        echo 'All files created successfully';
         return;
     }
 }

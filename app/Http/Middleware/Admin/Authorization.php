@@ -26,7 +26,7 @@ class Authorization
             if ($request->expectsJson()) {
                 return response()->json(['code' => 401, 'msg' => "未授权操作（路由别名：{$route}）"], 401);
             }
-            return response("未授权操作（路由别名：{$route}）", 401);
+            abort(401, "未授权操作（路由别名：{$route}）");
         }
         return $next($request);
     }
