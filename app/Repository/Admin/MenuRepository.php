@@ -70,7 +70,7 @@ class MenuRepository
     public static function tree($pid = 0, $allMenus = null, $level = 0, $path = [])
     {
         if (is_null($allMenus)) {
-            $allMenus = Menu::select('id', 'pid', 'name', 'route', 'group', 'status', 'url')->get();
+            $allMenus = Menu::select('id', 'pid', 'name', 'route', 'group', 'status', 'url', 'order')->get();
         }
         return $allMenus->where('pid', $pid)
             ->map(function (Menu $menu) use ($allMenus, $level, $path) {
@@ -84,6 +84,7 @@ class MenuRepository
                     'group' => $menu->group,
                     'status' => $menu->status,
                     'url' => $menu->url,
+                    'order' => $menu->order,
                 ];
 
                 $child = $allMenus->where('pid', $menu->id);
@@ -94,12 +95,12 @@ class MenuRepository
                 array_push($path, $menu->id);
                 $data['children'] = self::tree($menu->id, $allMenus, $level + 1, $path);
                 return $data;
-            });
+            })->sortBy('order');
     }
 
     public static function allRoot()
     {
-        return Menu::query()->where('pid', 0)->where('status', 1)->get();
+        return Menu::query()->where('pid', 0)->where('status', 1)->orderBy('order')->get();
     }
 
     /**
