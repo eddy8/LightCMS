@@ -105,6 +105,8 @@ php artisan light:basic config 配置
 * resources/views/admin/config/index.blade.php
 新增/编辑视图：只列出了基本架构，需要自定义相关字段的表单展示。参考 [layui form](https://www.layui.com/doc/element/form.html)
 
+最后，如果想让生成的路由展示在菜单中，只需在[菜单管理](/admin/menus)页面点击**自动更新菜单**即可。
+
 ## 系统日志
 
 ## 完善中。。。
