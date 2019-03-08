@@ -424,13 +424,13 @@ class {{-$model_uc_first-}}Controller extends Controller
             return [
                 'code' => 0,
                 'msg' => '删除成功',
-                'redirect' => route('admin::menu.index')
+                'redirect' => route('admin::{{-$model-}}.index')
             ];
         } catch (\RuntimeException $e) {
             return [
                 'code' => 1,
                 'msg' => '删除失败：' . $e->getMessage(),
-                'redirect' => route('admin::menu.index')
+                'redirect' => route('admin::{{-$model-}}.index')
             ];
         }
     }
