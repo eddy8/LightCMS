@@ -17,6 +17,7 @@ Route::get('/{{-$model_plural-}}/create', '{{-$model_uc_first-}}Controller@creat
 Route::post('/{{-$model_plural-}}', '{{-$model_uc_first-}}Controller@save')->name('{{-$model-}}.save');
 Route::get('/{{-$model_plural-}}/{id}/edit', '{{-$model_uc_first-}}Controller@edit')->name('{{-$model-}}.edit');
 Route::put('/{{-$model_plural-}}/{id}', '{{-$model_uc_first-}}Controller@update')->name('{{-$model-}}.update');
+Route::delete('/{{-$model_plural-}}/{id}', '{{-$model_uc_first-}}Controller@delete')->name('{{-$model-}}.delete');
 !endroute
 
 !startview=views/admin/{{-$model-}}/index.blade.php
@@ -60,6 +61,7 @@ Route::put('/{{-$model_plural-}}/{id}', '{{-$model_uc_first-}}Controller@update'
 @endsection
 <script type="text/html" id="action">
     <a href="<% d.editUrl %>" class="layui-table-link"><i class="layui-icon layui-icon-edit"></i></a>
+    <a href="javascript:;" class="layui-table-link" title="删除" style="margin-left: 10px" onclick="deleteMenu('<% d.deleteUrl %>')"><i class="layui-icon layui-icon-delete"></i></a>
 </script>
 
 @section('js')
@@ -75,6 +77,31 @@ Route::put('/{{-$model_plural-}}/{id}', '{{-$model_uc_first-}}Controller@update'
             elem: '#created_at',
             range: '~'
         });
+
+        function deleteMenu (url) {
+            layer.confirm('确定删除？', function(index){
+                $.ajax({
+                    url: url,
+                    data: {'_method': 'DELETE'},
+                    success: function (result) {
+                        if (result.code !== 0) {
+                            layer.msg(result.msg, {shift: 6});
+                            return false;
+                        }
+                        layer.msg(result.msg, {icon: 1}, function () {
+                            if (result.reload) {
+                                location.reload();
+                            }
+                            if (result.redirect) {
+                                location.href = result.redirect;
+                            }
+                        });
+                    }
+                });
+
+                layer.close(index);
+            });
+        }
     </script>
 @endsection
 !endview
@@ -167,6 +194,7 @@ class {{-$model_uc_first-}}Repository
             ->paginate($perPage);
         $data->transform(function ($item) {
             $item->editUrl = route('admin::{{-$model-}}.edit', ['id' => $item->id]);
+            $item->deleteUrl = route('admin::{{-$model-}}.delete', ['id' => $item->id]);
             return $item;
         });
 
@@ -280,7 +308,7 @@ class {{-$model_uc_first-}}Controller extends Controller
     }
 
     /**
-     * {{-$model_chinese_name-}}列表
+     * {{-$model_chinese_name-}}管理-{{-$model_chinese_name-}}列表
      *
      */
     public function index()
@@ -306,7 +334,7 @@ class {{-$model_uc_first-}}Controller extends Controller
     }
 
     /**
-     * 新增{{-$model_chinese_name-}}
+     * {{-$model_chinese_name-}}管理-新增{{-$model_chinese_name-}}
      *
      */
     public function create()
@@ -316,7 +344,7 @@ class {{-$model_uc_first-}}Controller extends Controller
     }
 
     /**
-     * 保存{{-$model_chinese_name-}}
+     * {{-$model_chinese_name-}}管理-保存{{-$model_chinese_name-}}
      *
      * @param {{-$model_uc_first-}}Request $request
      * @return array
@@ -340,7 +368,7 @@ class {{-$model_uc_first-}}Controller extends Controller
     }
 
     /**
-     * 编辑{{-$model_chinese_name-}}
+     * {{-$model_chinese_name-}}管理-编辑{{-$model_chinese_name-}}
      *
      * @param int $id
      * @return View
@@ -354,7 +382,7 @@ class {{-$model_uc_first-}}Controller extends Controller
     }
 
     /**
-     * 更新{{-$model_chinese_name-}}
+     * {{-$model_chinese_name-}}管理-更新{{-$model_chinese_name-}}
      *
      * @param {{-$model_uc_first-}}Request $request
      * @param int $id
@@ -378,6 +406,30 @@ class {{-$model_uc_first-}}Controller extends Controller
             ];
         }
     }
+
+    /**
+     * {{-$model_chinese_name-}}管理-删除{{-$model_chinese_name-}}
+     *
+     * @param int $id
+     */
+    public function delete($id)
+    {
+        try {
+            MenuRepository::delete($id);
+            return [
+                'code' => 0,
+                'msg' => '删除成功',
+                'redirect' => route('admin::menu.index')
+            ];
+        } catch (\RuntimeException $e) {
+            return [
+                'code' => 1,
+                'msg' => '删除失败：' . $e->getMessage(),
+                'redirect' => route('admin::menu.index')
+            ];
+        }
+    }
+
 }
 !endcontroller
 
