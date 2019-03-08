@@ -206,7 +206,7 @@ class MenuController extends Controller
 
                 $model = MenuRepository::exist($k);
                 if ($model) {
-                    if ($model->name != $data['name'] && $model->group != $data['group']) {
+                    if ($model->name != $data['name'] || $model->group != $data['group']) {
                         unset($data['status']);
                         MenuRepository::update($model->id, $data);
                         $updateNum++;
