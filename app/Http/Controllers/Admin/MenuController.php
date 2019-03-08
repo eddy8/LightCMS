@@ -144,17 +144,24 @@ class MenuController extends Controller
     /**
      * 菜单管理-删除菜单
      *
-     * @param Request $request
      * @param int $id
      */
-    public function delete(Request $request, $id)
+    public function delete($id)
     {
-        MenuRepository::delete($id);
-        return [
-            'code' => 0,
-            'msg' => '删除成功',
-            'redirect' => route('admin::menu.index')
-        ];
+        try {
+            MenuRepository::delete($id);
+            return [
+                'code' => 0,
+                'msg' => '删除成功',
+                'redirect' => route('admin::menu.index')
+            ];
+        } catch (\RuntimeException $e) {
+            return [
+                'code' => 1,
+                'msg' => '删除失败：' . $e->getMessage(),
+                'redirect' => route('admin::menu.index')
+            ];
+        }
     }
 
     /**
@@ -242,6 +249,7 @@ class MenuController extends Controller
             return intval($item);
         }, $ids);
 
+        $message = '';
         switch ($type) {
             case 'disable':
                 Menu::query()->whereIn('id', $ids)->update(['status' => Menu::STATUS_DISABLE]);
@@ -250,7 +258,15 @@ class MenuController extends Controller
                 Menu::query()->whereIn('id', $ids)->update(['status' => Menu::STATUS_ENABLE]);
                 break;
             case 'delete':
-                Menu::query()->whereIn('id', $ids)->delete();
+                // 过滤掉有子项目的
+                $hasChildren = array_unique(Menu::query()->whereIn('pid', $ids)->pluck('pid')->toArray());
+                $deleteIds = array_diff($ids, $hasChildren);
+                if (!empty($deleteIds)) {
+                    Menu::query()->whereIn('id', $deleteIds)->delete();
+                }
+                if ($hasChildren) {
+                    $message = ' 以下菜单ID因有子菜单不能直接删除：' . implode(',', $hasChildren);
+                }
                 break;
             case 'parent':
                 $pid = intval($request->input('params', -1));
@@ -274,7 +290,7 @@ class MenuController extends Controller
 
         return [
             'code' => 0,
-            'msg' => '操作成功',
+            'msg' => '操作成功' . $message,
             'reload' => true
         ];
     }
