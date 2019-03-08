@@ -60,7 +60,7 @@ Route::delete('/{{-$model_plural-}}/{id}', '{{-$model_uc_first-}}Controller@dele
     </div>
 @endsection
 <script type="text/html" id="action">
-    <a href="<% d.editUrl %>" class="layui-table-link"><i class="layui-icon layui-icon-edit"></i></a>
+    <a href="<% d.editUrl %>" class="layui-table-link" title="编辑"><i class="layui-icon layui-icon-edit"></i></a>
     <a href="javascript:;" class="layui-table-link" title="删除" style="margin-left: 10px" onclick="deleteMenu('<% d.deleteUrl %>')"><i class="layui-icon layui-icon-delete"></i></a>
 </script>
 
@@ -219,6 +219,11 @@ class {{-$model_uc_first-}}Repository
     public static function find($id)
     {
         return {{-$model_uc_first-}}::query()->find($id);
+    }
+
+    public static function delete($id)
+    {
+        return {{-$model_uc_first-}}::destroy($id);
     }
 }
 !endrepository
@@ -415,7 +420,7 @@ class {{-$model_uc_first-}}Controller extends Controller
     public function delete($id)
     {
         try {
-            MenuRepository::delete($id);
+            {{-$model_uc_first-}}Repository::delete($id);
             return [
                 'code' => 0,
                 'msg' => '删除成功',
