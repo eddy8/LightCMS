@@ -28,6 +28,15 @@
                     </div>
 
                     <div class="layui-form-item">
+                        <label class="layui-form-label">关联模型</label>
+                        <div class="layui-input-block" style="width: 400px">
+                            <select name="model_id" lay-verify="required">
+                                <option value="0">不关联</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
                         <label class="layui-form-label">排序</label>
                         <div class="layui-input-block">
                             <input type="text" name="order" required  lay-verify="required" autocomplete="off" class="layui-input" value="{{ $model->order ?? 0  }}">
