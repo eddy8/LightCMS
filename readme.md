@@ -89,6 +89,9 @@ $siteName = config('light_config.SITE_NAME');
 php artisan light:basic config 配置
 ```
 成功执行完成后，会创建如下文件：
+
+* routes/auto/config.php
+路由：包含模型增删改查相关路由，应用会自动加载`routes/auto/`目录下的路由。
 * app/Model/Admin/Config.php
 模型：`$searchField`属性用来配置搜索字段，`$listField`用来配置列表视图中需要展示哪些字段数据。
 * app/Repository/Admin/ConfigRepository.php
