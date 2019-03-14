@@ -7,7 +7,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\EntityFieldRequest;
+use App\Model\Admin\Entity;
 use App\Repository\Admin\EntityFieldRepository;
+use App\Repository\Admin\EntityRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -15,7 +17,7 @@ use Illuminate\View\View;
 
 class EntityFieldController extends Controller
 {
-    protected $formNames = [];
+    protected $formNames = ['name', 'type', 'comment', 'form_name', 'form_type', 'form_comment', 'entity_id'];
 
     public function __construct()
     {
@@ -56,8 +58,9 @@ class EntityFieldController extends Controller
      */
     public function create()
     {
+        $entity = Entity::query()->pluck('name', 'id')->all();
         $this->breadcrumb[] = ['title' => '新增模型字段', 'url' => ''];
-        return view('admin.entityField.add', ['breadcrumb' => $this->breadcrumb]);
+        return view('admin.entityField.add', ['breadcrumb' => $this->breadcrumb, 'entity' => $entity]);
     }
 
     /**
@@ -69,7 +72,26 @@ class EntityFieldController extends Controller
     public function save(EntityFieldRequest $request)
     {
         try {
-            EntityFieldRepository::add($request->only($this->formNames));
+            $data = $request->only($this->formNames);
+            $table = EntityRepository::find($data['model_id']);
+            if (!$table) {
+                return [
+                    'code' => 0,
+                    'msg' => '新增失败：模型不存在',
+                    'redirect' => route('admin::entityField.index')
+                ];
+            }
+            if (EntityFieldRepository::tableFieldExist($table->table_name, $data['name'])) {
+                return [
+                    'code' => 0,
+                    'msg' => '新增失败：字段已存在',
+                    'redirect' => route('admin::entityField.index')
+                ];
+            }
+
+            EntityFieldRepository::tableAddColumn($table->table_name);
+            EntityFieldRepository::add();
+
             return [
                 'code' => 0,
                 'msg' => '新增成功',

@@ -17,4 +17,9 @@ class Entity extends Model
         'table_name' => '数据库表名',
         'description' => '描述',
     ];
+
+    public function fields()
+    {
+        return $this->hasMany('App\Model\Admin\EntityField', 'entity_id');
+    }
 }

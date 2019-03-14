@@ -25,15 +25,10 @@ class EntityFieldRequest extends FormRequest
      */
     public function rules()
     {
-        $status_in = [
-            EntityField::STATUS_DISABLE,
-            EntityField::STATUS_ENABLE,
-        ];
         return [
-            'name' => 'required|max:50',
-            //'status' => [
-            //    Rule::in($status_in),
-            //],
+            'name' => ['required', 'max:64', 'regex:/^[0-9a-zA-Z$_]+$/'],
+            'entity_id' => 'required|integer|min:1',
+            'form_name' => 'required|max:20',
         ];
     }
 
@@ -46,7 +41,7 @@ class EntityFieldRequest extends FormRequest
     {
         return [
             'name.required' => '名称不能为空',
-            'name.max' => '名称长度不能大于50',
+            'name.max' => '名称长度不能大于64',
         ];
     }
 }
