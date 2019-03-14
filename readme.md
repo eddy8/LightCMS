@@ -73,6 +73,8 @@ public function index()
 }
 ```
 
+需要注意的是，程序可以自动获取菜单，但是菜单的层级关系还是需要在后台手动配置的。
+
 ## 自定义配置获取
 首先需要将`config/light.php`配置文件中的`light_config`设置为`true`：
 
@@ -88,7 +90,7 @@ $siteName = config('light_config.SITE_NAME');
 # config 为模型名称 配置 为模型中文名称
 php artisan light:basic config 配置
 ```
-成功执行完成后，会创建如下文件：
+成功执行完成后，会创建如下文件（注意：相关目录需要有写入权限）：
 
 * routes/auto/config.php
 路由：包含模型增删改查相关路由，应用会自动加载`routes/auto/`目录下的路由。
@@ -108,5 +110,8 @@ php artisan light:basic config 配置
 最后，如果想让生成的路由展示在菜单中，只需在[菜单管理](/admin/menus)页面点击**自动更新菜单**即可。
 
 ## 系统日志
+`lightCMS`集成了一套简单的日志系统，默认情况下记录后台的所有操作相关信息，具体实现可以参考`Log`中间件。
+
+## 模型管理
 
 ## 完善中。。。
