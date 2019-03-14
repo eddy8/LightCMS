@@ -8,16 +8,23 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\EntityFieldRequest;
 use App\Model\Admin\Entity;
+use App\Model\Admin\EntityField;
 use App\Repository\Admin\EntityFieldRepository;
 use App\Repository\Admin\EntityRepository;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Schema;
+use Log;
 
 class EntityFieldController extends Controller
 {
-    protected $formNames = ['name', 'type', 'comment', 'form_name', 'form_type', 'form_comment', 'entity_id'];
+    protected $formNames = [
+        'name', 'type', 'comment', 'form_name', 'form_type', 'is_show', 'is_edit',
+        'form_comment', 'entity_id', 'field_length', 'field_total', 'field_scale',
+    ];
 
     public function __construct()
     {
@@ -73,35 +80,55 @@ class EntityFieldController extends Controller
     {
         try {
             $data = $request->only($this->formNames);
-            $table = EntityRepository::find($data['model_id']);
+            $table = EntityRepository::find($data['entity_id']);
             if (!$table) {
                 return [
-                    'code' => 0,
+                    'code' => 1,
                     'msg' => '新增失败：模型不存在',
-                    'redirect' => route('admin::entityField.index')
                 ];
             }
-            if (EntityFieldRepository::tableFieldExist($table->table_name, $data['name'])) {
+            if (Schema::hasColumn($table->table_name, $data['name'])) {
                 return [
-                    'code' => 0,
+                    'code' => 2,
                     'msg' => '新增失败：字段已存在',
-                    'redirect' => route('admin::entityField.index')
+                ];
+            }
+            if (!in_array($data['type'], config('light.db_table_field_type'))) {
+                return [
+                    'code' => 3,
+                    'msg' => '新增失败：无效字段类型',
                 ];
             }
 
-            EntityFieldRepository::tableAddColumn($table->table_name);
-            EntityFieldRepository::add();
+            Schema::table($table->table_name, function (Blueprint $table) use ($data) {
+                $m = $data['type'];
+                $length = intval($data['field_length']);
+                $total = intval($data['field_total']);
+                $scale = intval($data['field_scale']);
+                if (in_array($m, ['char', 'string']) && $length > 0) {
+                    $table->$m($data['name'], $length)->comment($data['comment']);
+                } elseif (in_array($m, ['float', 'double', 'decimal', 'unsignedDecimal'])) {
+                    if ($total > 0 && $scale > 0 && $total > $scale) {
+                        $table->$m($data['name'], $total, $scale)->comment($data['comment']);
+                    }
+                } else {
+                    $table->$m($data['name'])->comment($data['comment']);
+                }
+            });
+
+            unset($data['field_length'], $data['field_total'], $data['field_scale']);
+            EntityFieldRepository::add($data);
 
             return [
                 'code' => 0,
                 'msg' => '新增成功',
                 'redirect' => route('admin::entityField.index')
             ];
-        } catch (QueryException $e) {
+        } catch (\Throwable $e) {
+            \Log::error($e);
             return [
                 'code' => 1,
-                'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前模型字段已存在' : '其它错误'),
-                'redirect' => route('admin::entityField.index')
+                'msg' => '新增失败：' . $e->getMessage(),
             ];
         }
     }
@@ -117,7 +144,13 @@ class EntityFieldController extends Controller
         $this->breadcrumb[] = ['title' => '编辑模型字段', 'url' => ''];
 
         $model = EntityFieldRepository::find($id);
-        return view('admin.entityField.add', ['id' => $id, 'model' => $model, 'breadcrumb' => $this->breadcrumb]);
+        $entity = Entity::query()->pluck('name', 'id')->all();
+        return view('admin.entityField.add', [
+            'id' => $id,
+            'model' => $model,
+            'breadcrumb' => $this->breadcrumb,
+            'entity' => $entity
+        ]);
     }
 
     /**
@@ -131,6 +164,14 @@ class EntityFieldController extends Controller
     {
         $data = $request->only($this->formNames);
         try {
+            if (!isset($data['is_show'])) {
+                $data['is_show'] = EntityField::SHOW_DISABLE;
+            }
+            if (!isset($data['is_edit'])) {
+                $data['is_edit'] = EntityField::EDIT_DISABLE;
+            }
+
+            unset($data['field_length'], $data['field_total'], $data['field_scale'], $data['entity_id']);
             EntityFieldRepository::update($id, $data);
             return [
                 'code' => 0,
@@ -138,6 +179,7 @@ class EntityFieldController extends Controller
                 'redirect' => route('admin::entityField.index')
             ];
         } catch (QueryException $e) {
+            \Log::error($e);
             return [
                 'code' => 1,
                 'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前模型字段已存在' : '其它错误'),

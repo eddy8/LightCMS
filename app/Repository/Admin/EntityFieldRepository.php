@@ -48,34 +48,4 @@ class EntityFieldRepository
     {
         return EntityField::query()->find($id);
     }
-
-    public static function doctrineConn()
-    {
-        $config = new \Doctrine\DBAL\Configuration();
-        $db = config('database.connections')[config('database.default')];
-        $connectionParams = [
-            'dbname' => $db['database'],
-            'user' => $db['username'],
-            'password' => $db['password'],
-            'host' => $db['host'],
-            'driver' => 'pdo_mysql',
-        ];
-        return \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-    }
-
-    public static function tableFieldExist($table, $field)
-    {
-        $conn = self::doctrineConn();
-        $sm = $conn->getSchemaManager();
-
-        return array_key_exists($field, $sm->listTableColumns($table));
-    }
-
-    public static function tableAddColumn($table, $field)
-    {
-        $conn = self::doctrineConn();
-        $sm = $conn->getSchemaManager();
-
-        return key_exists($field, $sm->listTableColumns($table));
-    }
 }

@@ -21,8 +21,12 @@ class CreateEntityFieldsTable extends Migration
             $table->string('form_name', 20)->default('');
             $table->string('form_type')->default('');
             $table->string('form_comment', 100)->default('');
+            $table->tinyInteger('is_show')->default(1);
+            $table->tinyInteger('is_edit')->default(1);
             $table->unsignedInteger('entity_id')->default(0);
             $table->timestamps();
+
+            $table->unique(['entity_id', 'name']);
         });
     }
 

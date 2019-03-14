@@ -24,6 +24,7 @@ class EntityRepository
         $data->transform(function ($item) {
             $item->editUrl = route('admin::entity.edit', ['id' => $item->id]);
             $item->deleteUrl = route('admin::entity.delete', ['id' => $item->id]);
+            $item->fieldUrl = route('admin::entityField.index') . '?entity_id=' . $item->id;
             return $item;
         });
 
