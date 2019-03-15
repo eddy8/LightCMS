@@ -19,4 +19,12 @@ class HomeController extends Controller
     {
         return view('admin.home.index');
     }
+
+    /**
+     * 内容管理
+     */
+    public function showAggregation()
+    {
+        return view('admin.home.index');
+    }
 }

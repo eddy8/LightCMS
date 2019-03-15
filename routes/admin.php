@@ -22,6 +22,7 @@ Route::group(
             Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
             Route::get('/index', 'HomeController@showIndex')->name('index');
+            Route::get('/aggregation', 'HomeController@showAggregation')->name('aggregation');
 
             // 管理员用户管理
             Route::get('/admin_users', 'AdminUserController@index')->name('adminUser.index');

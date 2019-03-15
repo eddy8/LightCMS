@@ -18,9 +18,13 @@ class EntityFieldRepository
             ->where(function ($query) use ($condition) {
                 Searchable::buildQuery($query, $condition);
             })
+            ->with('entity')
             ->orderBy('id', 'desc')
             ->paginate($perPage);
-        $data->transform(function ($item) {
+        $formTypes = config('light.form_type');
+        $data->transform(function ($item) use ($formTypes) {
+            $item->entityName = $item->entity->name;
+            $item->form_type = $formTypes[$item->form_type];
             $item->editUrl = route('admin::entityField.edit', ['id' => $item->id]);
             $item->deleteUrl = route('admin::entityField.delete', ['id' => $item->id]);
             return $item;
@@ -52,5 +56,10 @@ class EntityFieldRepository
     public static function delete($id)
     {
         return EntityField::destroy($id);
+    }
+
+    public static function getByEntityId($id)
+    {
+        return  EntityField::query()->where('entity_id', $id)->get();
     }
 }

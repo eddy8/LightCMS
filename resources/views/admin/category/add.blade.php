@@ -32,6 +32,9 @@
                         <div class="layui-input-block" style="width: 400px">
                             <select name="model_id" lay-verify="required">
                                 <option value="0">不关联</option>
+                                @foreach(App\Model\Admin\Entity::all(['id', 'name']) as $v)
+                                    <option value="{{ $v->id }}">{{ $v->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>

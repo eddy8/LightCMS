@@ -32,8 +32,7 @@
                     {{ \Auth::guard('admin')->user()->name }}
                 </a>
                 <dl class="layui-nav-child">
-                    <dd><a href="">基本资料</a></dd>
-                    <dd><a href="">安全设置</a></dd>
+                    <dd><a href="{{ route('admin::adminUser.edit', ['id' => \Auth::guard('admin')->user()->id]) }}">编辑用户</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item"><a href="{{ route('admin::logout') }}">退了</a></li>

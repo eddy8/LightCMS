@@ -49,13 +49,18 @@ class CategoryRepository
         return Category::query()->find($id);
     }
 
-    public static function tree($pid = 0, $all = null, $level = 0, $path = [])
+    public static function tree($entity_id = null, $pid = 0, $all = null, $level = 0, $path = [])
     {
         if (is_null($all)) {
-            $all = Category::select('id', 'pid', 'name', 'order')->get();
+            if (is_null($entity_id)) {
+                $all = Category::select('id', 'pid', 'name', 'order')->get();
+            } else {
+                $all = Category::select('id', 'pid', 'name', 'order')->where('model_id', $entity_id)->get();
+            }
+
         }
         return $all->where('pid', $pid)
-            ->map(function (Category $model) use ($all, $level, $path) {
+            ->map(function (Category $model) use ($all, $level, $path, $entity_id) {
                 $data = [
                     'id' => $model->id,
                     'name' => $model->name,
@@ -71,7 +76,7 @@ class CategoryRepository
                 }
 
                 array_push($path, $model->id);
-                $data['children'] = self::tree($model->id, $all, $level + 1, $path);
+                $data['children'] = self::tree($entity_id, $model->id, $all, $level + 1, $path);
                 return $data;
             })->sortBy('order');
     }

@@ -24,9 +24,14 @@ class EntityField extends Model
     }
 
     public static $listField = [
+        'entityName' => '模型',
         'name' => '字段名称',
         'type' => '字段类型',
-        'form_type' => '表单名称',
-        'form_name' => '表单类型',
+        'form_name' => '表单名称',
+        'form_type' => '表单类型',
+    ];
+
+    public static $searchField = [
+        'name' => '字段名称',
     ];
 }

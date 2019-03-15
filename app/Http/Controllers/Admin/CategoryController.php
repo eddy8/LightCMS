@@ -15,7 +15,7 @@ use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-    protected $formNames = ['name', 'pid', 'order', 'title', 'keywords', 'description'];
+    protected $formNames = ['name', 'pid', 'order', 'title', 'keywords', 'description', 'model_id'];
 
     public function __construct()
     {
