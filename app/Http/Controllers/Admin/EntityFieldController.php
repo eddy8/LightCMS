@@ -11,6 +11,7 @@ use App\Model\Admin\Entity;
 use App\Model\Admin\EntityField;
 use App\Repository\Admin\EntityFieldRepository;
 use App\Repository\Admin\EntityRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ use Log;
 class EntityFieldController extends Controller
 {
     protected $formNames = [
-        'name', 'type', 'comment', 'form_name', 'form_type', 'is_show', 'is_edit',
+        'name', 'type', 'comment', 'form_name', 'form_type', 'is_show', 'is_edit', 'is_required',
         'form_comment', 'entity_id', 'field_length', 'field_total', 'field_scale',
     ];
 
@@ -170,6 +171,9 @@ class EntityFieldController extends Controller
             if (!isset($data['is_edit'])) {
                 $data['is_edit'] = EntityField::EDIT_DISABLE;
             }
+            if (!isset($data['is_required'])) {
+                $data['is_required'] = EntityField::REQUIRED_DISABLE;
+            }
 
             unset($data['field_length'], $data['field_total'], $data['field_scale'], $data['entity_id']);
             EntityFieldRepository::update($id, $data);
@@ -196,17 +200,28 @@ class EntityFieldController extends Controller
     public function delete($id)
     {
         try {
-            MenuRepository::delete($id);
+            $entityField = EntityField::query()->findOrFail($id);
+            $entity = $entityField->entity;
+            Schema::table($entity->table_name, function (Blueprint $table) use ($entityField) {
+                $table->dropColumn($entityField->name);
+            });
+            EntityFieldRepository::delete($id);
             return [
                 'code' => 0,
                 'msg' => '删除成功',
                 'redirect' => route('admin::menu.index')
             ];
+        } catch (ModelNotFoundException $e) {
+            return [
+                'code' => 2,
+                'msg' => '删除失败：字段不存在',
+                'redirect' => false
+            ];
         } catch (\RuntimeException $e) {
             return [
                 'code' => 1,
                 'msg' => '删除失败：' . $e->getMessage(),
-                'redirect' => route('admin::menu.index')
+                'redirect' => false
             ];
         }
     }

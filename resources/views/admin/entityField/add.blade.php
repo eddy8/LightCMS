@@ -80,6 +80,13 @@
                                 <input type="checkbox" name="is_edit" lay-skin="switch" lay-text="是|否" value="1" @if(!isset($model) || isset($model) && $model->is_edit == App\Model\Admin\EntityField::EDIT_ENABLE) checked @endif>
                             </div>
                         </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">是否必填</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="is_required" lay-skin="switch" lay-text="是|否" value="1" @if(!isset($model) || isset($model) && $model->is_required == App\Model\Admin\EntityField::REQUIRED_ENABLE) checked @endif>
+                            </div>
+                        </div>
                     </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
@@ -114,7 +121,7 @@
                             location.reload();
                         }
                         if (result.redirect) {
-                            location.href = result.redirect;
+                            location.href = '{!! url()->previous() !!}';
                         }
                     });
                 }

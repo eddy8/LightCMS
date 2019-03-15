@@ -94,7 +94,7 @@
                             location.reload();
                         }
                         if (result.redirect) {
-                            location.href = result.redirect;
+                            location.href = '{!! url()->previous() !!}';
                         }
                     });
                 }

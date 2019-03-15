@@ -13,6 +13,9 @@ class EntityField extends Model
     const EDIT_ENABLE = 1;
     const EDIT_DISABLE = 0;
 
+    const REQUIRED_ENABLE = 1;
+    const REQUIRED_DISABLE = 0;
+
     protected $guarded = [];
 
     public function entity()

@@ -48,4 +48,9 @@ class EntityFieldRepository
     {
         return EntityField::query()->find($id);
     }
+
+    public static function delete($id)
+    {
+        return EntityField::destroy($id);
+    }
 }
