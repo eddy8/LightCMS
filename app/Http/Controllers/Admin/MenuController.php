@@ -88,13 +88,13 @@ class MenuController extends Controller
             return [
                 'code' => 0,
                 'msg' => '新增成功',
-                'redirect' => route('admin::menu.index')
+                'redirect' => true
             ];
         } catch (QueryException $e) {
             return [
                 'code' => 1,
                 'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前菜单已存在' : '其它错误'),
-                'redirect' => route('admin::menu.index')
+                'redirect' => false
             ];
         }
     }
@@ -130,13 +130,13 @@ class MenuController extends Controller
             return [
                 'code' => 0,
                 'msg' => '编辑成功',
-                'redirect' => route('admin::menu.index')
+                'redirect' => true
             ];
         } catch (QueryException $e) {
             return [
                 'code' => 1,
                 'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前菜单已存在' : '其它错误'),
-                'redirect' => route('admin::menu.index')
+                'redirect' => false
             ];
         }
     }
@@ -153,13 +153,13 @@ class MenuController extends Controller
             return [
                 'code' => 0,
                 'msg' => '删除成功',
-                'redirect' => route('admin::menu.index')
+                'redirect' => true
             ];
         } catch (\RuntimeException $e) {
             return [
                 'code' => 1,
                 'msg' => '删除失败：' . $e->getMessage(),
-                'redirect' => route('admin::menu.index')
+                'redirect' => false
             ];
         }
     }
@@ -228,7 +228,7 @@ class MenuController extends Controller
         return [
             'code' => 0,
             'msg' => "更新成功。新增菜单数：{$addNum}，更新菜单数：{$updateNum}。",
-            'redirect' => route('admin::menu.index')
+            'redirect' => true
         ];
     }
 

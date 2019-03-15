@@ -80,13 +80,13 @@ class RoleController extends Controller
             return [
                 'code' => 0,
                 'msg' => '新增成功',
-                'redirect' => route('admin::role.index')
+                'redirect' => true
             ];
         } catch (QueryException $e) {
             return [
                 'code' => 1,
                 'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前角色已存在' : '其它错误'),
-                'redirect' => route('admin::role.index')
+                'redirect' => false
             ];
         }
     }
@@ -120,13 +120,13 @@ class RoleController extends Controller
             return [
                 'code' => 0,
                 'msg' => '编辑成功',
-                'redirect' => route('admin::role.index')
+                'redirect' => true
             ];
         } catch (QueryException $e) {
             return [
                 'code' => 1,
                 'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前角色已存在' : '其它错误'),
-                'redirect' => route('admin::role.index')
+                'redirect' => false
             ];
         }
     }
@@ -165,7 +165,7 @@ class RoleController extends Controller
             return [
                 'code' => 0,
                 'msg' => '操作成功',
-                'redirect' => route('admin::role.index'),
+                'redirect' => true
             ];
         } catch (\Throwable $e) {
             Log::debug($e);

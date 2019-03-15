@@ -82,13 +82,13 @@ class CategoryController extends Controller
             return [
                 'code' => 0,
                 'msg' => '新增成功',
-                'redirect' => route('admin::category.index')
+                'redirect' => true
             ];
         } catch (QueryException $e) {
             return [
                 'code' => 1,
                 'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前分类已存在' : '其它错误'),
-                'redirect' => route('admin::category.index')
+                'redirect' => false
             ];
         }
     }
@@ -122,13 +122,13 @@ class CategoryController extends Controller
             return [
                 'code' => 0,
                 'msg' => '编辑成功',
-                'redirect' => route('admin::category.index')
+                'redirect' => true
             ];
         } catch (QueryException $e) {
             return [
                 'code' => 1,
                 'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前分类已存在' : '其它错误'),
-                'redirect' => route('admin::category.index')
+                'redirect' => false
             ];
         }
     }

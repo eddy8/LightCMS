@@ -102,7 +102,7 @@ class LoginController extends Controller
         return [
             'code' => 0,
             'msg' => '登陆成功',
-            'redirect' => route('admin::index'),
+            'redirect' => true
         ];
     }
 }
