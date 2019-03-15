@@ -30,11 +30,29 @@
                                 </div>
                                 @break
                             @case('richText')
+                                <script type="text/javascript" charset="utf-8" src="/public/vendor/neditor/neditor.config.js"></script>
+                                <script type="text/javascript" charset="utf-8" src="/public/vendor/neditor/neditor.all.min.js"> </script>
+                                <script type="text/javascript" charset="utf-8" src="/public/vendor/neditor/neditor.service.js"></script>
+                                <!--建议手动加载语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+                                <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+                                <script type="text/javascript" charset="utf-8" src="/public/vendor/neditor/i18n/zh-cn/zh-cn.js"></script>
+                                <script type="text/javascript" src="/public/vendor/neditor/third-party/browser-md5-file.min.js"></script>
+                                <script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block">
+                                    <script id="editor" type="text/plain" style="height:300px;"></script>
+                                    </div></div>
+                                <script>
+                                    //实例化编辑器
+                                    //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+                                    var ue = UE.getEditor('editor');
+                                </script>
                                 @break
                             @case('reference_category')
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
-                                    <div class="layui-input-block" style="width: 400px">
+                                    <div class="layui-input-block" style="width: 400px;z-index: 99999">
                                         <select name="{{ $field->name }}" lay-verify="required">
                                             @foreach(App\Repository\Admin\CategoryRepository::tree($entityModel->id) as $v)
                                                 @include('admin.menu', $v)
