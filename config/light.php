@@ -70,4 +70,13 @@ return [
         'reference_category' => '引用分类数据',
         'reference_admin_user' => '引用管理员数据'
     ],
+
+    // NEditor相关
+    'neditor' => [
+        'disk' => 'admin_img',
+        'upload' => [
+            'imageMaxSize' => 8 * 1024 * 1024, /* 上传大小限制，单位B */
+            'imageAllowFiles' => ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], /* 上传图片格式显示 */
+        ]
+    ]
 ];

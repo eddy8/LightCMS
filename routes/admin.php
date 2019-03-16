@@ -24,6 +24,9 @@ Route::group(
             Route::get('/index', 'HomeController@showIndex')->name('index');
             Route::get('/aggregation', 'HomeController@showAggregation')->name('aggregation');
 
+            //NEditor路由
+            Route::post('/neditor/serve/{type}', 'NEditorController@serve')->name('neditor.serve');
+
             // 管理员用户管理
             Route::get('/admin_users', 'AdminUserController@index')->name('adminUser.index');
             Route::get('/admin_users/list', 'AdminUserController@list')->name('adminUser.list');
