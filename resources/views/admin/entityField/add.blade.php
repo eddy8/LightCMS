@@ -13,7 +13,7 @@
                         <div class="layui-input-block" style="width: 400px">
                             <select name="entity_id" @if(isset($id)) disabled @endif>
                             @foreach($entity as $k => $v)
-                                <option value="{{ $k }}">{{ $v }}</option>
+                                <option value="{{ $k }}" @if(request()->get('entity_id') == $k) selected @endif>{{ $v }}</option>
                             @endforeach
                             </select>
 
@@ -22,13 +22,13 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">字段名称</label>
                     <div class="layui-input-block">
-                        <input type="text" name="name" required  lay-verify="required" autocomplete="off" class="layui-input" value="{{ $model->name ?? ''  }}">
+                        <input @if(isset($id)) disabled @endif type="text" name="name" required  lay-verify="required" autocomplete="off" class="layui-input" value="{{ $model->name ?? ''  }}">
                     </div>
                 </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">字段类型</label>
                         <div class="layui-input-inline" style="width: 400px">
-                            <select name="type" lay-verify="required" lay-filter="type">
+                            <select name="type" lay-verify="required" lay-filter="type" @if(isset($id)) disabled @endif>
                                 @foreach(config('light.db_table_field_type') as $v)
                                     <option value="{{ $v }}" @if(isset($model) && $model->type == $v) selected @endif>{{ $v }}</option>
                                 @endforeach

@@ -41,7 +41,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                    <script name="content" id="editor" type="text/plain" style="height:300px;">{!! $model->{$field->name} ?? '' !!}</script>
+                                    <script name="content" id="editor" type="text/plain" style="height:600px;">{!! $model->{$field->name} ?? '' !!}</script>
                                     </div></div>
                                 <script>
                                     //实例化编辑器
@@ -51,6 +51,45 @@
 
                                     });
                                 </script>
+                                @break
+                            @case('password')
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block">
+                                        <input type="password" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}">
+                                    </div>
+                                </div>
+                                @break
+                            @case('upload')
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block">
+                                        <button type="button" class="layui-btn" id="file-upload">
+                                            <i class="layui-icon">&#xe67c;</i>上传图片
+                                        </button>
+                                        <script type="text/javascript">
+                                            window.onload = function() {
+                                                layui.use('upload', function(){
+                                                    var upload = layui.upload;
+
+                                                    //执行实例
+                                                    var uploadInst = upload.render({
+                                                        elem: '#file-upload' //绑定元素
+                                                        ,url: "{{ route('admin::neditor.serve', ['type' => 'uploadimage']) }}" //上传接口
+                                                        ,done: function(res){
+                                                            $('input[name={{ $field->name }}]').val(res.url);
+                                                        }
+                                                        ,error: function(){
+                                                            layer.msg('上传失败')
+                                                        }
+                                                    });
+                                                });
+                                            };
+                                        </script>
+                                        <div style="float: left;width: 50%">
+                                        <input type="input" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}"></div>
+                                    </div>
+                                </div>
                                 @break
                             @case('reference_category')
                                 <div class="layui-form-item">

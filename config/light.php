@@ -66,7 +66,7 @@ return [
         'option' => '单选框',
         'checkbox' => '复选框',
         'select' => '下拉选择',
-        'upload' => '文件上传',
+        'upload' => '图片上传',
         'reference_category' => '引用分类数据',
         'reference_admin_user' => '引用管理员数据'
     ],
