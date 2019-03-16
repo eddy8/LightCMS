@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ContentRequest;
+use App\Model\Admin\Content;
 use App\Model\Admin\Entity;
 use App\Repository\Admin\ContentRepository;
 use App\Repository\Admin\EntityFieldRepository;
@@ -37,6 +38,9 @@ class ContentController extends Controller
     public function index($entity)
     {
         $this->breadcrumb[] = ['title' => $this->entity->name . '内容列表', 'url' => ''];
+        Content::$listField = [
+            'title' => '标题'
+        ];
         return view('admin.content.index', [
             'breadcrumb' => $this->breadcrumb,
             'entity' => $entity,
@@ -84,17 +88,20 @@ class ContentController extends Controller
     public function save(ContentRequest $request, $entity)
     {
         try {
-            ContentRepository::add($request->only($this->formNames));
+            ContentRepository::add($request->only(
+                EntityFieldRepository::getByEntityId($entity)->pluck('name')->toArray()
+            ));
             return [
                 'code' => 0,
                 'msg' => '新增成功',
-                'redirect' => route('admin::content.index')
+                'redirect' => true
             ];
         } catch (QueryException $e) {
+            \Log::error($e);
             return [
                 'code' => 1,
                 'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前内容已存在' : '其它错误'),
-                'redirect' => route('admin::content.index')
+                'redirect' => false
             ];
         }
     }
@@ -114,7 +121,9 @@ class ContentController extends Controller
             'id' => $id,
             'model' => $model,
             'breadcrumb' => $this->breadcrumb,
-            'entity' => $entity
+            'entity' => $entity,
+            'entityModel' => $this->entity,
+            'entityFields' => EntityFieldRepository::getByEntityId($entity)
         ]);
     }
 
@@ -127,19 +136,21 @@ class ContentController extends Controller
      */
     public function update(ContentRequest $request, $entity, $id)
     {
-        $data = $request->only($this->formNames);
+        $data = $request->only(
+            EntityFieldRepository::getByEntityId($entity)->pluck('name')->toArray()
+        );
         try {
             ContentRepository::update($id, $data);
             return [
                 'code' => 0,
                 'msg' => '编辑成功',
-                'redirect' => route('admin::content.index')
+                'redirect' => true
             ];
         } catch (QueryException $e) {
             return [
                 'code' => 1,
                 'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前内容已存在' : '其它错误'),
-                'redirect' => route('admin::content.index')
+                'redirect' => false
             ];
         }
     }

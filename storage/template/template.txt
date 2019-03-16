@@ -93,7 +93,7 @@ Route::delete('/{{-$model_plural-}}/{id}', '{{-$model_uc_first-}}Controller@dele
                                 location.reload();
                             }
                             if (result.redirect) {
-                                location.href = result.redirect;
+                                location.href = '{!! url()->previous() !!}';
                             }
                         });
                     }
@@ -156,7 +156,7 @@ Route::delete('/{{-$model_plural-}}/{id}', '{{-$model_uc_first-}}Controller@dele
                             location.reload();
                         }
                         if (result.redirect) {
-                            location.href = result.redirect;
+                            location.href = '{!! url()->previous() !!}';
                         }
                     });
                 }
@@ -361,13 +361,13 @@ class {{-$model_uc_first-}}Controller extends Controller
             return [
                 'code' => 0,
                 'msg' => '新增成功',
-                'redirect' => route('admin::{{-$model-}}.index')
+                'redirect' => true
             ];
         } catch (QueryException $e) {
             return [
                 'code' => 1,
                 'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前{{-$model_chinese_name-}}已存在' : '其它错误'),
-                'redirect' => route('admin::{{-$model-}}.index')
+                'redirect' => false
             ];
         }
     }
@@ -401,13 +401,13 @@ class {{-$model_uc_first-}}Controller extends Controller
             return [
                 'code' => 0,
                 'msg' => '编辑成功',
-                'redirect' => route('admin::{{-$model-}}.index')
+                'redirect' => true
             ];
         } catch (QueryException $e) {
             return [
                 'code' => 1,
                 'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前{{-$model_chinese_name-}}已存在' : '其它错误'),
-                'redirect' => route('admin::{{-$model-}}.index')
+                'redirect' => false
             ];
         }
     }
@@ -430,7 +430,7 @@ class {{-$model_uc_first-}}Controller extends Controller
             return [
                 'code' => 1,
                 'msg' => '删除失败：' . $e->getMessage(),
-                'redirect' => route('admin::{{-$model-}}.index')
+                'redirect' => false
             ];
         }
     }

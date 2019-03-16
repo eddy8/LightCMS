@@ -25,12 +25,12 @@ class ContentRequest extends FormRequest
      */
     public function rules()
     {
-        $status_in = [
-            Content::STATUS_DISABLE,
-            Content::STATUS_ENABLE,
-        ];
+//        $status_in = [
+//            Content::STATUS_DISABLE,
+//            Content::STATUS_ENABLE,
+//        ];
         return [
-            'name' => 'required|max:50',
+            //'name' => 'required|max:50',
             //'status' => [
             //    Rule::in($status_in),
             //],
@@ -45,8 +45,8 @@ class ContentRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => '名称不能为空',
-            'name.max' => '名称长度不能大于50',
+            //'name.required' => '名称不能为空',
+            //'name.max' => '名称长度不能大于50',
         ];
     }
 }

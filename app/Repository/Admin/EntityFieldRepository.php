@@ -60,6 +60,6 @@ class EntityFieldRepository
 
     public static function getByEntityId($id)
     {
-        return  EntityField::query()->where('entity_id', $id)->get();
+        return  EntityField::query()->where('entity_id', $id)->orderBy('order')->get();
     }
 }

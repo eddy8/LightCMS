@@ -41,7 +41,7 @@ class ContentRepository
 
     public static function add($data)
     {
-        return self::$model->newQuery()->create($data);
+        return self::$model->setRawAttributes($data)->save();
     }
 
     public static function update($id, $data)

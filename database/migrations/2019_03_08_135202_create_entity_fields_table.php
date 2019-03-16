@@ -25,6 +25,7 @@ class CreateEntityFieldsTable extends Migration
             $table->unsignedTinyInteger('is_edit')->default(1);
             $table->unsignedTinyInteger('is_required')->default(0);
             $table->unsignedInteger('entity_id')->default(0);
+            $table->unsignedInteger('order')->default(77);
             $table->timestamps();
 
             $table->unique(['entity_id', 'name']);

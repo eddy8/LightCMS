@@ -41,21 +41,36 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                    <script id="editor" type="text/plain" style="height:300px;"></script>
+                                    <script name="content" id="editor" type="text/plain" style="height:300px;">{!! $model->{$field->name} ?? '' !!}</script>
                                     </div></div>
                                 <script>
                                     //实例化编辑器
                                     //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
                                     var ue = UE.getEditor('editor');
+                                    ue.ready(function(){
+
+                                    });
                                 </script>
                                 @break
                             @case('reference_category')
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
-                                    <div class="layui-input-block" style="width: 400px;z-index: 99999">
+                                    <div class="layui-input-block" style="width: 400px;z-index: {{99999 - ($field->order + $field->id)}}">
                                         <select name="{{ $field->name }}" lay-verify="required">
                                             @foreach(App\Repository\Admin\CategoryRepository::tree($entityModel->id) as $v)
-                                                @include('admin.menu', $v)
+                                                @include('admin.category', [$v, 'fieldName' => $field->name])
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                @break
+                            @case('reference_admin_user')
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block" style="width: 400px;z-index: {{99999 - ($field->order + $field->id)}}">
+                                        <select name="{{ $field->name }}" lay-verify="required">
+                                            @foreach(App\Model\Admin\AdminUser::query()->where('status', App\Model\Admin\AdminUser::STATUS_ENABLE)->orderBy('name')->get(['id', 'name']) as $v)
+                                                <option value="{{ $v->id }}" @if($v->id == $model->{$field->name}) selected @endif>{{ $v->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -99,7 +114,7 @@
                             location.reload();
                         }
                         if (result.redirect) {
-                            location.href = result.redirect;
+                            location.href = '{!! url()->previous() !!}';
                         }
                     });
                 }
