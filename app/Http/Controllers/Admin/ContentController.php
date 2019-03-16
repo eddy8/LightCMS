@@ -77,7 +77,8 @@ class ContentController extends Controller
             'breadcrumb' => $this->breadcrumb,
             'entity' => $entity,
             'entityModel' => $this->entity,
-            'entityFields' => EntityFieldRepository::getByEntityId($entity)
+            'entityFields' => EntityFieldRepository::getByEntityId($entity),
+            'autoMenu' => EntityRepository::systemMenu()
         ]);
     }
 
@@ -89,6 +90,7 @@ class ContentController extends Controller
      */
     public function save(ContentRequest $request, $entity)
     {
+        $this->validateEntityRequest();
         try {
             ContentRepository::add($request->only(
                 EntityFieldRepository::getByEntityId($entity)->pluck('name')->toArray()
@@ -125,7 +127,8 @@ class ContentController extends Controller
             'breadcrumb' => $this->breadcrumb,
             'entity' => $entity,
             'entityModel' => $this->entity,
-            'entityFields' => EntityFieldRepository::getByEntityId($entity)
+            'entityFields' => EntityFieldRepository::getByEntityId($entity),
+            'autoMenu' => EntityRepository::systemMenu()
         ]);
     }
 
@@ -138,6 +141,7 @@ class ContentController extends Controller
      */
     public function update(ContentRequest $request, $entity, $id)
     {
+        $this->validateEntityRequest();
         $data = $request->only(
             EntityFieldRepository::getByEntityId($entity)->pluck('name')->toArray()
         );
@@ -177,6 +181,15 @@ class ContentController extends Controller
                 'msg' => '删除失败：' . $e->getMessage(),
                 'redirect' => route('admin::content.index')
             ];
+        }
+    }
+
+    protected function validateEntityRequest()
+    {
+        $entityRequestClass = '\\App\\Http\\Requests\\Admin\\' .
+            Str::ucfirst(Str::singular($this->entity->table_name)) . 'Request';
+        if (class_exists($entityRequestClass)) {
+            $entityRequestClass::capture()->setContainer(app())->setRedirector(app()->make('redirect'))->validate();
         }
     }
 
