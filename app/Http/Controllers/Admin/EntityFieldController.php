@@ -106,11 +106,13 @@ class EntityFieldController extends Controller
                 $length = intval($data['field_length']);
                 $total = intval($data['field_total']);
                 $scale = intval($data['field_scale']);
-                if (in_array($m, ['char', 'string']) && $length > 0) {
-                    $table->$m($data['name'], $length)->comment($data['comment']);
+                if (in_array($m, ['char', 'string'])) {
+                    $table->$m($data['name'], $length > 0 ? $length : 255)->comment($data['comment'])->default('');
                 } elseif (in_array($m, ['float', 'double', 'decimal', 'unsignedDecimal'])) {
                     if ($total > 0 && $scale > 0 && $total > $scale) {
-                        $table->$m($data['name'], $total, $scale)->comment($data['comment']);
+                        $table->$m($data['name'], $total, $scale)->comment($data['comment'])->default(0);
+                    } else {
+                        $table->$m($data['name'])->comment($data['comment'])->default(0);
                     }
                 } else {
                     $table->$m($data['name'])->comment($data['comment']);

@@ -29,7 +29,7 @@ class EntityFieldRequest extends FormRequest
             'name' => ['required', 'max:64', 'regex:/^[0-9a-zA-Z$_]+$/'],
             'entity_id' => 'required|integer|min:1',
             'form_name' => 'required|max:20',
-            'order' => 'integer',
+            'order' => 'required|integer',
         ];
     }
 

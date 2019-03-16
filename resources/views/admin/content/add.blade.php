@@ -70,7 +70,7 @@
                                     <div class="layui-input-block" style="width: 400px;z-index: {{99999 - ($field->order + $field->id)}}">
                                         <select name="{{ $field->name }}" lay-verify="required">
                                             @foreach(App\Model\Admin\AdminUser::query()->where('status', App\Model\Admin\AdminUser::STATUS_ENABLE)->orderBy('name')->get(['id', 'name']) as $v)
-                                                <option value="{{ $v->id }}" @if($v->id == $model->{$field->name}) selected @endif>{{ $v->name }}</option>
+                                                <option value="{{ $v->id }}" @if(isset($model) && $v->id == $model->{$field->name}) selected @endif>{{ $v->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

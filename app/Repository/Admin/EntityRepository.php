@@ -63,4 +63,23 @@ EOF;
     {
         return Entity::query()->find($id);
     }
+
+    public static function all()
+    {
+        return Entity::query()->get();
+    }
+
+    public static function systemMenu()
+    {
+        $entities = Entity::query()->pluck('name', 'id')->all();
+        $autoMenu = [];
+        foreach ($entities as $k => $v) {
+            $autoMenu[] = [
+                'url' => route('admin::content.index', ['entity' => $k]),
+                'name' => $v,
+            ];
+        }
+
+        return $autoMenu;
+    }
 }

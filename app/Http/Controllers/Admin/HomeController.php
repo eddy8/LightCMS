@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Repository\Admin\EntityRepository;
 
 class HomeController extends Controller
 {
@@ -25,6 +26,6 @@ class HomeController extends Controller
      */
     public function showAggregation()
     {
-        return view('admin.home.index');
+        return view('admin.home.index', ['autoMenu' => EntityRepository::systemMenu()]);
     }
 }

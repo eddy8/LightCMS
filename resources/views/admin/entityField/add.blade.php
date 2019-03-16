@@ -73,7 +73,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">排序</label>
                         <div class="layui-input-inline">
-                            <input type="number" name="order" autocomplete="off" class="layui-input" value="{{ $model->order ?? ''  }}">
+                            <input type="number" name="order" required  lay-verify="required" autocomplete="off" class="layui-input" value="{{ $model->order ?? 77  }}">
                         </div>
                         <div class="layui-form-mid layui-word-aux">值越小排序越靠前</div>
                     </div>

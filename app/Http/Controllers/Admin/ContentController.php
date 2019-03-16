@@ -11,6 +11,7 @@ use App\Model\Admin\Content;
 use App\Model\Admin\Entity;
 use App\Repository\Admin\ContentRepository;
 use App\Repository\Admin\EntityFieldRepository;
+use App\Repository\Admin\EntityRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -44,7 +45,8 @@ class ContentController extends Controller
         return view('admin.content.index', [
             'breadcrumb' => $this->breadcrumb,
             'entity' => $entity,
-            'entityModel' => $this->entity
+            'entityModel' => $this->entity,
+            'autoMenu' => EntityRepository::systemMenu()
         ]);
     }
 
