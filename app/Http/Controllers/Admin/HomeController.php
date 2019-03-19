@@ -18,7 +18,11 @@ class HomeController extends Controller
      */
     public function showIndex()
     {
-        return view('admin.home.index');
+        $opcache = 'false';
+        if (function_exists('opcache_get_status') && opcache_get_status() !== false) {
+            $opcache = 'true';
+        }
+        return view('admin.home.index', ['opcache' => $opcache]);
     }
 
     /**
@@ -26,6 +30,6 @@ class HomeController extends Controller
      */
     public function showAggregation()
     {
-        return view('admin.home.index', ['autoMenu' => EntityRepository::systemMenu()]);
+        return view('admin.home.content', ['autoMenu' => EntityRepository::systemMenu()]);
     }
 }

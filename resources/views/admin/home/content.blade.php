@@ -3,7 +3,7 @@
 @section('title', '内容管理')
 
 @section('content')
-    content
+
 @endsection
 
 @section('js')
