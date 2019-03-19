@@ -115,7 +115,33 @@
                                     </div>
                                 </div>
                                 @break
-                            @case('reference_admin_user')
+                            @case('checkbox')
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block">
+                                        @foreach(explode("\r\n", $field->form_params) as $v)
+                                            @php
+                                                $v = explode("=", $v);
+                                            @endphp
+                                            <input type="checkbox" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ $v[1] }}" lay-skin="primary" checked>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                @break
+                            @case('option')
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block">
+                                        @foreach(explode("\n", $field->form_params) as $v)
+                                            @php
+                                                $data = explode("=", $v);
+                                            @endphp
+                                            <input type="radio" name="{{ $field->name }}" value="{{ $data[0] }}" title="{{ $data[1] }}" @if(isset($model) && $data[0] == $model->{$field->name}) checked @endif>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                @break
+                            @case('select')
                                 @break
 
                         @endswitch

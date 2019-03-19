@@ -91,6 +91,7 @@ class ContentController extends Controller
     public function save(ContentRequest $request, $entity)
     {
         $this->validateEntityRequest();
+        $this->useUserDefindHandler($request, $entity);
         try {
             ContentRepository::add($request->only(
                 EntityFieldRepository::getByEntityId($entity)->pluck('name')->toArray()
@@ -186,10 +187,20 @@ class ContentController extends Controller
 
     protected function validateEntityRequest()
     {
-        $entityRequestClass = '\\App\\Http\\Requests\\Admin\\' .
+        $entityRequestClass = '\\App\\Http\\Requests\\Admin\\Entity\\' .
             Str::ucfirst(Str::singular($this->entity->table_name)) . 'Request';
         if (class_exists($entityRequestClass)) {
             $entityRequestClass::capture()->setContainer(app())->setRedirector(app()->make('redirect'))->validate();
+        }
+    }
+
+    protected function useUserDefindHandler($request, $entity)
+    {
+        $entityControllerClass = '\\App\\Http\\Controllers\\Admin\\Entity\\' .
+            Str::ucfirst(Str::singular($this->entity->table_name)) . 'Controller';
+        if (class_exists($entityRequestClass) && method_exists($entityRequestClass, 'save')) {
+            call_user_func("{$entityControllerClass}::save", $request, $entity);
+            exit();
         }
     }
 
