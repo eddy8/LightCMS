@@ -144,9 +144,16 @@ class ContentController extends Controller
     {
         $this->validateEntityRequest();
         $this->useUserDefinedUpdateHandler($request, $entity, $id);
-        $data = $request->only(
-            EntityFieldRepository::getByEntityId($entity)->pluck('name')->toArray()
-        );
+
+        $fieldInfo = EntityFieldRepository::getByEntityId($entity)->pluck('form_type', 'name')->toArray();
+        $data = [];
+        foreach ($fieldInfo as $k => $v) {
+            if ($v === 'checkbox') {
+                $data[$k] = '';
+            }
+        }
+        $data = array_merge($data, $request->only(array_keys($fieldInfo)));
+
         try {
             ContentRepository::update($id, $data);
             return [

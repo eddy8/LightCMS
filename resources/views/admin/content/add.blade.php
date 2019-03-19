@@ -130,7 +130,7 @@
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
                                         @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                            <input type="radio" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ $v[1] }}" @if(isset($model) && $v[0] == $model->{$field->name}) checked @endif>
+                                            <input type="radio" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ $v[1] }}" @if((isset($model) && $v[0] == $model->{$field->name}) || $loop->first) checked @endif>
                                         @endforeach
                                     </div>
                                 </div>
