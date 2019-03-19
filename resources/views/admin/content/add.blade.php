@@ -119,11 +119,8 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                        @foreach(explode("\r\n", $field->form_params) as $v)
-                                            @php
-                                                $v = explode("=", $v);
-                                            @endphp
-                                            <input type="checkbox" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ $v[1] }}" lay-skin="primary" checked>
+                                        @foreach(parseEntityFieldParams($field->form_params) as $v)
+                                            <input type="checkbox" name="{{ $field->name }}[]" value="{{ $v[0] }}" title="{{ $v[1] }}" lay-skin="primary" @if(isset($model) && isChecked($v[0], $model->{$field->name})) checked @endif>
                                         @endforeach
                                     </div>
                                 </div>
@@ -132,16 +129,23 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                        @foreach(explode("\n", $field->form_params) as $v)
-                                            @php
-                                                $data = explode("=", $v);
-                                            @endphp
-                                            <input type="radio" name="{{ $field->name }}" value="{{ $data[0] }}" title="{{ $data[1] }}" @if(isset($model) && $data[0] == $model->{$field->name}) checked @endif>
+                                        @foreach(parseEntityFieldParams($field->form_params) as $v)
+                                            <input type="radio" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ $v[1] }}" @if(isset($model) && $v[0] == $model->{$field->name}) checked @endif>
                                         @endforeach
                                     </div>
                                 </div>
                                 @break
                             @case('select')
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block" style="width: 400px;z-index: {{99999 - ($field->order + $field->id)}}">
+                                        <select name="{{ $field->name }}">
+                                        @foreach(parseEntityFieldParams($field->form_params) as $v)
+                                            <option value="{{ $v[0] }}" @if(isset($model) && $v[0] == $model->{$field->name}) selected @endif>{{ $v[1] }}</option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                                 @break
 
                         @endswitch

@@ -91,7 +91,7 @@ class ContentController extends Controller
     public function save(ContentRequest $request, $entity)
     {
         $this->validateEntityRequest();
-        $this->useUserDefindHandler($request, $entity);
+        $this->useUserDefinedSaveHandler($request, $entity);
         try {
             ContentRepository::add($request->only(
                 EntityFieldRepository::getByEntityId($entity)->pluck('name')->toArray()
@@ -143,6 +143,7 @@ class ContentController extends Controller
     public function update(ContentRequest $request, $entity, $id)
     {
         $this->validateEntityRequest();
+        $this->useUserDefinedUpdateHandler($request, $entity, $id);
         $data = $request->only(
             EntityFieldRepository::getByEntityId($entity)->pluck('name')->toArray()
         );
@@ -154,6 +155,7 @@ class ContentController extends Controller
                 'redirect' => true
             ];
         } catch (QueryException $e) {
+            \Log::error($e);
             return [
                 'code' => 1,
                 'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前内容已存在' : '其它错误'),
@@ -194,12 +196,22 @@ class ContentController extends Controller
         }
     }
 
-    protected function useUserDefindHandler($request, $entity)
+    protected function useUserDefinedSaveHandler($request, $entity)
     {
         $entityControllerClass = '\\App\\Http\\Controllers\\Admin\\Entity\\' .
             Str::ucfirst(Str::singular($this->entity->table_name)) . 'Controller';
-        if (class_exists($entityRequestClass) && method_exists($entityRequestClass, 'save')) {
+        if (class_exists($entityControllerClass) && method_exists($entityControllerClass, 'save')) {
             call_user_func("{$entityControllerClass}::save", $request, $entity);
+            exit();
+        }
+    }
+
+    protected function useUserDefinedUpdateHandler($request, $entity, $id)
+    {
+        $entityControllerClass = '\\App\\Http\\Controllers\\Admin\\Entity\\' .
+            Str::ucfirst(Str::singular($this->entity->table_name)) . 'Controller';
+        if (class_exists($entityControllerClass) && method_exists($entityControllerClass, 'update')) {
+            call_user_func("{$entityControllerClass}::update", $request, $entity, $id);
             exit();
         }
     }

@@ -41,12 +41,12 @@ class ContentRepository
 
     public static function add($data)
     {
-        return self::$model->setRawAttributes($data)->save();
+        return self::$model->setRawAttributes(self::processParams($data))->save();
     }
 
     public static function update($id, $data)
     {
-        return self::$model->newQuery()->where('id', $id)->update($data);
+        return self::$model->newQuery()->where('id', $id)->update(self::processParams($data));
     }
 
     public static function find($id)
@@ -63,5 +63,16 @@ class ContentRepository
     {
         self::$model = new Content();
         return self::$model->setTable($table);
+    }
+
+    protected static function processParams($data)
+    {
+        return array_map(function ($item) {
+            if (is_array($item)) {
+                return implode(',', $item);
+            } else {
+                return $item;
+            }
+        }, $data);
     }
 }
