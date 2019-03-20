@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ContentRequest;
 use App\Model\Admin\Content;
 use App\Model\Admin\Entity;
+use App\Model\Admin\EntityField;
 use App\Repository\Admin\ContentRepository;
 use App\Repository\Admin\EntityFieldRepository;
 use App\Repository\Admin\EntityRepository;
@@ -145,7 +146,10 @@ class ContentController extends Controller
         $this->validateEntityRequest();
         $this->useUserDefinedUpdateHandler($request, $entity, $id);
 
-        $fieldInfo = EntityFieldRepository::getByEntityId($entity)->pluck('form_type', 'name')->toArray();
+        $fieldInfo = EntityFieldRepository::getByEntityId($entity)
+                        ->where('is_edit', EntityField::EDIT_ENABLE)
+                        ->pluck('form_type', 'name')
+                        ->toArray();
         $data = [];
         foreach ($fieldInfo as $k => $v) {
             if ($v === 'checkbox') {

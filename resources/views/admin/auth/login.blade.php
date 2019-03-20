@@ -76,7 +76,7 @@
                         location.reload();
                     }
                     if (result.redirect) {
-                        location.href = '{!! url()->previous() !!}';
+                        location.href = '{{ route('admin::index') }}';
                     }
                 });
             },
