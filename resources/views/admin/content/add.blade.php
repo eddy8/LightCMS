@@ -17,7 +17,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}">
+                                        <input type="text" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                     </div>
                                 </div>
                                 @break
@@ -25,11 +25,15 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                        <textarea name="{{ $field->name }}" placeholder="请输入内容" class="layui-textarea" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif>{{ $model->{$field->name} ?? ''  }}</textarea>
+                                        <textarea name="{{ $field->name }}" placeholder="请输入内容" class="layui-textarea" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>{{ $model->{$field->name} ?? ''  }}</textarea>
                                     </div>
                                 </div>
                                 @break
                             @case('richText')
+                                @if(!isset($neditor_init))
+                                    @php
+                                        $neditor_init = true
+                                    @endphp
                                 <script type="text/javascript" charset="utf-8" src="/public/vendor/neditor/neditor.config.js"></script>
                                 <script type="text/javascript" charset="utf-8" src="/public/vendor/neditor/neditor.all.min.js"> </script>
                                 <script type="text/javascript" charset="utf-8" src="/public/vendor/neditor/neditor.service.js"></script>
@@ -38,17 +42,20 @@
                                 <script type="text/javascript" charset="utf-8" src="/public/vendor/neditor/i18n/zh-cn/zh-cn.js"></script>
                                 <script type="text/javascript" src="/public/vendor/neditor/third-party/browser-md5-file.min.js"></script>
                                 <script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>
+                                @endif
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                    <script name="content" id="editor" type="text/plain" style="height:600px;">{!! $model->{$field->name} ?? '' !!}</script>
+                                    <script name="{{ $field->name }}" id="editor-{{ $field->name }}" type="text/plain" style="height:600px;">{!! $model->{$field->name} ?? '' !!}</script>
                                     </div></div>
                                 <script>
                                     //实例化编辑器
                                     //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
-                                    var ue = UE.getEditor('editor');
-                                    ue.ready(function(){
-
+                                    var ue_{{ $field->name }} = UE.getEditor('editor-{{ $field->name }}');
+                                    ue_{{ $field->name }}.ready(function(){
+                                        @if(isset($model) && $field->is_required == \App\Model\Admin\EntityField::EDIT_DISABLE)
+                                        ue_{{ $field->name }}.setDisabled();
+                                        @endif
                                     });
                                 </script>
                                 @break
@@ -56,7 +63,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                        <input type="password" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}">
+                                        <input type="password" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                     </div>
                                 </div>
                                 @break
@@ -64,7 +71,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                        <button type="button" class="layui-btn" id="file-upload">
+                                        <button type="button" class="layui-btn" id="file-upload-{{ $field->name }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled style="background-color: gray" @endif>
                                             <i class="layui-icon">&#xe67c;</i>上传图片
                                         </button>
                                         <script type="text/javascript">
@@ -74,7 +81,7 @@
 
                                                     //执行实例
                                                     var uploadInst = upload.render({
-                                                        elem: '#file-upload' //绑定元素
+                                                        elem: '#file-upload-{{ $field->name }}' //绑定元素
                                                         ,url: "{{ route('admin::neditor.serve', ['type' => 'uploadimage']) }}" //上传接口
                                                         ,done: function(res){
                                                             $('input[name={{ $field->name }}]').val(res.url);
@@ -87,7 +94,7 @@
                                             };
                                         </script>
                                         <div style="float: left;width: 50%">
-                                        <input type="input" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}"></div>
+                                        <input type="input" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif></div>
                                     </div>
                                 </div>
                                 @break
@@ -95,7 +102,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block" style="width: 400px;z-index: {{99999 - ($field->order + $field->id)}}">
-                                        <select name="{{ $field->name }}" lay-verify="required">
+                                        <select name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                             @foreach(App\Repository\Admin\CategoryRepository::tree($entityModel->id) as $v)
                                                 @include('admin.category', [$v, 'fieldName' => $field->name])
                                             @endforeach
@@ -107,7 +114,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block" style="width: 400px;z-index: {{99999 - ($field->order + $field->id)}}">
-                                        <select name="{{ $field->name }}" lay-verify="required">
+                                        <select name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                             @foreach(App\Model\Admin\AdminUser::query()->where('status', App\Model\Admin\AdminUser::STATUS_ENABLE)->orderBy('name')->get(['id', 'name']) as $v)
                                                 <option value="{{ $v->id }}" @if(isset($model) && $v->id == $model->{$field->name}) selected @endif>{{ $v->name }}</option>
                                             @endforeach
@@ -120,7 +127,7 @@
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
                                         @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                            <input type="checkbox" name="{{ $field->name }}[]" value="{{ $v[0] }}" title="{{ $v[1] }}" lay-skin="primary" @if(isset($model) && isChecked($v[0], $model->{$field->name})) checked @endif>
+                                            <input type="checkbox" name="{{ $field->name }}[]" value="{{ $v[0] }}" title="{{ $v[1] }}" lay-skin="primary" @if(isset($model) && isChecked($v[0], $model->{$field->name})) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                         @endforeach
                                     </div>
                                 </div>
@@ -130,7 +137,7 @@
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
                                         @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                            <input type="radio" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ $v[1] }}" @if((isset($model) && $v[0] == $model->{$field->name}) || $loop->first) checked @endif>
+                                            <input type="radio" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ $v[1] }}" @if((isset($model) && $v[0] == $model->{$field->name}) || $loop->first) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                         @endforeach
                                     </div>
                                 </div>
@@ -139,7 +146,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block" style="width: 400px;z-index: {{99999 - ($field->order + $field->id)}}">
-                                        <select name="{{ $field->name }}">
+                                        <select name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                         @foreach(parseEntityFieldParams($field->form_params) as $v)
                                             <option value="{{ $v[0] }}" @if(isset($model) && $v[0] == $model->{$field->name}) selected @endif>{{ $v[1] }}</option>
                                         @endforeach
