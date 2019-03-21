@@ -72,7 +72,8 @@ class AdminUserController extends Controller
     public function save(AdminUserRequest $request)
     {
         try {
-            AdminUserRepository::add($request->only($this->formNames));
+            $user = AdminUserRepository::add($request->only($this->formNames));
+            AdminUserRepository::setDefaultPermission($user);
             return [
                 'code' => 0,
                 'msg' => '新增成功',

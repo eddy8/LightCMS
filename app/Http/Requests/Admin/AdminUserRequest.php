@@ -29,9 +29,18 @@ class AdminUserRequest extends FormRequest
             AdminUser::STATUS_DISABLE,
             AdminUser::STATUS_ENABLE,
         ];
+
+        $passwordRule = '';
+        if ($this->method() == 'POST' ||
+            ($this->method() == 'PUT' && request()->post('password') !== '')) {
+            $passwordRule = [
+                'required',
+                'regex:/^(?![0-9]+$)(?![a-zA-Z]+$)[\w\x21-\x7e]{6,18}$/'
+            ];
+        }
         return [
             'name' => 'required|max:50',
-            'password' => $this->method() == 'PUT' ? '' : 'required|min:6|max:18',
+            'password' => $passwordRule,
             'status' => [
                 Rule::in($status_in),
             ],
@@ -48,6 +57,7 @@ class AdminUserRequest extends FormRequest
         return [
             'name.required' => '用户名不能为空',
             'password.required' => '密码不能为空',
+            'regex' => '密码不符合规则'
         ];
     }
 }

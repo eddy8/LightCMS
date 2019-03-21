@@ -9,6 +9,7 @@
 namespace App\Repository\Admin;
 
 use App\Model\Admin\AdminUser;
+use App\Model\Admin\Menu;
 use App\Repository\Searchable;
 
 class AdminUserRepository
@@ -63,5 +64,13 @@ class AdminUserRepository
     public static function roles(AdminUser $user)
     {
         return $user->roles();
+    }
+
+    public static function setDefaultPermission(AdminUser $user)
+    {
+        $logoutPermission = Menu::query()->where('route', 'admin::logout')->first();
+        if ($logoutPermission) {
+            $user->givePermissionTo($logoutPermission->name);
+        }
     }
 }

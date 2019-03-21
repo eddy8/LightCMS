@@ -19,7 +19,7 @@
                     <div class="layui-input-inline">
                         <input type="password" name="password" @if(!isset($id)) required lay-verify="required" @endif placeholder="请输入密码" autocomplete="off" class="layui-input">
                     </div>
-                    @if(isset($id))<div class="layui-form-mid layui-word-aux">密码留空则不修改密码</div>@endif
+                    <div class="layui-form-mid layui-word-aux">密码6到18位，不能为纯数字或纯字母。@if(isset($id))留空则不修改密码@endif</div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">是否启用</label>
