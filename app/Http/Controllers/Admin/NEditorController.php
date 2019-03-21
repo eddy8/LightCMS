@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\Storage;
 
 class NEditorController extends Controller
 {
+    /**
+     * 基础功能-图片上传
+     *
+     * @param Request $request
+     * @return array
+     */
     public function serve(Request $request, $type)
     {
         if (!method_exists(\self::class, $type)) {

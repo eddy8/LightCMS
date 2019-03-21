@@ -154,7 +154,7 @@ class AdminUserController extends Controller
     }
 
     /**
-     * 管理员管理-更新角色
+     * 管理员管理-更新用户角色
      *
      * @param Request $request
      * @param $id
