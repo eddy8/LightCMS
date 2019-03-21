@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Model\Admin\AdminUser;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Auth;
 use Illuminate\Http\Request;
@@ -61,6 +62,15 @@ class LoginController extends Controller
             $this->fireLockoutEvent($request);
 
             return $this->sendLockoutResponse($request);
+        }
+
+        // 检查用户是否已被禁用
+        $user = $this->guard()->getProvider()->retrieveByCredentials($this->credentials($request));
+        if ($user->status === AdminUser::STATUS_DISABLE) {
+            return [
+                'code' => 1,
+                'msg' => '用户被禁用'
+            ];
         }
 
         if ($this->attemptLogin($request)) {
