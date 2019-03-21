@@ -18,6 +18,7 @@ class CreateMenuTable extends Migration
             $table->string('name', 50)->default('')->unique();
             $table->unsignedInteger('pid')->default(0);
             $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('is_lock_name')->default(0);
             $table->unsignedInteger('order')->default(0);
             $table->string('route', 100)->default('')->unique();
             $table->string('url', 512)->default('');

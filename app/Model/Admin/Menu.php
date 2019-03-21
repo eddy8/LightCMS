@@ -20,6 +20,9 @@ class Menu extends Model implements PermissionContract
     const STATUS_ENABLE = 1;
     const STATUS_DISABLE = 0;
 
+    const LOCK_NAME = 1;
+    const UNLOCK_NAME = 0;
+
     protected $guarded = [];
 
     public function parent()

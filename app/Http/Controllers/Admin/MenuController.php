@@ -21,7 +21,7 @@ use Route;
 
 class MenuController extends Controller
 {
-    protected $formNames = ['name', 'pid', 'status', 'order', 'route', 'group', 'remark', 'url'];
+    protected $formNames = ['name', 'pid', 'status', 'order', 'route', 'group', 'remark', 'url', 'is_lock_name'];
 
     public function __construct()
     {
@@ -117,13 +117,17 @@ class MenuController extends Controller
      *
      * @param MenuRequest $request
      * @param int $id
+     * @return array
      */
     public function update(MenuRequest $request, $id)
     {
-        $data = $request->only($this->formNames);
-        if (!isset($data['status'])) {
-            $data['status'] = Menu::STATUS_DISABLE;
-        }
+        $data = array_merge(
+            [
+                'is_lock_name' => Menu::UNLOCK_NAME,
+                'status' => Menu::STATUS_DISABLE
+            ],
+            $request->only($this->formNames)
+        );
 
         try {
             MenuRepository::update($id, $data);
@@ -213,7 +217,8 @@ class MenuController extends Controller
 
                 $model = MenuRepository::exist($k);
                 if ($model) {
-                    if ($model->name != $data['name'] || $model->group != $data['group']) {
+                    if ($model->is_lock_name === Menu::UNLOCK_NAME &&
+                        ($model->name != $data['name'] || $model->group != $data['group'])) {
                         unset($data['status']);
                         MenuRepository::update($model->id, $data);
                         $updateNum++;

@@ -9,9 +9,18 @@
             <form class="layui-form" action="@if(isset($id)){{ route('admin::menu.update', ['id' => $id]) }}@else{{ route('admin::menu.save') }}@endif" method="post">
                 @if(isset($id)) {{ method_field('PUT') }} @endif
                 <div class="layui-form-item">
+                    <div class="layui-inline">
                     <label class="layui-form-label">名称</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline">
                         <input type="text" name="name" required  lay-verify="required" autocomplete="off" class="layui-input" value="{{ $model->name ?? ''  }}">
+                    </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">锁定名称</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="is_lock_name" lay-skin="switch" lay-text="锁定|不锁定" value="1" @if(isset($model) && $model->is_lock_name == App\Model\Admin\Menu::LOCK_NAME) checked @endif>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">锁定名称则菜单自动更新时不会更新当前菜单的名称和分组等信息</div>
                     </div>
                 </div>
                     <div class="layui-form-item">
