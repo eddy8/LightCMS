@@ -109,9 +109,14 @@ php artisan light:basic config 配置
 
 最后，如果想让生成的路由展示在菜单中，只需在[菜单管理](/admin/menus)页面点击**自动更新菜单**即可。
 
+## 模型管理
+`lightCMS`支持在后台直接创建模型，并可对模型的表字段进行自定义设置。设置完模型字段后，就不需要做其它工作了，模型的增删改查功能系统已经内置。
+
+这里说明下模型的表单验证及后端的保存和更新处理。如果有自定义表单验证需求，只需在`app/Http/Request/Admin/Entity`目录下创建模型的表单请求验证类即可。类名的命名规则：**模型名+Request**。例如`User`模型对应的表单请求验证类为`UserRequest`。
+
+同理，如果想自定义模型的保存和更新处理逻辑，只需在`app/Http/Controllers/Admin/Entity`目录下创建模型的控制器类即可，`save`和`update`方法实现可参考`app/Http/Controllers/Admin/ContentController`。类名的命名规则：**模型名+Controller**。例如`User`模型对应的控制器类为`UserController`。
+
 ## 系统日志
 `lightCMS`集成了一套简单的日志系统，默认情况下记录后台的所有操作相关信息，具体实现可以参考`Log`中间件。
-
-## 模型管理
 
 ## 完善中。。。
