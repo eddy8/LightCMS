@@ -17,7 +17,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">标志符</label>
                         <div class="layui-input-block">
-                            <input type="text" name="key" required  lay-verify="required" autocomplete="off" class="layui-input" value="{{ $model->key ?? ''  }}">
+                            <input type="text" name="key" required  lay-verify="required" autocomplete="off" class="layui-input" value="{{ $model->key ?? ''  }}" placeholder="数字、字母或下划线组成，长度不超过100">
                         </div>
                     </div>
                     <div class="layui-form-item">

@@ -63,4 +63,9 @@ class ConfigRepository
             })->all();
         });
     }
+
+    public static function groupNames()
+    {
+        return Config::query()->select('group')->distinct()->pluck('group')->toArray();
+    }
 }

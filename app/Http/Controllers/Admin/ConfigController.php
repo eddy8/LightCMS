@@ -32,7 +32,10 @@ class ConfigController extends Controller
     public function index()
     {
         $this->breadcrumb[] = ['title' => '配置列表', 'url' => ''];
-        return view('admin.config.index', ['breadcrumb' => $this->breadcrumb]);
+        return view(
+            'admin.config.index',
+            ['breadcrumb' => $this->breadcrumb, 'groups' => ConfigRepository::groupNames()]
+        );
     }
 
     /**
@@ -45,6 +48,9 @@ class ConfigController extends Controller
     {
         $perPage = (int) $request->get('limit', 50);
         $condition = $request->only($this->formNames);
+        if (isset($condition['group'])) {
+            $condition['group'] = ['=', $condition['group']];
+        }
 
         $data = ConfigRepository::list($perPage, $condition);
 

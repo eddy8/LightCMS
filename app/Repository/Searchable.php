@@ -22,7 +22,7 @@ trait Searchable
                 list($type, $value) = $v;
             }
             $value = trim($value);
-            if ($value === '') {
+            if ($type ==='like' && $value === '') {
                 continue;
             }
 

@@ -22,7 +22,7 @@
             </form>
         </div>
         <div class="layui-card-body">
-            <table class="layui-table" lay-data="{url:'{{ route('admin::config.list') }}?{{ request()->getQueryString() }}', page:true, limit:50, id:'test', toolbar:'<div><a href=\'{{ route('admin::config.create') }}\'><i class=\'layui-icon layui-icon-add-1\'></i>新增配置</a></div>'}" lay-filter="test">
+            <table class="layui-table" lay-data="{url:'{{ route('admin::config.list') }}?{{ request()->getQueryString() }}', page:true, limit:50, id:'test', toolbar:'<div><a style=\'margin-right:20px\' href=\'{{ route('admin::config.create') }}\'><i class=\'layui-icon layui-icon-add-1\'></i>新增配置</a>@foreach($groups as $v)<a class=\'layui-btn layui-btn-normal layui-btn-sm\' href=\'{{ route('admin::config.index') }}?group={{ $v }}\'>{{ $v !== '' ? $v : '未分组'  }}</a>@endforeach</div>'}" lay-filter="test">
                 <thead>
                 <tr>
                     <th lay-data="{field:'id', width:80, sort: true}">ID</th>
