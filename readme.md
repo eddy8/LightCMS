@@ -3,6 +3,11 @@
 
 `lightCMS`基于`Laravel 5.5`开发，前端框架基于`layui`。
 
+## 后台预览
+![首页](https://user-images.githubusercontent.com/2555476/54804611-16fa4900-4caf-11e9-885e-7f5c0dac7ce4.png)
+
+![系统管理](https://iocaffcdn.phphub.org/uploads/images/201903/22/4315/3P6diGt5ti.png!large)
+
 ## 系统环境
 `linux/windows & nginx/apache/iis & mysql 5.5+ & php 7.0+`
 
