@@ -54,7 +54,7 @@ server {
 ```
 
 ### 后台登陆
-后台访问地址：http://light.com/admin/login
+后台访问地址：`/admin/login`
 
 默认用户（此用户为超级用户，不受权限管理限制）：admin/admin
 
