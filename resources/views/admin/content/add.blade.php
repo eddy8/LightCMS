@@ -1,6 +1,19 @@
 @extends('admin.base')
 
 @section('content')
+    <script>
+        function addLoadEvent(func) {
+            var oldonload = window.onload;
+            if (typeof window.onload != 'function') {
+                window.onload = func;
+            } else {
+                window.onload = function () {
+                    oldonload();
+                    func();
+                }
+            }
+        }
+    </script>
     <div class="layui-card">
 
         @include('admin.breadcrumb')
@@ -75,7 +88,7 @@
                                             <i class="layui-icon">&#xe67c;</i>上传图片
                                         </button>
                                         <script type="text/javascript">
-                                            window.onload = function() {
+                                            addLoadEvent(function () {
                                                 layui.use('upload', function(){
                                                     var upload = layui.upload;
 
@@ -91,7 +104,7 @@
                                                         }
                                                     });
                                                 });
-                                            };
+                                            });
                                         </script>
                                         <div style="float: left;width: 50%">
                                         <input type="input" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif></div>
@@ -122,6 +135,39 @@
                                     </div>
                                 </div>
                                 @break
+                                        @case('datetime')
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">{{ $field->form_name }}</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="{{ $field->name }}" class="layui-input" id="{{ $field->name }}" value="{{ $model->{$field->name} ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <script>
+                                            addLoadEvent(function () {
+                                                var laydate = layui.laydate;
+                                                laydate.render({
+                                                    elem: '#{{ $field->name }}',
+                                                    type: 'datetime'
+                                                });
+                                            });
+                                        </script>
+                                        @break
+                                        @case('date')
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">{{ $field->form_name }}</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="{{ $field->name }}" class="layui-input" id="{{ $field->name }}" value="{{ $model->{$field->name} ?? '' }}">
+                                            </div>
+                                        </div>
+                                        <script>
+                                            addLoadEvent(function () {
+                                                var laydate = layui.laydate;
+                                                laydate.render({
+                                                    elem: '#{{ $field->name }}',
+                                                });
+                                            });
+                                        </script>
+                                        @break
                             @case('checkbox')
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
@@ -166,6 +212,9 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('foot_js')
 @endsection
 
 @section('js')

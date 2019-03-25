@@ -115,7 +115,7 @@ class EntityFieldController extends Controller
                         $table->$m($data['name'])->comment($data['comment'])->default(0);
                     }
                 } else {
-                    $table->$m($data['name'])->comment($data['comment']);
+                    $table->$m($data['name'])->comment($data['comment'])->nullable();
                 }
             });
 
