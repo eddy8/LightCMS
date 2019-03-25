@@ -132,6 +132,8 @@ php artisan light:basic config 配置
 ## 完善中。。。
 
 ## 说明
+`LightCMS&Laravel`学习交流群：**972796921**
+
 有问题可以提 issue ，为项目贡献代码可以提 pull request
 
 如果该项目对于您有所帮助，欢迎打赏支持项目开发 ^_^ 
