@@ -7,9 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Route;
 use Illuminate\Support\Facades\View;
-use Debugbar;
 
 class Controller extends BaseController
 {
@@ -32,7 +30,5 @@ class Controller extends BaseController
         } else {
             View::share('light_menu', $currentRootMenu);
         }
-
-        Debugbar::info($currentRootMenu);
     }
 }

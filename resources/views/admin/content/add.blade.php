@@ -98,6 +98,7 @@
                                                         ,url: "{{ route('admin::neditor.serve', ['type' => 'uploadimage']) }}" //上传接口
                                                         ,done: function(res){
                                                             $('input[name={{ $field->name }}]').val(res.url);
+                                                            $('#img-'+'{{ $field->name }}').attr('src', res.url);
                                                         }
                                                         ,error: function(){
                                                             layer.msg('上传失败')
@@ -108,6 +109,7 @@
                                         </script>
                                         <div style="float: left;width: 50%">
                                         <input type="input" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif></div>
+                                        <div><img style="width: 200px;height: auto" src="{{ $model->{$field->name} ?? ''  }}" id="img-{{ $field->name }}"></div>
                                     </div>
                                 </div>
                                 @break
