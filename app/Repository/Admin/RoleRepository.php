@@ -24,6 +24,7 @@ class RoleRepository
             ->orderBy('id', 'desc')
             ->paginate($perPage);
         $data->transform(function ($item) {
+            xssFilter($item);
             $item->editUrl = route('admin::role.edit', ['id' => $item->id]);
             $item->permissionUrl = route('admin::role.permission.edit', ['id' => $item->id]);
             return $item;

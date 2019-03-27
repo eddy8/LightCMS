@@ -26,6 +26,7 @@ class ContentRepository
             ->orderBy('id', 'desc')
             ->paginate($perPage);
         $data->transform(function ($item) use ($entity) {
+            xssFilter($item);
             $item->editUrl = route('admin::content.edit', ['id' => $item->id, 'entity' => $entity]);
             $item->deleteUrl = route('admin::content.delete', ['id' => $item->id, 'entity' => $entity]);
             return $item;

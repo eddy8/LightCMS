@@ -21,6 +21,7 @@ class CategoryRepository
             ->orderBy('id', 'desc')
             ->paginate($perPage);
         $data->transform(function ($item) {
+            xssFilter($item);
             $item->editUrl = route('admin::category.edit', ['id' => $item->id]);
             $item->parentName = $item->pid == 0 ? '顶级菜单' : $item->parent->name;
             return $item;

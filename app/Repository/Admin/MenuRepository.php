@@ -26,6 +26,7 @@ class MenuRepository
             ->with('parent')
             ->paginate($perPage);
         $data->transform(function ($item) {
+            xssFilter($item);
             $item->editUrl = route('admin::menu.edit', ['id' => $item->id]);
             $item->deleteUrl = route('admin::menu.delete', ['id' => $item->id]);
             $item->statusText = $item->status == Menu::STATUS_ENABLE ?

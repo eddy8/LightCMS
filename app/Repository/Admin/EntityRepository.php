@@ -22,6 +22,7 @@ class EntityRepository
             ->orderBy('id', 'desc')
             ->paginate($perPage);
         $data->transform(function ($item) {
+            xssFilter($item);
             $item->editUrl = route('admin::entity.edit', ['id' => $item->id]);
             $item->deleteUrl = route('admin::entity.delete', ['id' => $item->id]);
             $item->fieldUrl = route('admin::entityField.index') . '?entity_id=' . $item->id;

@@ -22,6 +22,7 @@ class ConfigRepository
             ->orderBy('id', 'desc')
             ->paginate($perPage);
         $data->transform(function ($item) {
+            xssFilter($item);
             $item->editUrl = route('admin::config.edit', ['id' => $item->id]);
             $item->type = Config::$types[$item->type];
             return $item;

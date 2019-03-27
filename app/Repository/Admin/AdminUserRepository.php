@@ -26,6 +26,7 @@ class AdminUserRepository
             ->orderBy('id', 'desc')
             ->paginate($perPage);
         $data->transform(function ($item) {
+            xssFilter($item);
             $item->editUrl = route('admin::adminUser.edit', ['id' => $item->id]);
             $item->roleUrl = route('admin::adminUser.role.edit', ['id' => $item->id]);
             $item->statusText = $item->status == AdminUser::STATUS_ENABLE ?

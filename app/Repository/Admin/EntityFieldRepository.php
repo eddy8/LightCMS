@@ -23,6 +23,7 @@ class EntityFieldRepository
             ->paginate($perPage);
         $formTypes = config('light.form_type');
         $data->transform(function ($item) use ($formTypes) {
+            xssFilter($item);
             $item->entityName = $item->entity->name;
             $item->form_type = $formTypes[$item->form_type];
             $item->editUrl = route('admin::entityField.edit', ['id' => $item->id]);
