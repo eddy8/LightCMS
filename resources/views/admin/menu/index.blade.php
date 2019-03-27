@@ -60,6 +60,7 @@
                                 <option value="disable">禁用</option>
                                 <option value="enable">启用</option>
                                 <option value="parent">设置父级菜单</option>
+                                <option value="order">设置排序</option>
                                 <option value="delete">删除</option>
                             </select>
                         </div>
@@ -188,6 +189,8 @@
         form.on('select(action-type)', function(data){
             if (data.value === 'parent') {
                 $('input[name=params]').attr('placeholder', '请填写父级菜单的ID');
+            } else if (data.value === 'order') {
+                $('input[name=params]').attr('placeholder', '请填写排序值');
             } else {
                 $('input[name=params]').attr('placeholder', '');
             }

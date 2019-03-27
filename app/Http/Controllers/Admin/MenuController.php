@@ -289,6 +289,16 @@ class MenuController extends Controller
                 }
                 Menu::query()->whereIn('id', $ids)->update(['pid' => $pid]);
                 break;
+            case 'order':
+                $order = intval($request->input('params', 77));
+                if ($order < 0) {
+                    return [
+                        'code' => 4,
+                        'msg' => '排序值不能小于0'
+                    ];
+                }
+                Menu::query()->whereIn('id', $ids)->update(['order' => $order]);
+                break;
             default:
                 break;
         }
