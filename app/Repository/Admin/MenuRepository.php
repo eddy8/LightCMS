@@ -135,7 +135,7 @@ class MenuRepository
     public static function root($route, $tree = null)
     {
         if (is_null($tree)) {
-            $tree = self::tree();
+            $tree = self::getTree();
         }
 
         foreach ($tree as $menu) {
@@ -145,7 +145,7 @@ class MenuRepository
                 }
 
                 $rootId = current($menu['path']);
-                foreach (self::tree() as $v) {
+                foreach (self::getTree() as $v) {
                     if ($v['id'] === $rootId) {
                         return $v;
                     }
@@ -161,5 +161,17 @@ class MenuRepository
         }
 
         return null;
+    }
+
+    public static function getTree()
+    {
+        static $tree = null;
+
+        if (!is_null($tree)) {
+            return $tree;
+        }
+
+        $tree = self::tree();
+        return $tree;
     }
 }
