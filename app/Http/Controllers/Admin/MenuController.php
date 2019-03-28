@@ -299,6 +299,10 @@ class MenuController extends Controller
                 }
                 Menu::query()->whereIn('id', $ids)->update(['order' => $order]);
                 break;
+            case 'group':
+                $group = strval($request->input('params', ''));
+                Menu::query()->whereIn('id', $ids)->update(['group' => $group]);
+                break;
             default:
                 break;
         }

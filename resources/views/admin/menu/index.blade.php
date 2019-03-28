@@ -40,6 +40,7 @@
                     <th lay-data="{width:50, type:'checkbox'}"></th>
                     <th lay-data="{field:'id', width:80, sort: true}">ID</th>
                     <th lay-data="{templet:'#menuName'}">名称</th>
+                    <th lay-data="{field: 'group'}">分组</th>
                     <th lay-data="{field:'parentName'}">上级菜单</th>
                     <th lay-data="{field:'route'}">路由</th>
                     <th lay-data="{field:'url'}">URL</th>
@@ -61,6 +62,7 @@
                                 <option value="enable">启用</option>
                                 <option value="parent">设置父级菜单</option>
                                 <option value="order">设置排序</option>
+                                <option value="group">设置分组</option>
                                 <option value="delete">删除</option>
                             </select>
                         </div>
@@ -191,6 +193,8 @@
                 $('input[name=params]').attr('placeholder', '请填写父级菜单的ID');
             } else if (data.value === 'order') {
                 $('input[name=params]').attr('placeholder', '请填写排序值');
+            } else if (data.value === 'group') {
+                $('input[name=params]').attr('placeholder', '请填写分组名称');
             } else {
                 $('input[name=params]').attr('placeholder', '');
             }
