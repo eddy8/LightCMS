@@ -1,3 +1,6 @@
+# LightCMS
+[![StyleCI](https://github.styleci.io/repos/175428969/shield?branch=master)](https://github.styleci.io/repos/175428969)
+
 ## 项目简介
 `lightCMS`是一个轻量级的`CMS`系统，也可以作为一个通用的后台管理框架使用。`lightCMS`集成了用户管理、权限管理、日志管理、菜单管理等后台管理框架的通用功能，同时也提供模型管理、分类管理等`CMS`系统中常用的功能。`lightCMS`的**代码一键生成**功能可以快速对特定模型生成增删改查代码，极大提高开发效率。
 
@@ -33,20 +36,20 @@ php artisan migrate --seed
 
 ### 配置Web服务器（此处以`Nginx`为例）
 ```
-server { 
+server {
     listen 80;
     server_name light.com;
     root /data/www/lightCMS/public;
     index index.php index.html index.htm;
-    
-    location / {  
+
+    location / {
         try_files $uri $uri/ /index.php?$query_string;
     }
-    
-    location ~ \.php$ { 
-        fastcgi_pass 127.0.0.1:9000; 
-        fastcgi_index index.php; 
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; 
+
+    location ~ \.php$ {
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param   APP_ENV pro; #不同配置对应不同的环境配置文件。比如此处应用会加载.env.pro文件。
         include fastcgi_params;
     }
@@ -66,7 +69,7 @@ server {
 ```php
 /**
  * 角色管理-角色列表
- * 
+ *
  * 取方法的第一行注释作为菜单的名称、分组名。注释格式：分组名称-菜单名称。
  * 未写分组名称，则直接作为菜单名称，分组名为空。
  * 未写注释则选用uri作为菜单名，分组名为空。
@@ -115,7 +118,7 @@ php artisan light:basic config 配置
 模型服务层：默认有一个`list`方法，该方法用来返回列表数据。需要注意的是如果列表中的数据不能和数据库字段数据直接对应，则可对数据库字段数据做相应转换，可参考`list`方法中的`transform`部分。
 * app/Http/Controllers/Admin/ConfigController.php
 控制器：默认有一个`$formNames`属性，用来配置新增/编辑表单请求字段的白名单。此属性必需配置，否则获取不到表单数据。参考 [request 对象的 only 方法](https://laravel.com/docs/5.5/requests#retrieving-input)
-* app/Http/Requests/Admin/ConfigRequest.php 
+* app/Http/Requests/Admin/ConfigRequest.php
 表单请求类：可在此类中编写表单验证规则，参考 [Form Request Validation](https://laravel.com/docs/5.5/validation#form-request-validation)
 * resources/views/admin/config/index.blade.php
 列表视图：列表数据、搜索表单。
@@ -136,6 +139,6 @@ php artisan light:basic config 配置
 
 有问题可以提 issue ，为项目贡献代码可以提 pull request
 
-如果该项目对于您有所帮助，欢迎打赏支持项目开发 ^_^ 
+如果该项目对于您有所帮助，欢迎打赏支持项目开发 ^_^
 
 <img src="https://user-images.githubusercontent.com/2555476/54803956-a7835a00-4cac-11e9-9a10-ede3cfa6cef0.JPG" width="160" height="200" />
