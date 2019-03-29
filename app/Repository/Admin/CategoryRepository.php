@@ -58,7 +58,6 @@ class CategoryRepository
             } else {
                 $all = Category::select('id', 'pid', 'name', 'order')->where('model_id', $entity_id)->get();
             }
-
         }
         return $all->where('pid', $pid)
             ->map(function (Category $model) use ($all, $level, $path, $entity_id) {
