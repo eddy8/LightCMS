@@ -227,5 +227,4 @@ class EntityFieldController extends Controller
             ];
         }
     }
-
 }

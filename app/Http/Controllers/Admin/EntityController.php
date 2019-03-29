@@ -127,5 +127,4 @@ class EntityController extends Controller
             ];
         }
     }
-
 }

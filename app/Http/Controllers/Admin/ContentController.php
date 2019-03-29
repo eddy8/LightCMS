@@ -226,5 +226,4 @@ class ContentController extends Controller
             exit();
         }
     }
-
 }
