@@ -60,6 +60,7 @@
                             <select name="type" lay-filter="action-type">
                                 <option value="disable">禁用</option>
                                 <option value="enable">启用</option>
+                                <option value="lock_name">锁定名称</option>
                                 <option value="parent">设置父级菜单</option>
                                 <option value="order">设置排序</option>
                                 <option value="group">设置分组</option>

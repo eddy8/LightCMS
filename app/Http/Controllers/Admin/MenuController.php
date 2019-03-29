@@ -303,6 +303,9 @@ class MenuController extends Controller
                 $group = strval($request->input('params', ''));
                 Menu::query()->whereIn('id', $ids)->update(['group' => $group]);
                 break;
+            case 'lock_name':
+                Menu::query()->whereIn('id', $ids)->update(['is_lock_name' => Menu::LOCK_NAME]);
+                break;
             default:
                 break;
         }
