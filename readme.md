@@ -6,6 +6,8 @@
 
 `lightCMS`基于`Laravel 5.5`开发，前端框架基于`layui`。
 
+`LightCMS&Laravel`学习交流QQ群：**972796921**
+
 ## 后台预览
 ![首页](https://user-images.githubusercontent.com/2555476/54804611-16fa4900-4caf-11e9-885e-7f5c0dac7ce4.png)
 
@@ -135,8 +137,6 @@ php artisan light:basic config 配置
 ## 完善中。。。
 
 ## 说明
-`LightCMS&Laravel`学习交流群：**972796921**
-
 有问题可以提 issue ，为项目贡献代码可以提 pull request
 
 如果该项目对于您有所帮助，欢迎打赏支持项目开发 ^_^
