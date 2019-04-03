@@ -14,6 +14,9 @@
 @endphp
 <div class="container h-full flex justify-center items-center">
     <div class="layui-tab w-1/3" >
+        @if(session()->has(\App\Http\Controllers\Front\UserController::AUTH_SESSION))
+            <span style="margin-bottom: 20px;" class="text-purple-light block">登录或注册进行帐号关联</span>
+        @endif
         <ul class="layui-tab-title">
             <li @if($type === 'login') class="layui-this" @endif>登录</li>
             <li @if($type === 'register') class="layui-this" @endif>注册</li>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Requests\Front\RegisterRequest;
+use App\Model\Front\UserAuth;
 use App\Repository\Front\UserRepository;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -17,6 +18,8 @@ class UserController extends BaseController
     use AuthenticatesUsers;
 
     protected $guard = 'member';
+
+    const AUTH_SESSION = 'auth_login_user';
 
     /**
      * Create a new controller instance.
@@ -66,6 +69,9 @@ class UserController extends BaseController
         }
 
         if ($this->attemptLogin($request)) {
+            // 如果存在三方登录关联，则关联之
+            $this->associateAuth($user);
+
             return $this->sendLoginResponse($request);
         }
 
@@ -123,6 +129,7 @@ class UserController extends BaseController
             )
         );
 
+        $this->associateAuth($user);
         $this->guard()->login($user);
 
         return [
@@ -140,9 +147,7 @@ class UserController extends BaseController
 
     public function weiboCallback()
     {
-        $socialite = new SocialiteManager(config('light.auth_login'));
-        $user = $socialite->driver('weibo')->user();
-        return $user;
+        return $this->handleCallback('weibo');
     }
 
     public function qqAuth()
@@ -153,9 +158,7 @@ class UserController extends BaseController
 
     public function qqCallback()
     {
-        $socialite = new SocialiteManager(config('light.auth_login'));
-        $user = $socialite->driver('qq')->user();
-        return $user;
+        return $this->handleCallback('qq');
     }
 
     public function wechatAuth()
@@ -166,8 +169,33 @@ class UserController extends BaseController
 
     public function wechatCallback()
     {
+        return $this->handleCallback('wechat');
+    }
+
+    protected function associateAuth($user)
+    {
+        $authUser = session()->pull(self::AUTH_SESSION);
+        if ($authUser instanceof \Overtrue\Socialite\User &&
+            UserAuth::where('openid', (string) $authUser->getId())->first() === null
+        ) {
+            UserRepository::createAuth($user->id, $authUser);
+        }
+    }
+
+    protected function handleCallback($type)
+    {
         $socialite = new SocialiteManager(config('light.auth_login'));
-        $user = $socialite->driver('wechat')->user();
-        return $user;
+        $user = $socialite->driver($type)->user();
+
+        $openId = (string) $user->getId();
+        $siteUser = UserAuth::query()->where('openid', $openId)->first();
+        if ($siteUser) {
+            $this->guard()->loginUsingId($siteUser->user_id);
+            return redirect()->intended('/');
+        }
+
+        // 重定向到登录注册页面，关联本站用户
+        session([self::AUTH_SESSION => $user]);
+        return redirect(route('member::login.show'));
     }
 }
