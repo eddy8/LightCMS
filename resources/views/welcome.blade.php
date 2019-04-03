@@ -65,11 +65,21 @@
         </style>
     </head>
     <body>
+    @php
+        $user = \Auth::guard('member')->user();
+    @endphp
         <div class="flex-center position-ref full-height">
 
             <div class="content">
                 <div class="title m-b-md">
                     LightCMS
+                </div>
+                <div>
+                    @if($user)
+                        <span style="margin-right: 20px">欢迎 {{ $user->phone }} !</span><a href="{{ route('member::logout') }}">退出登录</a>
+                    @else
+                        <a href="{{ route('member::login.show') }}">用户登录</a>
+                    @endif
                 </div>
             </div>
         </div>

@@ -40,10 +40,12 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebRoutes();
 
         $this->mapAdminRoutes();
+
+        $this->mapMemberRoutes();
     }
 
     /**
-     * Define the "web" routes for the application.
+     * Define the "admin" routes for the application.
      *
      * These routes all receive session state, CSRF protection, etc.
      *
@@ -55,6 +57,21 @@ class RouteServiceProvider extends ServiceProvider
             ->middleware('web')
             ->namespace($this->namespace . '\Admin')
             ->group(base_path('routes/admin.php'));
+    }
+
+    /**
+     * Define the "member" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapMemberRoutes()
+    {
+        Route::prefix('member')
+            ->middleware('web')
+            ->namespace($this->namespace . '\Front')
+            ->group(base_path('routes/member.php'));
     }
 
     /**

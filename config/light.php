@@ -80,5 +80,24 @@ return [
             'imageMaxSize' => 8 * 1024 * 1024, /* 上传大小限制，单位B */
             'imageAllowFiles' => ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], /* 上传图片格式显示 */
         ]
+    ],
+
+    // 三方登录
+    'auth_login' => [
+        'weibo' => [
+            'client_id' => env('WEIBO_CLIENT_ID', ''),
+            'client_secret' => env('WEIBO_CLIENT_SECRET', ''),
+            'redirect' => env('WEIBO_REDIRECT', ''),
+        ],
+        'qq' => [
+            'client_id' => env('QQ_CLIENT_ID', ''),
+            'client_secret' => env('QQ_CLIENT_SECRET', ''),
+            'redirect' => env('QQ_REDIRECT', ''),
+        ],
+        'wechat' => [
+            'client_id' => env('WECHAT_CLIENT_ID', ''),
+            'client_secret' => env('WECHAT_CLIENT_SECRET', ''),
+            'redirect' => env('WECHAT_REDIRECT', ''),
+        ],
     ]
 ];
