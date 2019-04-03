@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Http\Requests\Front\RegisterRequest;
+use App\Repository\Front\UserRepository;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Requests\Front\LoginRequest;
 use App\Model\Front\User;
 use Auth;
+use Overtrue\Socialite\SocialiteManager;
+use Illuminate\Auth\Events\Registered;
 
 class UserController extends BaseController
 {
@@ -104,5 +108,66 @@ class UserController extends BaseController
             'msg' => '登陆成功',
             'redirect' => true
         ];
+    }
+
+    public function showRegistrationForm()
+    {
+        return view('front.user.login');
+    }
+
+    public function register(RegisterRequest $request)
+    {
+        event(
+            new Registered(
+                $user = UserRepository::create($request->only(['phone', 'password']))
+            )
+        );
+
+        $this->guard()->login($user);
+
+        return [
+            'code' => 0,
+            'msg' => '注册成功',
+            'redirect' => true
+        ];
+    }
+
+    public function weiboAuth()
+    {
+        $socialite = new SocialiteManager(config('light.auth_login'));
+        return $socialite->driver('weibo')->redirect();
+    }
+
+    public function weiboCallback()
+    {
+        $socialite = new SocialiteManager(config('light.auth_login'));
+        $user = $socialite->driver('weibo')->user();
+        return $user;
+    }
+
+    public function qqAuth()
+    {
+        $socialite = new SocialiteManager(config('light.auth_login'));
+        return $socialite->driver('qq')->redirect();
+    }
+
+    public function qqCallback()
+    {
+        $socialite = new SocialiteManager(config('light.auth_login'));
+        $user = $socialite->driver('qq')->user();
+        return $user;
+    }
+
+    public function wechatAuth()
+    {
+        $socialite = new SocialiteManager(config('light.auth_login'));
+        return $socialite->driver('wechat')->redirect();
+    }
+
+    public function wechatCallback()
+    {
+        $socialite = new SocialiteManager(config('light.auth_login'));
+        $user = $socialite->driver('wechat')->user();
+        return $user;
     }
 }
