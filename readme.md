@@ -6,8 +6,9 @@
 
 `lightCMS`基于`Laravel 5.5`开发，前端框架基于`layui`。
 
-`lightCMS`功能点一览：
+`LightCMS&Laravel`学习交流QQ群：**972796921**
 
+## 功能点一览
 后台：
 * 基于`RBAC`的权限管理
 * 管理员、日志、菜单管理
@@ -21,8 +22,6 @@
 * 用户注册登录（包括微信、QQ、微博三方登录）
 
 更多功能待你发现~
-
-`LightCMS&Laravel`学习交流QQ群：**972796921**
 
 ## 后台预览
 ![首页](https://user-images.githubusercontent.com/2555476/54804611-16fa4900-4caf-11e9-885e-7f5c0dac7ce4.png)
