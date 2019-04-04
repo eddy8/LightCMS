@@ -136,7 +136,7 @@ class Tire
         } else {
             $asciis = array($ascii);
         }
-        print_r($ascii);
+
         $utf8_str = '';
         foreach ($asciis as $ascii) {
             $ascii = (int) $ascii;
