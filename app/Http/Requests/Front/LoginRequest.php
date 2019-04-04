@@ -8,6 +8,7 @@
 
 namespace App\Http\Requests\Front;
 
+use App\Foundation\Regexp;
 use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends FormRequest
@@ -30,7 +31,10 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'phone' => 'required',
+            'phone' => [
+                'required',
+                'regex:/' . Regexp::PHONE . '/',
+            ],
             'password' => 'required',
         ];
     }
@@ -44,6 +48,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'phone.required' => '手机号不能为空',
+            'phone.regex' => '手机号格式有误',
             'password.required' => '密码不能为空',
         ];
     }
