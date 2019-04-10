@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Front\LoginRequest;
 use App\Model\Front\User;
 use Auth;
+use Overtrue\Socialite\AuthorizeFailedException;
 use Overtrue\Socialite\SocialiteManager;
 use Illuminate\Auth\Events\Registered;
 
@@ -184,18 +185,22 @@ class UserController extends BaseController
 
     protected function handleCallback($type)
     {
-        $socialite = new SocialiteManager(config('light.auth_login'));
-        $user = $socialite->driver($type)->user();
+        try {
+            $socialite = new SocialiteManager(config('light.auth_login'));
+            $user = $socialite->driver($type)->user();
 
-        $openId = (string) $user->getId();
-        $siteUser = UserAuth::query()->where('openid', $openId)->first();
-        if ($siteUser) {
-            $this->guard()->loginUsingId($siteUser->user_id);
-            return redirect()->intended('/');
+            $openId = (string)$user->getId();
+            $siteUser = UserAuth::query()->where('openid', $openId)->first();
+            if ($siteUser) {
+                $this->guard()->loginUsingId($siteUser->user_id);
+                return redirect()->intended('/');
+            }
+
+            // 重定向到登录注册页面，关联本站用户
+            session([self::AUTH_SESSION => $user]);
+            return redirect(route('member::login.show'));
+        } catch (AuthorizeFailedException $e) {
+            return redirect(route('member::login.show'))->withErrors('授权失败');
         }
-
-        // 重定向到登录注册页面，关联本站用户
-        session([self::AUTH_SESSION => $user]);
-        return redirect(route('member::login.show'));
     }
 }

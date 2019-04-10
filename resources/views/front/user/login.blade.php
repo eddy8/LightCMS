@@ -17,6 +17,11 @@
         @if(session()->has(\App\Http\Controllers\Front\UserController::AUTH_SESSION))
             <span style="margin-bottom: 20px;" class="text-purple-light block">登录或注册进行帐号关联</span>
         @endif
+            <span style="margin-bottom: 20px;" class="text-red-light block">
+            @foreach($errors->all() as $message)
+                {{ $message }}
+            @endforeach
+            </span>
         <ul class="layui-tab-title">
             <li @if($type === 'login') class="layui-this" @endif>登录</li>
             <li @if($type === 'register') class="layui-this" @endif>注册</li>
