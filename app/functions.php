@@ -48,9 +48,23 @@ function initTire()
     });
 }
 
-function checkSensitiveWords($text)
+/**
+ * 敏感词检查
+ *
+ * @param string $text 待检查文本
+ * @param null $mode 检查模式。默认名词、动词、专用词都检查，显示可指定为 noun verb exclusive
+ * @return array
+ */
+function checkSensitiveWords(string $text, $mode = null)
 {
+    if (!is_null($mode) && !in_array($mode, ['noun', 'verb', 'exclusive'])) {
+        throw new \InvalidArgumentException('mode参数无效，只能为null值、noun、exclusive');
+    }
+
     $tires = initTire();
+    if (!is_null($mode)) {
+        return $tires[$mode]->seek($text);
+    }
 
     $result = [];
     foreach ($tires as $k => $tire) {
