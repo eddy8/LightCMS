@@ -15,4 +15,9 @@ class User extends \App\Model\Front\User
     public static $searchField = [
         'phone' => '手机号'
     ];
+
+    public function comments()
+    {
+        return $this->hasMany('App\Model\Admin\Comment', 'user_id');
+    }
 }

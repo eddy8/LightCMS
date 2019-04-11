@@ -31,7 +31,7 @@ function xssFilter(Model $data)
 
 function initTire()
 {
-    return Cache::rememberForever('sensitive_words', function() {
+    return Cache::rememberForever('sensitive_words', function () {
         $tires = [];
 
         foreach (['noun', 'verb', 'exclusive'] as $v) {

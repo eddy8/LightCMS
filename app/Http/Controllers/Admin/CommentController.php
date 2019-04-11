@@ -6,37 +6,36 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\UserRequest;
-use App\Model\Admin\User;
-use App\Repository\Admin\UserRepository;
+use App\Http\Requests\Admin\CommentRequest;
+use App\Repository\Admin\CommentRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
-class UserController extends Controller
+class CommentController extends Controller
 {
-    protected $formNames = ['phone', 'status'];
+    protected $formNames = [];
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->breadcrumb[] = ['title' => '会员列表', 'url' => route('admin::user.index')];
+        $this->breadcrumb[] = ['title' => '评论列表', 'url' => route('admin::comment.index')];
     }
 
     /**
-     * 会员管理-会员列表
+     * 评论管理-评论列表
      *
      */
     public function index()
     {
-        $this->breadcrumb[] = ['title' => '会员列表', 'url' => ''];
-        return view('admin.user.index', ['breadcrumb' => $this->breadcrumb]);
+        $this->breadcrumb[] = ['title' => '评论列表', 'url' => ''];
+        return view('admin.comment.index', ['breadcrumb' => $this->breadcrumb]);
     }
 
     /**
-     * 会员列表数据接口
+     * 评论列表数据接口
      *
      * @param Request $request
      * @return array
@@ -46,32 +45,31 @@ class UserController extends Controller
         $perPage = (int) $request->get('limit', 50);
         $condition = $request->only($this->formNames);
 
-        $data = UserRepository::list($perPage, $condition);
+        $data = CommentRepository::list($perPage, $condition);
 
         return $data;
     }
 
     /**
-     * 会员管理-新增会员
+     * 评论管理-新增评论
      *
      */
     public function create()
     {
-        $this->breadcrumb[] = ['title' => '新增会员', 'url' => ''];
-        return view('admin.user.add', ['breadcrumb' => $this->breadcrumb]);
+        $this->breadcrumb[] = ['title' => '新增评论', 'url' => ''];
+        return view('admin.comment.add', ['breadcrumb' => $this->breadcrumb]);
     }
 
     /**
-     * 会员管理-保存会员
+     * 评论管理-保存评论
      *
-     * @param UserRequest $request
+     * @param CommentRequest $request
      * @return array
      */
-    public function save(UserRequest $request)
+    public function save(CommentRequest $request)
     {
         try {
-            array_push($this->formNames, 'password');
-            UserRepository::add($request->only($this->formNames));
+            CommentRepository::add($request->only($this->formNames));
             return [
                 'code' => 0,
                 'msg' => '新增成功',
@@ -80,41 +78,38 @@ class UserController extends Controller
         } catch (QueryException $e) {
             return [
                 'code' => 1,
-                'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前会员已存在' : '其它错误'),
+                'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前评论已存在' : '其它错误'),
                 'redirect' => false
             ];
         }
     }
 
     /**
-     * 会员管理-编辑会员
+     * 评论管理-编辑评论
      *
      * @param int $id
      * @return View
      */
     public function edit($id)
     {
-        $this->breadcrumb[] = ['title' => '编辑会员', 'url' => ''];
+        $this->breadcrumb[] = ['title' => '编辑评论', 'url' => ''];
 
-        $model = UserRepository::find($id);
-        return view('admin.user.add', ['id' => $id, 'model' => $model, 'breadcrumb' => $this->breadcrumb]);
+        $model = CommentRepository::find($id);
+        return view('admin.comment.add', ['id' => $id, 'model' => $model, 'breadcrumb' => $this->breadcrumb]);
     }
 
     /**
-     * 会员管理-更新会员
+     * 评论管理-更新评论
      *
-     * @param UserRequest $request
+     * @param CommentRequest $request
      * @param int $id
      * @return array
      */
-    public function update(UserRequest $request, $id)
+    public function update(CommentRequest $request, $id)
     {
         $data = $request->only($this->formNames);
-        if (!isset($data['status'])) {
-            $data['status'] = User::STATUS_DISABLE;
-        }
         try {
-            UserRepository::update($id, $data);
+            CommentRepository::update($id, $data);
             return [
                 'code' => 0,
                 'msg' => '编辑成功',
@@ -123,25 +118,25 @@ class UserController extends Controller
         } catch (QueryException $e) {
             return [
                 'code' => 1,
-                'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前会员已存在' : '其它错误'),
+                'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前评论已存在' : '其它错误'),
                 'redirect' => false
             ];
         }
     }
 
     /**
-     * 会员管理-删除会员
+     * 评论管理-删除评论
      *
      * @param int $id
      */
     public function delete($id)
     {
         try {
-            UserRepository::delete($id);
+            CommentRepository::delete($id);
             return [
                 'code' => 0,
                 'msg' => '删除成功',
-                'redirect' => route('admin::user.index')
+                'redirect' => route('admin::comment.index')
             ];
         } catch (\RuntimeException $e) {
             return [

@@ -21,4 +21,9 @@ class AdminUser extends Authenticatable
     protected $guarded = [];
 
     protected $guard_name = 'admin';
+
+    public function comments()
+    {
+        return $this->hasMany('App\Model\Admin\Comment', 'user_id');
+    }
 }

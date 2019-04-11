@@ -68,6 +68,7 @@ class Handler extends ExceptionHandler
         } elseif (array_search('member', $guards) !== false) {
             $url = route('member::login.show');
         }
+
         return $request->expectsJson()
             ? response()->json(['message' => $exception->getMessage()], 401)
             : redirect()->guest($url);
