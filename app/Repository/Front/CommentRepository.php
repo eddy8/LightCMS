@@ -4,10 +4,42 @@ namespace App\Repository\Front;
 
 use App\Model\Admin\Comment;
 use App\Model\Admin\CommentOperateLog;
+use App\Repository\Searchable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class CommentRepository
 {
+    public static function list($perPage = 10, $condition = [])
+    {
+        $data = Comment::query()
+            ->where(function ($query) use ($condition) {
+                Searchable::buildQuery($query, $condition);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($perPage);
+
+        if ($condition['rid'][1] > 0) {
+            // 接口直接请求评论的回复数据，则直接返回
+            return $data;
+        }
+
+        $data->transform(function ($item) use ($perPage) {
+            // 获取评论回复
+            $reply = self::reply($item->id, $perPage);
+            $item->reply = $reply;
+            return $item;
+        });
+        return $data;
+    }
+
+    public static function reply($id, $perPage = 10)
+    {
+        return Cache::rememberForever('comment_replay:' . $id, function () use ($id, $perPage) {
+            return Comment::query()->where('rid', $id)->orderBy('id', 'desc')->paginate($perPage);
+        });
+    }
+
     public static function like(int $id, int $uid)
     {
         self::operate($id, $uid, 'like');

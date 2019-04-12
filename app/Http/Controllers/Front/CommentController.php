@@ -7,6 +7,7 @@ use App\Repository\Admin\EntityRepository;
 use App\Repository\Front\CommentRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Throwable;
 use Illuminate\Support\Facades\Log;
 
@@ -32,6 +33,8 @@ class CommentController extends BaseController
         }
 
         $content = (string) $request->post('content', '');
+        // 暂不支持html
+        $content = strip_tags($content);
         if ($content === '') {
             return [
                 'code' => 5,
@@ -59,15 +62,19 @@ class CommentController extends BaseController
         }
 
         try {
+            $rid = $pid === 0 ? $pid : ($parentComment->rid === 0 ? $parentComment->id : $parentComment->rid);
             \App\Repository\Admin\CommentRepository::add([
                 'entity_id' => $entityId,
                 'content_id' => $contentId,
                 'pid' => $pid,
-                'rid' => $pid === 0 ? $pid : ($parentComment->rid === 0 ? $parentComment->id : $parentComment->rid),
+                'rid' => $rid,
                 'content' => $content,
                 'user_id' => Auth::guard('member')->id(),
             ]);
-
+            if ($rid > 0) {
+                // 清除缓存
+                Cache::forget('comment_replay:' . $rid);
+            }
             return [
                 'code' => 0,
                 'msg' => '',
@@ -91,6 +98,28 @@ class CommentController extends BaseController
      */
     public function list(Request $request, $entityId, $contentId)
     {
+        $result = $this->checkParam($entityId, $contentId);
+        if ($result !== true) {
+            return $result;
+        }
+
+        $limit = (int) $request->get('limit', 10);
+        $limit = ($limit > 0 && $limit <= 20) ? $limit : 10;
+        $rid = (int) $request->get('rid', 0);
+
+        $condition = [
+            'content_id' => ['=', $contentId],
+            'entity_id' => ['=', $entityId],
+            'rid' => ['=', $rid],
+        ];
+
+        $data = CommentRepository::list($limit, $condition);
+
+        return [
+            'code' => 0,
+            'msg' => '',
+            'data' => $data
+        ];
     }
 
     /**
