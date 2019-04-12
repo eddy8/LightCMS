@@ -11,6 +11,18 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Foundation\Regexp;
+
+Route::group(
+    [
+        'as' => 'web::',
+    ],
+    function () {
+        // 首页
+        Route::get('/', 'HomeController@index')->name('index');
+
+        // 评论列表
+        Route::get('/entity/{entityId}/content/{contentId}/comment', 'CommentController@list')
+            ->name('comment.list')->where(['entityId' => Regexp::RESOURCE_ID, 'contentId' => Regexp::RESOURCE_ID]);
+    }
+);

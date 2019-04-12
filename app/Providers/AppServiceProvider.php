@@ -19,6 +19,20 @@ class AppServiceProvider extends ServiceProvider
         if (config('light.light_config') === true) {
             $this->loadConfig();
         }
+
+        /*
+        if (\App::environment('dev')) {
+            \DB::listen(function ($sql) {
+                $sqlStr = $sql->sql;
+                foreach ($sql->bindings as $replace) {
+                    $value = is_numeric($replace) ? $replace : "'" . $replace . "'";
+                    $sqlStr = preg_replace('/\?/', $value, $sqlStr, 1);
+                }
+                \Log::debug(PHP_EOL . 'SQL：' . $sqlStr . PHP_EOL . '用时：' . $sql->time . 'ms');
+                return true;
+            });
+        }
+        */
     }
 
     /**
