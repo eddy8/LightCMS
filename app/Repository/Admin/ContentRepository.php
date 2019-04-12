@@ -55,6 +55,11 @@ class ContentRepository
         return self::$model->newQuery()->find($id);
     }
 
+    public static function findOrFail($id)
+    {
+        return self::$model->newQuery()->findOrFail($id);
+    }
+
     public static function delete($id)
     {
         return self::$model->newQuery()->where('id', $id)->delete();
@@ -75,5 +80,13 @@ class ContentRepository
                 return $item;
             }
         }, $data);
+    }
+
+    public static function adjacent($id)
+    {
+        return [
+            'previous' => self::$model->newQuery()->where('id', '<', $id)->first(),
+            'next' => self::$model->newQuery()->where('id', '>', $id)->first()
+        ];
     }
 }
