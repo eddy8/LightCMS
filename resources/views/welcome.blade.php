@@ -71,7 +71,12 @@
                 <div class="title m-b-md">
                     LightCMS
                 </div>
-                <div>
+                <div class="m-b-md">
+                    @foreach($entities as $entity)
+                        <a target="_blank" href="{{ route('web::entity.content.list', ['entityId' => $entity->id]) }}">{{ $entity->name }}</a><hr>
+                    @endforeach
+                </div>
+                <div class="m-b-md">
                     @if($user)
                         <span style="margin-right: 20px">欢迎 {{ $user->phone }} !</span><a href="{{ route('member::logout') }}">退出登录</a>
                     @else

@@ -21,7 +21,10 @@ Route::group(
         // 首页
         Route::get('/', 'HomeController@index')->name('index');
 
-        // 模型内容
+        // 模型内容列表
+        Route::get('/entity/{entityId}/content/', 'HomeController@content')
+            ->name('entity.content.list')->where(['entityId' => Regexp::RESOURCE_ID]);
+        // 模型内容详情
         Route::get('/entity/{entityId}/content/{contentId}', 'ContentController@show')
             ->name('content')->where(['entityId' => Regexp::RESOURCE_ID, 'contentId' => Regexp::RESOURCE_ID]);
 

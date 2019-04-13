@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $content->title }}</title>
+    <title>列表</title>
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="/public/vendor/layui-v2.4.5/css/layui.css" media="all">
     <link rel="stylesheet" href="/public/css/member.css">
 </head>
 <body class="bg-grey-lightest font-sans leading-normal tracking-normal">
@@ -44,47 +43,12 @@
 <div class="container w-full md:max-w-md mx-auto pt-20">
 
     <div class="w-full px-4 md:px-6 text-xl text-grey-darkest leading-normal" style="font-family:Georgia,serif;">
-
-        <!--Title-->
-        <div class="font-sans">
-                        <h1 class="font-sans break-normal text-black pt-6 pb-2 text-3xl md:text-4xl">{{ $content->title }}</h1>
-				<p class="text-sm md:text-base font-normal text-grey-dark">发布于：{{ $content->created_at }} 最后更新：{{ $content->updated_at }}</p>
-        </div>
         <div class="mt-6">
-            <!--Post Content-->
-            {!! $content->content !!}
-            <!--/ Post Content-->
+        @foreach($contents as $content)
+            <a href="{{ route('web::content', ['entityId' => $entity->id, 'contentId' => $content->id]) }}">{{ $content->title }}</a><hr>
+        @endforeach
         </div>
-
-
     </div>
-
-    <!--Tags -->
-    <div class="text-base md:text-sm text-grey px-4 py-6">
-
-    </div>
-
-    <!--Divider-->
-    <hr class="border-b-2 border-grey-light mb-8 mx-4">
-
-    <!--Next & Prev Links-->
-    <div class="font-sans flex justify-between content-center px-4 pb-12">
-            <div class="text-left">
-                @if($previous)
-                <span class="text-xs md:text-sm font-normal text-grey-dark">&lt; 上一篇</span><br>
-                <p><a href="{{ route('web::content', ['contentId' => $previous->id, 'entityId' => $entityId]) }}" class="break-normal text-base md:text-sm text-teal font-bold no-underline hover:underline">{{ $previous->title }}</a></p>
-                @endif
-            </div>
-            <div class="text-right">
-                @if($next)
-                <span class="text-xs md:text-sm font-normal text-grey-dark">下一篇 &gt;</span><br>
-                <p><a href="{{ route('web::content', ['contentId' => $next->id, 'entityId' => $entityId]) }}" class="break-normal text-base md:text-sm text-teal font-bold no-underline hover:underline">{{ $next->title }}</a></p>
-                @endif
-            </div>
-    </div>
-
-
-    <!--/Next & Prev Links-->
 
 </div>
 <!--/container-->
@@ -118,41 +82,7 @@
 
     </div>
 </footer>
-<script src="/public/vendor/layui-v2.4.5/layui.all.js"></script>
-<script type="text/javascript" src="/public/js/member.js"></script>
 <script>
-    $(function () {
-        $('button').click(function () {
-            var form = $('#login');
-            if ($(this).attr('id') === 'submit-register') {
-                form = $('#register');
-            }
-
-            window.form_submit = $(this);
-            form_submit.prop('disabled', true);
-            $.ajax({
-                url: form.attr('action'),
-                data: form.serialize(),
-                success: function (result) {
-                    if (result.code !== 0) {
-                        form_submit.prop('disabled', false);
-                        layer.msg(result.msg, {shift: 6});
-                        return false;
-                    }
-                    layer.msg(result.msg, {icon: 1}, function () {
-                        if (result.reload) {
-                            location.reload();
-                        }
-                        if (result.redirect) {
-                            location.href = '/';
-                        }
-                    });
-                }
-            });
-            return false;
-        });
-    });
-
     /* Progress bar */
     //Source: https://alligator.io/js/progress-bar-javascript-css-variables/
     var h = document.documentElement,

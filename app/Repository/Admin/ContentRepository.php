@@ -89,4 +89,11 @@ class ContentRepository
             'next' => self::$model->newQuery()->where('id', '>', $id)->first()
         ];
     }
+
+    public static function paginate($perPage = 10)
+    {
+        return self::$model->newQuery()
+            ->orderBy('id', 'desc')
+            ->paginate($perPage);
+    }
 }
