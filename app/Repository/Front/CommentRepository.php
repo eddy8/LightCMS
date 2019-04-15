@@ -134,4 +134,9 @@ class CommentRepository
 
         return $data;
     }
+
+    public static function addReplyCount($id)
+    {
+        return Comment::query()->where('id', $id)->increment('reply_count');
+    }
 }

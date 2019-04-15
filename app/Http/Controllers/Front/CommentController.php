@@ -74,6 +74,9 @@ class CommentController extends BaseController
             if ($rid > 0) {
                 // 清除缓存
                 Cache::forget('comment_replay:' . $rid);
+
+                // 回复数+1
+                CommentRepository::addReplyCount($rid);
             }
             return [
                 'code' => 0,
