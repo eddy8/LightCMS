@@ -27,6 +27,7 @@ class CreateCommentsTable extends Migration
             $table->unsignedInteger('rid')->default(0);
             $table->unsignedTinyInteger('status')->default(0);
             $table->unsignedInteger('reply_count')->default(0);
+            $table->unsignedInteger('reply_user_id')->default(0);
             $table->timestamps();
         });
     }

@@ -17,6 +17,11 @@ class Comment extends Model
         return $this->belongsTo('App\Model\Admin\User', 'user_id');
     }
 
+    public function replyUser()
+    {
+        return $this->belongsTo('App\Model\Admin\User', 'reply_user_id');
+    }
+
     public function adminUser()
     {
         return $this->belongsTo('App\Model\Admin\AdminUser', 'user_id');

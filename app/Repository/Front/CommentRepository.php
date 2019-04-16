@@ -38,7 +38,7 @@ class CommentRepository
     {
         return Cache::rememberForever('comment_replay:' . $id, function () use ($id, $perPage) {
             return Comment::query()->where('rid', $id)->orderBy('id', 'desc')
-                ->with('user:id,name,avatar')->paginate($perPage);
+                ->with('user:id,name,avatar')->with('replyUser:id,name,avatar')->paginate($perPage);
         });
     }
 

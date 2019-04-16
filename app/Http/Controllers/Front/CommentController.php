@@ -66,6 +66,7 @@ class CommentController extends BaseController
                 'rid' => $rid,
                 'content' => $content,
                 'user_id' => Auth::guard('member')->id(),
+                'reply_user_id' => $pid > 0 ? $parentComment->user_id : 0,
             ]);
             if ($rid > 0) {
                 // 清除缓存
