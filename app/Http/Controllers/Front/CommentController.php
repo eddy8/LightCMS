@@ -13,10 +13,6 @@ use Illuminate\Support\Facades\Log;
 
 class CommentController extends BaseController
 {
-    public function __construct()
-    {
-        //Auth::guard('member')->loginUsingId(1);
-    }
     /**
      * 发布一条评论
      *
@@ -81,6 +77,7 @@ class CommentController extends BaseController
             return [
                 'code' => 0,
                 'msg' => '',
+                'reload' => true,
             ];
         } catch (Throwable $e) {
             Log::error($e);

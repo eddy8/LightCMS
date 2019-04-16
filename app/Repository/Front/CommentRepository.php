@@ -16,6 +16,7 @@ class CommentRepository
             ->where(function ($query) use ($condition) {
                 Searchable::buildQuery($query, $condition);
             })
+            ->with('user:id,name,avatar')
             ->orderBy('id', 'desc')
             ->paginate($perPage);
 
@@ -36,7 +37,8 @@ class CommentRepository
     public static function reply($id, $perPage = 10)
     {
         return Cache::rememberForever('comment_replay:' . $id, function () use ($id, $perPage) {
-            return Comment::query()->where('rid', $id)->orderBy('id', 'desc')->paginate($perPage);
+            return Comment::query()->where('rid', $id)->orderBy('id', 'desc')
+                ->with('user:id,name,avatar')->paginate($perPage);
         });
     }
 

@@ -17,6 +17,9 @@ var ajax_options = {
                 layer.msg(parse.errors[key][0], {shift: 6});
             }
             return false;
+        } else if (resp.status === 401) {
+            layer.msg('请先登录', {shift: 6});
+            return false;
         } else {
             var parse = $.parseJSON(resp.responseText);
             if (parse && parse.err) {
