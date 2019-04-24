@@ -88,7 +88,7 @@ function checkSensitiveWords(string $text, $mode = null)
     if (!empty($result['noun']) && !empty($result['verb'])) {
         $data = mapTypeToVerbOfSensitiveWords();
         foreach ($result['noun'] as $noun) {
-            $type = Cache::rememberForever('sensitive_words_noun_type', function () use ($noun) {
+            $type = Cache::rememberForever('sensitive_words_noun_type:' . $noun, function () use ($noun) {
                 return SensitiveWord::query()->where('noun', $noun)->value('type');
             });
             $type = $type ? $type : 'others';
