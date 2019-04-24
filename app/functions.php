@@ -31,7 +31,7 @@ function xssFilter(Model $data)
 
 function initTire()
 {
-    return Cache::rememberForever('sensitive_words', function () {
+    return Cache::rememberForever('sensitive_words_tire', function () {
         $tires = [];
 
         foreach (['noun', 'verb', 'exclusive'] as $v) {
@@ -45,6 +45,20 @@ function initTire()
         }
 
         return $tires;
+    });
+}
+
+function mapTypeToVerbOfSensitiveWords()
+{
+    return Cache::rememberForever('sensitive_verb_words', function () {
+        $words = SensitiveWord::query()->select('verb', 'type')->where('verb', '<>', '')->get();
+
+        $data = [];
+        foreach ($words as $word) {
+            $data[$word->type <> '' ? $word->type : 'others'][] = $word->verb;
+        }
+
+        return $data;
     });
 }
 
@@ -67,8 +81,23 @@ function checkSensitiveWords(string $text, $mode = null)
     }
 
     $result = [];
+    $return = [];
     foreach ($tires as $k => $tire) {
         $result[$k] = $tire->seek($text);
     }
-    return $result;
+    if (!empty($result['noun']) && !empty($result['verb'])) {
+        $data = mapTypeToVerbOfSensitiveWords();
+        foreach ($result['noun'] as $noun) {
+            $type = Cache::rememberForever('sensitive_words_noun_type', function () use ($noun) {
+                return SensitiveWord::query()->where('noun', $noun)->value('type');
+            });
+            $type = $type ? $type : 'others';
+            $verbs = array_intersect($data[$type], $result['verb']);
+            if (!empty($verbs)) {
+                array_push($verbs, $noun);
+                $return[] = implode(' ', $verbs);
+            }
+        }
+    }
+    return array_merge($return, $result['exclusive']);
 }

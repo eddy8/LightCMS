@@ -150,6 +150,19 @@ php artisan light:basic config 配置
 
 最后，如果想让生成的路由展示在菜单中，只需在[菜单管理](/admin/menus)页面点击**自动更新菜单**即可。
 
+## 敏感词检测
+如果需要对发表的内容（文章、评论等）进行内容审查，则可直接调用`LightCMS`提供的`checkSensitiveWords`函数即可。示例如下：
+```php
+$result = checkSensitiveWords('出售正品枪支');
+print_r($result);
+/*
+[
+    "售 出售 枪",
+    "正品枪支"
+]
+*/
+```
+
 ## 前台相关
 ### 用户注册登录
 `LightCMS`集成了一套简单的用户注册登录系统，支持微信、QQ、微博三方登录。三方登录相关配置请参考`config/light.php`。
