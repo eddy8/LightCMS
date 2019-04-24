@@ -90,15 +90,22 @@ class CommentRepository
 
             $oppositeOperate = $operate === 'like' ? 'dislike' : 'like';
             $log = CommentOperateLog::query()->where('user_id', $uid)->where('comment_id', $id)
-                ->where('operate', $oppositeOperate)->first();
+                ->where('operate', $oppositeOperate)->lockForUpdate()->first();
             if ($log) {
-                // 存在反操作则删除，并递减数量
-                $log->delete();
+                // 存在反操作则递减数量并更新操作类型
                 Comment::query()->where('id', $id)->decrement($oppositeOperate);
+                $log->operate = $operate;
+                $log->save();
+            } else {
+                CommentOperateLog::query()->create(['user_id' => $uid, 'comment_id' => $id, 'operate' => $operate]);
             }
+            Comment::query()->where('id', $id)->increment($operate);
 
-            CommentOperateLog::query()->create(['user_id' => $uid, 'comment_id' => $id, 'operate' => $operate]);
-            return Comment::query()->where('id', $id)->increment($operate);
+            $comment = Comment::query()->select('rid')->find($id);
+            if ($comment->rid > 0) {
+                Cache::forget('comment_replay:' . $comment->rid);
+            }
+            return true;
         });
     }
 

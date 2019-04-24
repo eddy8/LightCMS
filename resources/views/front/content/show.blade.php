@@ -7,6 +7,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/public/vendor/layui-v2.4.5/css/layui.css" media="all">
     <link rel="stylesheet" href="/public/css/member.css">
+    <!-- 样式文件来自 www.taptap.com 侵删~~~ -->
+    <link rel="stylesheet" href="/public/css/app-2adb6bab87.css">
+    <style>
+        .pagination {
+            display: inline-block;
+            padding-left: 0;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .pagination>li {
+            display: inline;
+        }
+        img {
+            vertical-align: middle;
+        }
+        img {
+            border: 0;
+        }
+        .img-circle {
+            border-radius: 50%;
+        }
+
+        .taptap-review-item {
+            padding: 15px 0px;
+        }
+    </style>
 </head>
 <body class="bg-grey-lightest font-sans leading-normal tracking-normal">
 
@@ -86,6 +112,25 @@
 
     <!--/Next & Prev Links-->
 
+    <div id="comment-form">
+        <h3>用户评价</h3>
+        <form action="{{ route('member::comment.save', ['entityId' => $entityId, 'contentId' => $content->id]) }}" class="layui-form">
+            <div class="layui-form-item">
+                <div>
+                <textarea name="content" rows="7" placeholder="请输入评论内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div>
+                    <button class="layui-btn" style="float: right" lay-submit lay-filter="comment" id="submitBtn">提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="comments">
+
+    </div>
+
 </div>
 <!--/container-->
 
@@ -121,37 +166,243 @@
 <script src="/public/vendor/layui-v2.4.5/layui.all.js"></script>
 <script type="text/javascript" src="/public/js/member.js"></script>
 <script>
-    $(function () {
-        $('button').click(function () {
-            var form = $('#login');
-            if ($(this).attr('id') === 'submit-register') {
-                form = $('#register');
+    var info = {
+        'entityId': {{ $entityId }},
+        'contentId': {{ $content->id }}
+    };
+    var form = layui.form;
+
+    //监听提交
+    form.on('submit(comment)', function(data){
+        window.form_submit = $('#submitBtn');
+        form_submit.prop('disabled', true);
+        $.ajax({
+            url: data.form.action,
+            data: data.field,
+            success: function (result) {
+                if (result.code !== 0) {
+                    form_submit.prop('disabled', false);
+                    layer.msg(result.msg, {shift: 6});
+                    return false;
+                }
+                form_submit.prop('disabled', false);
+                layer.msg('操作成功', {icon: 1}, function () {
+                    if (result.reload) {
+                        location.reload();
+                    }
+                    if (result.redirect) {
+                        location.href = '{!! url()->previous() !!}';
+                    }
+                });
+            }
+        });
+
+        return false;
+    });
+
+    $.ajax({
+        url: '{{ route('web::comment.list', ['entityId' => $entityId, 'contentId' => $content->id]) }}',
+        method: 'get',
+        success: function (data) {
+            if (data.code !== 0) {
+                layer.msg('评论加载失败', {icon: 2});
+                return;
             }
 
-            window.form_submit = $(this);
-            form_submit.prop('disabled', true);
-            $.ajax({
-                url: form.attr('action'),
-                data: form.serialize(),
-                success: function (result) {
-                    if (result.code !== 0) {
-                        form_submit.prop('disabled', false);
-                        layer.msg(result.msg, {shift: 6});
-                        return false;
-                    }
-                    layer.msg(result.msg, {icon: 1}, function () {
-                        if (result.reload) {
-                            location.reload();
-                        }
-                        if (result.redirect) {
-                            location.href = '/';
-                        }
-                    });
+            var listData = data.data.data, avatar;
+            var html = '<ul class="list-unstyled taptap-review-list" id="reviewsList">';
+            for (var i = 0; i < listData.length; i++) {
+                avatar = listData[i].user.avatar;
+                if (avatar === '') {
+                    avatar = '/public/image/boy-2.png';
                 }
+                html = html + '<li id="review-' + listData[i].id + '" class="taptap-review-item collapse in" data-user="' + listData[i].user_id + '"> \
+    <a href="#" class="review-item-avatar img-circle gender-empty" rel="nofollow"> \
+        <img src="' + avatar + '"> \
+    </a> \
+    <div class="review-item-text "> \
+        <div class="item-text-header"> \
+            <span class="taptap-user" data-user-id="9474753"> \
+                <a href="#" class="taptap-user-name taptap-link" rel="nofollow">' + listData[i].user.name + '</a> \
+            </span> \
+            <a href="#" class="text-header-time"> \
+                <span data-toggle="tooltip" data-placement="top" title="' + listData[i].created_at + '" \
+                        <span>发布于 </span> \
+                        <span>' + getDateDiff(getDateTimeStamp(listData[i].created_at)) + '</span> \
+                </span> \
+            </a> \
+            <button type="button" data-obj="review" data-id="' + listData[i].id + '" class="btn btn-sm taptap-button-opinion report"> \
+                <span>举报</span> \
+            </button> \
+        </div> \
+        <div class="item-text-body" data-review-' + listData[i].id + '="contents"> \
+            <p>' + listData[i].content + '</p> \
+        </div> \
+        <div class="item-text-footer"> \
+            <ul class="list-unstyled text-footer-btns"> \
+                <li> \
+                    <button class="btn btn-sm taptap-button-opinion vote-btn vote-up" data-value="like" data-id="' + listData[i].id + '" data-has-word=""> \
+                        <i class="icon-font icon-up"></i> \
+                        <span data-taptap-ajax-vote="count">' + listData[i].like + '</span> \
+                    </button> \
+                </li> \
+                <li> \
+                    <button class="btn btn-sm taptap-button-opinion vote-btn vote-down" data-value="dislike" data-id="' + listData[i].id + '" data-has-word=""> \
+                        <i class="icon-font icon-down"></i> \
+                        <span data-taptap-ajax-vote="count" data-downs="14">' + listData[i].dislike + '</span> \
+                    </button> \
+                </li> \
+                <li> \
+                    <button id="review-' + listData[i].id + '-reply-button" class="btn btn-sm taptap-button-opinion comment question-witch-replay" data-taptap-comment="button" data-obj-id="' + listData[i].id + '" data-modalid="#commentModal"> \
+                        <i class="icon-font icon-reply"></i> \
+                        <span class="normal-text">回复 ' + listData[i].reply_count + '</span> \
+                    </button> \
+                </li> \
+            </ul> \
+        </div> \
+        <div class="taptap-comments collapse in" data-taptap-comment="container" data-taptap-ajax-paginator="container">';
+                var reply = listData[i].reply;
+                if (reply.data.length > 0) {
+            html = html + '<ul class="list-unstyled taptap-comments-list">';
+            for (var j = 0; j < reply.data.length; j++) {
+                avatar = reply.data[j].user.avatar;
+                if (avatar === '') {
+                    avatar = '/public/image/boy-2.png';
+                }
+                html = html + '<li class="taptap-comment-item " id="comment-10486096"> \
+                    <a href="https://www.taptap.com/user/15226001" class="comment-item-avatar img-circle female"> \
+                        <img src="' + avatar + '" data-comment-avatar="10486096"> \
+                    </a> \
+                    <div class="comment-item-text"> \
+                        <div class="item-text-header"> \
+                            <span class="taptap-user" data-user-id="15226001"> \
+                                <a href="" class="taptap-user-name taptap-link" rel="nofollow">' + reply.data[j].user.name + '</a> \
+                            </span>';
+                            if (reply.data[j].reply_user.id !== listData[i].user_id) {
+                                html = html + '<i class="taptap-icon icon-reply-right"></i> \
+                            <span class="taptap-user" data-user-id="15226001"> \
+                                <a href="" class="taptap-user-name taptap-link" rel="nofollow">' + reply.data[j].reply_user.name + '</a> \
+                            </span>';
+                            }
+                        html = html + '</div> \
+                        <div class="item-text-body" data-comment-10486096="contents"> \
+                            <p>' + reply.data[j].content + '</p> \
+                        </div> \
+                        <div class="item-text-footer"> \
+                            <ul class="list-unstyled text-footer-btns"> \
+                                <li> \
+                                    <span class="text-footer-time" data-dynamic-time="1555341470" title="' + reply.data[j].created_at + '">' + getDateDiff(getDateTimeStamp(reply.data[j].created_at)) + '</span> \
+                                </li> \
+                                <li class="open"> \
+                                    <a href="#" data-taptap-comment="button" data-obj="comment" data-obj-id="' + reply.data[j].id + '" data-reply-id="10486096" class="btn btn-sm taptap-button-opinion comment question-witch-replay"> \
+                                        <i class="icon-font icon-reply"></i> \
+                                        <span>回复</span> \
+                                    </a> \
+                                </li> \
+                                <li> \
+                                    <button class="btn btn-sm taptap-button-opinion vote-btn vote-up" data-value="like" data-id="' + reply.data[j].id + '" data-has-word=""> \
+                                        <i class="icon-font icon-up"></i> \
+                                        <span data-taptap-ajax-vote="count">' + reply.data[j].like + '</span> \
+                                    </button> \
+                                </li> \
+                                <li> \
+                                    <button class="btn btn-sm taptap-button-opinion vote-btn vote-down" data-value="dislike" data-id="' + reply.data[j].id + '" data-has-word=""> \
+                                        <i class="icon-font icon-down"></i> \
+                                        <span data-taptap-ajax-vote="count" data-downs="0">' + reply.data[j].dislike + '</span> \
+                                    </button> \
+                                </li> \
+                                <li> \
+                                    <button type="button" data-id="' + reply.data[j].id + '" class="btn btn-sm taptap-button-opinion report"> \
+                                        <span>举报</span> \
+                                    </button> \
+                                </li> \
+                            </ul> \
+                        </div> \
+                    </div> \
+                </li>';
+            }
+            html = html + '</ul>';
+                    }
+            html = html + '<div class="taptap-comments-buttons"> \
+                <div class="comments-buttons-page" data-taptap-ajax="paginator"> ';
+                    if (reply.last_page > 1) {
+                        html = html + '<section class="taptap-paginator">\
+                    <ul class="pagination">';
+                        if (reply.last_page < 10) {
+                            html = html + '<li class="disabled"><span>&lt;</span></li>';
+                            for (var k = 1; k <= reply.last_page; k++) {
+                                if (k == reply.current_page) {
+                                    html = html + '<li class="active"><span>' + k + '</span></li>';
+                                } else {
+                                    html = html + '<li><a rel="nofollow" href="#">' + k + '</a></li>';
+                                }
+                            }
+                            html = html + '<li><span>&gt;</span></li>';
+                        }
+                        html = html + '</ul></section> ';
+                    }
+                html = html + '</div> \
+                    <span id="reply-13428285-button" class="reply-review-button"></span> \
+            </div> \
+        </div> \
+    </div> \
+</li> \
+</ul>';
+            }
+            //html = html + '<section class="taptap-paginator"><ul class="pagination"><li class="disabled"><span>&lt;</span></li><li class="active"><span>1</span></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=2#review-list">2</a></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=3#review-list">3</a></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=4#review-list">4</a></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=5#review-list">5</a></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=6#review-list">6</a></li><li><span>...</span></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=379#review-list">379</a></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=2#review-list">&gt;</a></li></ul></section>';
+
+            $('#comments').append(html);
+
+            // 评论回复
+            $('.question-witch-replay').on('click', function () {
+                $('input[name=pid]').remove();
+                layer.open({
+                    type: 1,
+                    area: '500px',
+                    title: '回复',
+                    content: $('form.layui-form').append('<input type="hidden" name="pid" value="' + $(this).data('obj-id') + '">'),
+                    cancel: function(index, layero){
+                        $('input[name=pid]').remove();
+                        return true;
+                    }
+                });
             });
-            return false;
-        });
+
+            // 评论操作
+            $('button.vote-btn').click(function () {
+                var id = $(this).data('id'),
+                    action = $(this).data('value'),
+                    that = $(this);
+                if (that.hasClass('active')) {
+                    action = 'neutral';
+                }
+                $.ajax({
+                    url: '/member/comment/' + id + '/operate/' + action,
+                    success: function (d) {
+                        if (d.code !== 0) {
+                            layer.msg('操作失败', {icon: 2});
+                            return;
+                        }
+                        $('button.vote-btn[data-id=' + id + ']').removeClass('active').find('span').text(0);
+                        if (d.data[action] > 0) {
+                            that.addClass('active');
+                        }
+                        that.find('span').eq(0).text(d.data[action]);
+                    }
+                })
+            });
+
+            // 举报
+            $('button.report').click(function () {
+                layer.msg('待实现');
+            });
+        },
+        error: function () {
+            layer.msg('页面错误', {icon: 2});
+        }
     });
+
+
 
     /* Progress bar */
     //Source: https://alligator.io/js/progress-bar-javascript-css-variables/
