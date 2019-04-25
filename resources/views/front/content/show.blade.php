@@ -200,23 +200,24 @@
         return false;
     });
 
-    $.ajax({
-        url: '{{ route('web::comment.list', ['entityId' => $entityId, 'contentId' => $content->id]) }}',
-        method: 'get',
-        success: function (data) {
-            if (data.code !== 0) {
-                layer.msg('评论加载失败', {icon: 2});
-                return;
-            }
-
-            var listData = data.data.data, avatar;
-            var html = '<ul class="list-unstyled taptap-review-list" id="reviewsList">';
-            for (var i = 0; i < listData.length; i++) {
-                avatar = listData[i].user.avatar;
-                if (avatar === '') {
-                    avatar = '/public/image/boy-2.png';
+    function loadComments(url) {
+        $.ajax({
+            url: url !== undefined ? url : '{{ route('web::comment.list', ['entityId' => $entityId, 'contentId' => $content->id]) }}',
+            method: 'get',
+            success: function (data) {
+                if (data.code !== 0) {
+                    layer.msg('评论加载失败', {icon: 2});
+                    return;
                 }
-                html = html + '<li id="review-' + listData[i].id + '" class="taptap-review-item collapse in" data-user="' + listData[i].user_id + '"> \
+
+                var listData = data.data.data, avatar;
+                var html = '<ul class="list-unstyled taptap-review-list" id="reviewsList">';
+                for (var i = 0; i < listData.length; i++) {
+                    avatar = listData[i].user.avatar;
+                    if (avatar === '') {
+                        avatar = '/public/image/boy-2.png';
+                    }
+                    html = html + '<li id="review-' + listData[i].id + '" class="taptap-review-item collapse in" data-user="' + listData[i].user_id + '"> \
     <a href="#" class="review-item-avatar img-circle gender-empty" rel="nofollow"> \
         <img src="' + avatar + '"> \
     </a> \
@@ -261,15 +262,15 @@
             </ul> \
         </div> \
         <div class="taptap-comments collapse in" data-taptap-comment="container" data-taptap-ajax-paginator="container">';
-                var reply = listData[i].reply;
-                if (reply.data.length > 0) {
-            html = html + '<ul class="list-unstyled taptap-comments-list">';
-            for (var j = 0; j < reply.data.length; j++) {
-                avatar = reply.data[j].user.avatar;
-                if (avatar === '') {
-                    avatar = '/public/image/boy-2.png';
-                }
-                html = html + '<li class="taptap-comment-item " id="comment-10486096"> \
+                    var reply = listData[i].reply;
+                    if (reply.data.length > 0) {
+                        html = html + '<ul class="list-unstyled taptap-comments-list">';
+                        for (var j = 0; j < reply.data.length; j++) {
+                            avatar = reply.data[j].user.avatar;
+                            if (avatar === '') {
+                                avatar = '/public/image/boy-2.png';
+                            }
+                            html = html + '<li class="taptap-comment-item " id="comment-10486096"> \
                     <a href="https://www.taptap.com/user/15226001" class="comment-item-avatar img-circle female"> \
                         <img src="' + avatar + '" data-comment-avatar="10486096"> \
                     </a> \
@@ -284,7 +285,7 @@
                                 <a href="" class="taptap-user-name taptap-link" rel="nofollow">' + reply.data[j].reply_user.name + '</a> \
                             </span>';
                             }
-                        html = html + '</div> \
+                            html = html + '</div> \
                         <div class="item-text-body" data-comment-10486096="contents"> \
                             <p>' + reply.data[j].content + '</p> \
                         </div> \
@@ -320,10 +321,10 @@
                         </div> \
                     </div> \
                 </li>';
-            }
-            html = html + '</ul>';
+                        }
+                        html = html + '</ul>';
                     }
-            html = html + '<div class="taptap-comments-buttons"> \
+                    html = html + '<div class="taptap-comments-buttons"> \
                 <div class="comments-buttons-page" data-taptap-ajax="paginator"> ';
                     if (reply.last_page > 1) {
                         html = html + '<section class="taptap-paginator">\
@@ -341,68 +342,85 @@
                         }
                         html = html + '</ul></section> ';
                     }
-                html = html + '</div> \
+                    html = html + '</div> \
                     <span id="reply-13428285-button" class="reply-review-button"></span> \
             </div> \
         </div> \
     </div> \
 </li> \
 </ul>';
-            }
-            //html = html + '<section class="taptap-paginator"><ul class="pagination"><li class="disabled"><span>&lt;</span></li><li class="active"><span>1</span></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=2#review-list">2</a></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=3#review-list">3</a></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=4#review-list">4</a></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=5#review-list">5</a></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=6#review-list">6</a></li><li><span>...</span></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=379#review-list">379</a></li><li><a rel="nofollow" href="https://www.taptap.com/app/72930/review?order=default&amp;page=2#review-list">&gt;</a></li></ul></section>';
-
-            $('#comments').append(html);
-
-            // 评论回复
-            $('.question-witch-replay').on('click', function () {
-                $('input[name=pid]').remove();
-                layer.open({
-                    type: 1,
-                    area: '500px',
-                    title: '回复',
-                    content: $('form.layui-form').append('<input type="hidden" name="pid" value="' + $(this).data('obj-id') + '">'),
-                    cancel: function(index, layero){
-                        $('input[name=pid]').remove();
-                        return true;
-                    }
-                });
-            });
-
-            // 评论操作
-            $('button.vote-btn').click(function () {
-                var id = $(this).data('id'),
-                    action = $(this).data('value'),
-                    that = $(this);
-                if (that.hasClass('active')) {
-                    action = 'neutral';
                 }
-                $.ajax({
-                    url: '/member/comment/' + id + '/operate/' + action,
-                    success: function (d) {
-                        if (d.code !== 0) {
-                            layer.msg('操作失败', {icon: 2});
-                            return;
-                        }
-                        $('button.vote-btn[data-id=' + id + ']').removeClass('active').find('span').text(0);
-                        if (d.data[action] > 0) {
-                            that.addClass('active');
-                        }
-                        that.find('span').eq(0).text(d.data[action]);
+
+                if (data.data.last_page > 1) {
+                    html = html + '<section class="taptap-paginator"><ul class="pagination">';
+                    if (data.data.current_page !== 1) {
+                        html = html + '<li><a class="page-target" href="' + data.data.prev_page_url + '">上一页</a></li>';
                     }
-                })
-            });
+                    if (data.data.next_page_url !== null) {
+                        html = html + '<li><a class="page-target" href="' + data.data.next_page_url + '">下一页</a></li>';
+                    }
+                    html = html + '</ul></section>';
+                }
 
-            // 举报
-            $('button.report').click(function () {
-                layer.msg('待实现');
-            });
-        },
-        error: function () {
-            layer.msg('页面错误', {icon: 2});
-        }
-    });
+                $('#comments').html(html);
 
+                // 评论回复
+                $('.question-witch-replay').on('click', function () {
+                    $('input[name=pid]').remove();
+                    layer.open({
+                        type: 1,
+                        area: '500px',
+                        title: '回复',
+                        content: $('form.layui-form').append('<input type="hidden" name="pid" value="' + $(this).data('obj-id') + '">'),
+                        cancel: function (index, layero) {
+                            $('input[name=pid]').remove();
+                            return true;
+                        }
+                    });
+                });
 
+                // 评论操作
+                $('button.vote-btn').click(function () {
+                    var id = $(this).data('id'),
+                        action = $(this).data('value'),
+                        that = $(this);
+                    if (that.hasClass('active')) {
+                        action = 'neutral';
+                    }
+                    $.ajax({
+                        url: '/member/comment/' + id + '/operate/' + action,
+                        success: function (d) {
+                            if (d.code !== 0) {
+                                layer.msg('操作失败', {icon: 2});
+                                return;
+                            }
+                            $('button.vote-btn[data-id=' + id + ']').removeClass('active').find('span').text(0);
+                            if (d.data[action] > 0) {
+                                that.addClass('active');
+                            }
+                            that.find('span').eq(0).text(d.data[action]);
+                        }
+                    })
+                });
+
+                // 举报
+                $('button.report').click(function () {
+                    layer.msg('待实现');
+                });
+
+                // 评论翻页
+                $('a.page-target').click(function (e) {
+                    e.preventDefault();
+                    loadComments($(this).attr('href'));
+                });
+            },
+            error: function () {
+                layer.msg('页面错误', {icon: 2});
+            }
+        });
+    }
+
+    loadComments();
 
     /* Progress bar */
     //Source: https://alligator.io/js/progress-bar-javascript-css-variables/
