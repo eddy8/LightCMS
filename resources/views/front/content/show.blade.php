@@ -237,7 +237,7 @@
             </button> \
         </div> \
         <div class="item-text-body" data-review-' + listData[i].id + '="contents"> \
-            <p>' + listData[i].content + '</p> \
+            <p>' + listData[i].content.replace(/\n/g,"<br>").replace(/\s/g,"&nbsp;") + '</p> \
         </div> \
         <div class="item-text-footer"> \
             <ul class="list-unstyled text-footer-btns"> \
@@ -287,7 +287,7 @@
                             }
                             html = html + '</div> \
                         <div class="item-text-body" data-comment-10486096="contents"> \
-                            <p>' + reply.data[j].content + '</p> \
+                            <p>' + reply.data[j].content.replace(/\n/g,"<br>").replace(/\s/g,"&nbsp;") + '</p> \
                         </div> \
                         <div class="item-text-footer"> \
                             <ul class="list-unstyled text-footer-btns"> \
