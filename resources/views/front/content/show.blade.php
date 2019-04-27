@@ -30,7 +30,7 @@
         }
 
         .taptap-review-item {
-            padding: 15px 0px;
+            padding: 5px 0px;
         }
     </style>
 </head>

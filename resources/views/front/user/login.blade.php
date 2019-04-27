@@ -140,7 +140,7 @@
                             location.reload();
                         }
                         if (result.redirect) {
-                            location.href = '/';
+                            location.href = '{{ $url }}';
                         }
                     });
                 }

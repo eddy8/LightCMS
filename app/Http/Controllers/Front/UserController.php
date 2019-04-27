@@ -40,7 +40,12 @@ class UserController extends BaseController
      */
     public function showLogin()
     {
-        return view('front.user.login');
+        $url = url()->previous();
+        if ($url === route('member::logout')) {
+            $url = '/';
+        }
+
+        return view('front.user.login', compact('url'));
     }
 
     /**
