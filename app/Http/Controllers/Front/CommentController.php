@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Repository\Admin\ContentRepository;
 use App\Repository\Admin\EntityRepository;
 use App\Repository\Front\CommentRepository;
+use App\Model\Admin\CommentOperateLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -121,6 +122,32 @@ class CommentController extends BaseController
             'msg' => '',
             'data' => $data
         ];
+    }
+
+    /**
+     * 获取指定用户对评论的操作数据
+     *
+     * @param Request $request
+     */
+    public function operateLogs(Request $request)
+    {
+        $commentIds = $request->get('comment_ids', '');
+        if (!preg_match('%^[1-9]\d*(,[1-9]\d*)*%', $commentIds)) {
+            return [
+                'code' => 1,
+                'msg' => '参数错误'
+            ];
+        }
+
+        $userId = Auth::guard('member')->id();
+        $data = CommentOperateLog::query()->select('comment_id', 'operate')
+                ->whereIn('comment_id', explode(',', $commentIds))
+                ->where('user_id', $userId)->get();
+        return [
+            'code' => 0,
+            'msg' => '',
+            'data' => $data
+        ];;
     }
 
     /**

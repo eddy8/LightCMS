@@ -39,6 +39,8 @@ Route::group(
             // 评论操作
             Route::post('/comment/{id}/operate/{action}', 'CommentController@operate')
                 ->name('comment.operate')->where('action', 'like|dislike|neutral');
+            Route::get('/comment/operate/logs', 'CommentController@operateLogs')
+                ->name('comment.operateLogs');
         });
     }
 );

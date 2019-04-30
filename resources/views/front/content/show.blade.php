@@ -212,7 +212,9 @@
 
                 var listData = data.data.data, avatar;
                 var html = '<ul class="list-unstyled taptap-review-list" id="reviewsList">';
+                var commentIds = [];
                 for (var i = 0; i < listData.length; i++) {
+                    commentIds.push(listData[i].id);
                     avatar = listData[i].user.avatar;
                     if (avatar === '') {
                         avatar = '/public/image/boy-2.png';
@@ -250,7 +252,7 @@
                 <li> \
                     <button class="btn btn-sm taptap-button-opinion vote-btn vote-down" data-value="dislike" data-id="' + listData[i].id + '" data-has-word=""> \
                         <i class="icon-font icon-down"></i> \
-                        <span data-taptap-ajax-vote="count" data-downs="14">' + listData[i].dislike + '</span> \
+                        <span data-taptap-ajax-vote="count">' + listData[i].dislike + '</span> \
                     </button> \
                 </li> \
                 <li> \
@@ -266,12 +268,13 @@
                     if (reply.data.length > 0) {
                         html = html + '<ul class="list-unstyled taptap-comments-list">';
                         for (var j = 0; j < reply.data.length; j++) {
+                            commentIds.push(reply.data[j].id);
                             avatar = reply.data[j].user.avatar;
                             if (avatar === '') {
                                 avatar = '/public/image/boy-2.png';
                             }
                             html = html + '<li class="taptap-comment-item " id="comment-10486096"> \
-                    <a href="https://www.taptap.com/user/15226001" class="comment-item-avatar img-circle female"> \
+                    <a href="" class="comment-item-avatar img-circle female"> \
                         <img src="' + avatar + '" data-comment-avatar="10486096"> \
                     </a> \
                     <div class="comment-item-text"> \
@@ -309,7 +312,7 @@
                                 <li> \
                                     <button class="btn btn-sm taptap-button-opinion vote-btn vote-down" data-value="dislike" data-id="' + reply.data[j].id + '" data-has-word=""> \
                                         <i class="icon-font icon-down"></i> \
-                                        <span data-taptap-ajax-vote="count" data-downs="0">' + reply.data[j].dislike + '</span> \
+                                        <span data-taptap-ajax-vote="count">' + reply.data[j].dislike + '</span> \
                                     </button> \
                                 </li> \
                                 <li> \
@@ -363,6 +366,28 @@
                 }
 
                 $('#comments').html(html);
+
+                @auth('member')
+                // 获取登录用户对评论的操作数据
+                commentIds = commentIds.join(',');
+                if (commentIds !== '') {
+                    $.ajax({
+                        url:'{{ route("member::comment.operateLogs") }}',
+                        method: 'get',
+                        data: {comment_ids: commentIds},
+                        success: function (d) {
+                            if (d.code !== 0) {
+                                layer.msg('获取评论操作数据失败', {icon: 2});
+                                return;
+                            }
+
+                            for (var i = d.data.length - 1; i >= 0; i--) {
+                                $('button[data-value='+d.data[i].operate+'][data-id='+d.data[i].comment_id+']').addClass('active');
+                            }
+                        }
+                    })
+                }
+                @endauth
 
                 // 评论回复
                 $('.question-witch-replay').on('click', function () {
