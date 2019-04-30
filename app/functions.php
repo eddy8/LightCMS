@@ -48,6 +48,40 @@ function initTire()
     });
 }
 
+function initTireSingle()
+{
+    return Cache::rememberForever('sensitive_words_tire_single', function () {
+        $types = SensitiveWord::query()->select('type')->groupBy('type')->get();
+        $tire = new Tire();
+        foreach ($types as $type) {
+            $words = SensitiveWord::query()->where('type', $type->type)->get();
+            $nouns = [];
+            $verbs = [];
+            $exclusives = [];
+            foreach ($words as $word) {
+                if ($word->noun !== '') {
+                    $nouns[] = $word->noun;
+                } elseif ($word->verb !== '') {
+                    $verbs[] = $word->verb;
+                } elseif ($word->exclusive !== '') {
+                    $exclusives[] = $word->exclusive;
+                }
+            }
+
+            foreach ($exclusives as $k) {
+                $tire->add($k);
+            }
+            foreach ($verbs as $vk) {
+                foreach ($nouns as $nk) {
+                    $tire->add($vk . $nk);
+                }
+            }
+        }
+
+        return $tire;
+    });
+}
+
 function mapTypeToVerbOfSensitiveWords()
 {
     return Cache::rememberForever('sensitive_verb_words', function () {
@@ -66,13 +100,20 @@ function mapTypeToVerbOfSensitiveWords()
  * 敏感词检查
  *
  * @param string $text 待检查文本
- * @param null $mode 检查模式。默认名词、动词、专用词都检查，显示可指定为 noun verb exclusive
+ * @param string $type 名词、动词的检测方法。默认为 join 。join：名词和动词相连组合在一起视为违规 all：名词和动词只要同时出现即为违规
+ * @param null $mode 检查模式。仅 $type 为 all 时有效。默认名词、动词、专用词都检查，显示可指定为 noun verb exclusive
  * @return array
  */
-function checkSensitiveWords(string $text, $mode = null)
+function checkSensitiveWords(string $text, $type = 'join', $mode = null)
 {
     if (!is_null($mode) && !in_array($mode, ['noun', 'verb', 'exclusive'])) {
         throw new \InvalidArgumentException('mode参数无效，只能为null值、noun、exclusive');
+    }
+
+    if ($type === 'join') {
+        $tire = initTireSingle();
+        $result = $tire->seek($text);
+        return $result;
     }
 
     $tires = initTire();
