@@ -147,7 +147,7 @@ class CommentController extends BaseController
             'code' => 0,
             'msg' => '',
             'data' => $data
-        ];;
+        ];
     }
 
     /**

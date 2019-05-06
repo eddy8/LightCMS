@@ -171,6 +171,7 @@
         'contentId': {{ $content->id }}
     };
     var form = layui.form;
+    var commentIds = [];
 
     //监听提交
     form.on('submit(comment)', function(data){
@@ -200,72 +201,11 @@
         return false;
     });
 
-    function loadComments(url) {
-        $.ajax({
-            url: url !== undefined ? url : '{{ route('web::comment.list', ['entityId' => $entityId, 'contentId' => $content->id]) }}',
-            method: 'get',
-            success: function (data) {
-                if (data.code !== 0) {
-                    layer.msg('评论加载失败', {icon: 2});
-                    return;
-                }
-
-                var listData = data.data.data, avatar;
-                var html = '<ul class="list-unstyled taptap-review-list" id="reviewsList">';
-                var commentIds = [];
-                for (var i = 0; i < listData.length; i++) {
-                    commentIds.push(listData[i].id);
-                    avatar = listData[i].user.avatar;
-                    if (avatar === '') {
-                        avatar = '/public/image/boy-2.png';
-                    }
-                    html = html + '<li id="review-' + listData[i].id + '" class="taptap-review-item collapse in" data-user="' + listData[i].user_id + '"> \
-    <a href="#" class="review-item-avatar img-circle gender-empty" rel="nofollow"> \
-        <img src="' + avatar + '"> \
-    </a> \
-    <div class="review-item-text "> \
-        <div class="item-text-header"> \
-            <span class="taptap-user" data-user-id="9474753"> \
-                <a href="#" class="taptap-user-name taptap-link" rel="nofollow">' + listData[i].user.name + '</a> \
-            </span> \
-            <a href="#" class="text-header-time"> \
-                <span data-toggle="tooltip" data-placement="top" title="' + listData[i].created_at + '" \
-                        <span>发布于 </span> \
-                        <span>' + getDateDiff(getDateTimeStamp(listData[i].created_at)) + '</span> \
-                </span> \
-            </a> \
-            <button type="button" data-obj="review" data-id="' + listData[i].id + '" class="btn btn-sm taptap-button-opinion report"> \
-                <span>举报</span> \
-            </button> \
-        </div> \
-        <div class="item-text-body" data-review-' + listData[i].id + '="contents"> \
-            <p>' + listData[i].content.replace(/\n/g,"<br>").replace(/\s/g,"&nbsp;") + '</p> \
-        </div> \
-        <div class="item-text-footer"> \
-            <ul class="list-unstyled text-footer-btns"> \
-                <li> \
-                    <button class="btn btn-sm taptap-button-opinion vote-btn vote-up" data-value="like" data-id="' + listData[i].id + '" data-has-word=""> \
-                        <i class="icon-font icon-up"></i> \
-                        <span data-taptap-ajax-vote="count">' + listData[i].like + '</span> \
-                    </button> \
-                </li> \
-                <li> \
-                    <button class="btn btn-sm taptap-button-opinion vote-btn vote-down" data-value="dislike" data-id="' + listData[i].id + '" data-has-word=""> \
-                        <i class="icon-font icon-down"></i> \
-                        <span data-taptap-ajax-vote="count">' + listData[i].dislike + '</span> \
-                    </button> \
-                </li> \
-                <li> \
-                    <button id="review-' + listData[i].id + '-reply-button" class="btn btn-sm taptap-button-opinion comment question-witch-replay" data-taptap-comment="button" data-obj-id="' + listData[i].id + '" data-modalid="#commentModal"> \
-                        <i class="icon-font icon-reply"></i> \
-                        <span class="normal-text">回复 ' + listData[i].reply_count + '</span> \
-                    </button> \
-                </li> \
-            </ul> \
-        </div> \
-        <div class="taptap-comments collapse in" data-taptap-comment="container" data-taptap-ajax-paginator="container">';
-                    var reply = listData[i].reply;
-                    if (reply.data.length > 0) {
+    // loadReplyComments(reply, listData[i].id, listData[i].user_id)
+    function loadReplyComments(reply, rid, uid)
+    {
+        var html = "";
+        if (reply.data.length > 0) {
                         html = html + '<ul class="list-unstyled taptap-comments-list">';
                         for (var j = 0; j < reply.data.length; j++) {
                             commentIds.push(reply.data[j].id);
@@ -282,7 +222,7 @@
                             <span class="taptap-user" data-user-id="15226001"> \
                                 <a href="" class="taptap-user-name taptap-link" rel="nofollow">' + reply.data[j].user.name + '</a> \
                             </span>';
-                            if (reply.data[j].reply_user.id !== listData[i].user_id) {
+                            if (reply.data[j].reply_user !== undefined && reply.data[j].reply_user.id !== uid) {
                                 html = html + '<i class="taptap-icon icon-reply-right"></i> \
                             <span class="taptap-user" data-user-id="15226001"> \
                                 <a href="" class="taptap-user-name taptap-link" rel="nofollow">' + reply.data[j].reply_user.name + '</a> \
@@ -332,21 +272,101 @@
                     if (reply.last_page > 1) {
                         html = html + '<section class="taptap-paginator">\
                     <ul class="pagination">';
-                        if (reply.last_page < 10) {
-                            html = html + '<li class="disabled"><span>&lt;</span></li>';
+                        html = html + '<li class="disabled"><span>&lt;</span></li>';
+                        if (reply.last_page <= 10) {
                             for (var k = 1; k <= reply.last_page; k++) {
                                 if (k == reply.current_page) {
                                     html = html + '<li class="active"><span>' + k + '</span></li>';
                                 } else {
-                                    html = html + '<li><a rel="nofollow" href="#">' + k + '</a></li>';
+                                    html = html + '<li><a data-rid="'+rid+'" data-uid="'+uid+'" class="comment-reply" rel="nofollow" href="'+reply.path+'?rid='+rid+'&page='+k+'">' + k + '</a></li>';
                                 }
                             }
-                            html = html + '<li><span>&gt;</span></li>';
+                        } else {
+                            var endNum = reply.current_page + 5;
+                            endNum = reply.last_page > endNum ? endNum : reply.last_page;
+                            for (var k = reply.current_page - 5; k < endNum; k++) {
+
+                                if (k == reply.current_page) {
+                                    html = html + '<li class="active"><span>' + k + '</span></li>';
+                                } else {
+                                    html = html + '<li><a data-rid="'+rid+'" data-uid="'+uid+'" class="comment-reply" rel="nofollow" href="'+reply.path+'?rid='+rid+'&page='+k+'">' + k + '</a></li>';
+                                }
+                            }
                         }
+                        html = html + '<li><span>&gt;</span></li>';
                         html = html + '</ul></section> ';
                     }
-                    html = html + '</div> \
-                    <span id="reply-13428285-button" class="reply-review-button"></span> \
+
+                    html = html + '</div>';
+                    return html;
+    }
+
+    function loadComments(url) {
+        $.ajax({
+            url: url !== undefined ? url : '{{ route('web::comment.list', ['entityId' => $entityId, 'contentId' => $content->id]) }}',
+            method: 'get',
+            success: function (data) {
+                if (data.code !== 0) {
+                    layer.msg('评论加载失败', {icon: 2});
+                    return;
+                }
+
+                var listData = data.data.data, avatar;
+                var html = '<ul class="list-unstyled taptap-review-list" id="reviewsList">';
+                for (var i = 0; i < listData.length; i++) {
+                    commentIds.push(listData[i].id);
+                    avatar = listData[i].user.avatar;
+                    if (avatar === '') {
+                        avatar = '/public/image/boy-2.png';
+                    }
+                    html = html + '<li id="review-' + listData[i].id + '" class="taptap-review-item collapse in" data-user="' + listData[i].user_id + '"> \
+    <a href="#" class="review-item-avatar img-circle gender-empty" rel="nofollow"> \
+        <img src="' + avatar + '"> \
+    </a> \
+    <div class="review-item-text "> \
+        <div class="item-text-header"> \
+            <span class="taptap-user" data-user-id=""> \
+                <a href="#" class="taptap-user-name taptap-link" rel="nofollow">' + listData[i].user.name + '</a> \
+            </span> \
+            <a href="#" class="text-header-time"> \
+                <span data-toggle="tooltip" data-placement="top" title="' + listData[i].created_at + '" \
+                        <span>发布于 </span> \
+                        <span>' + getDateDiff(getDateTimeStamp(listData[i].created_at)) + '</span> \
+                </span> \
+            </a> \
+            <button type="button" data-obj="review" data-id="' + listData[i].id + '" class="btn btn-sm taptap-button-opinion report"> \
+                <span>举报</span> \
+            </button> \
+        </div> \
+        <div class="item-text-body" data-review-' + listData[i].id + '="contents"> \
+            <p>' + listData[i].content.replace(/\n/g,"<br>").replace(/\s/g,"&nbsp;") + '</p> \
+        </div> \
+        <div class="item-text-footer"> \
+            <ul class="list-unstyled text-footer-btns"> \
+                <li> \
+                    <button class="btn btn-sm taptap-button-opinion vote-btn vote-up" data-value="like" data-id="' + listData[i].id + '" data-has-word=""> \
+                        <i class="icon-font icon-up"></i> \
+                        <span data-taptap-ajax-vote="count">' + listData[i].like + '</span> \
+                    </button> \
+                </li> \
+                <li> \
+                    <button class="btn btn-sm taptap-button-opinion vote-btn vote-down" data-value="dislike" data-id="' + listData[i].id + '" data-has-word=""> \
+                        <i class="icon-font icon-down"></i> \
+                        <span data-taptap-ajax-vote="count">' + listData[i].dislike + '</span> \
+                    </button> \
+                </li> \
+                <li> \
+                    <button id="review-' + listData[i].id + '-reply-button" class="btn btn-sm taptap-button-opinion comment question-witch-replay" data-taptap-comment="button" data-obj-id="' + listData[i].id + '" data-modalid="#commentModal"> \
+                        <i class="icon-font icon-reply"></i> \
+                        <span class="normal-text">回复 ' + listData[i].reply_count + '</span> \
+                    </button> \
+                </li> \
+            </ul> \
+        </div> \
+        <div class="taptap-comments collapse in" data-taptap-comment="container" data-taptap-ajax-paginator="container">';
+                    var reply = listData[i].reply;
+                    html = html + loadReplyComments(reply, listData[i].id, listData[i].user_id);
+                    html = html + '<span id="reply-13428285-button" class="reply-review-button"></span> \
             </div> \
         </div> \
     </div> \
@@ -369,24 +389,7 @@
 
                 @auth('member')
                 // 获取登录用户对评论的操作数据
-                commentIds = commentIds.join(',');
-                if (commentIds !== '') {
-                    $.ajax({
-                        url:'{{ route("member::comment.operateLogs") }}',
-                        method: 'get',
-                        data: {comment_ids: commentIds},
-                        success: function (d) {
-                            if (d.code !== 0) {
-                                layer.msg('获取评论操作数据失败', {icon: 2});
-                                return;
-                            }
-
-                            for (var i = d.data.length - 1; i >= 0; i--) {
-                                $('button[data-value='+d.data[i].operate+'][data-id='+d.data[i].comment_id+']').addClass('active');
-                            }
-                        }
-                    })
-                }
+                commentAction();
                 @endauth
 
                 // 评论回复
@@ -405,7 +408,7 @@
                 });
 
                 // 评论操作
-                $('button.vote-btn').click(function () {
+                $('div#comments').on('click', 'button.vote-btn', function () {
                     var id = $(this).data('id'),
                         action = $(this).data('value'),
                         that = $(this);
@@ -429,20 +432,64 @@
                 });
 
                 // 举报
-                $('button.report').click(function () {
+                $('div#comments').on('click', 'button.report', function () {
                     layer.msg('待实现');
                 });
 
                 // 评论翻页
                 $('a.page-target').click(function (e) {
+                    console.log(commentIds);
                     e.preventDefault();
                     loadComments($(this).attr('href'));
+                });
+
+                // 评论回复翻页
+                $('div.taptap-comments').on('click', 'a.comment-reply', function (e) {
+                    e.preventDefault();
+                    commentIds = [];
+                    var url = $(this).attr('href'),
+                        rid = $(this).data("rid"),
+                        uid = $(this).data("uid"),
+                        that = $(this);
+                    $.ajax({
+                        method: "get",
+                        url: url,
+                        success: function (d) {
+                            that.parents('div.taptap-comments').html(loadReplyComments(d.data, rid, uid));
+
+                            @auth('member')
+                            // 获取登录用户对评论的操作数据
+                            commentAction();
+                            @endauth
+                        }
+                    });
                 });
             },
             error: function () {
                 layer.msg('页面错误', {icon: 2});
             }
         });
+    }
+
+    function commentAction()
+    {
+        var commentIdsStr = commentIds.join(',');
+        if (commentIdsStr !== '') {
+            $.ajax({
+                url:'{{ route("member::comment.operateLogs") }}',
+                method: 'get',
+                data: {comment_ids: commentIdsStr},
+                success: function (d) {
+                    if (d.code !== 0) {
+                        layer.msg('获取评论操作数据失败', {icon: 2});
+                        return;
+                    }
+                    for (var i = d.data.length - 1; i >= 0; i--) {
+                        $('button[data-value='+d.data[i].operate+'][data-id='+d.data[i].comment_id+']').addClass('active');
+                    }
+                }
+            })
+        }
     }
 
     loadComments();
