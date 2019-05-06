@@ -82,7 +82,7 @@ class CommentRepository
     {
         return DB::transaction(function () use ($id, $uid, $operate) {
             $log = CommentOperateLog::query()->where('user_id', $uid)->where('comment_id', $id)
-                ->where('operate', $operate)->first();
+                ->where('operate', $operate)->lockForUpdate()->first();
             if ($log) {
                 // 已操作则直接返回
                 return true;

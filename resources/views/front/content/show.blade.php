@@ -422,11 +422,13 @@
                                 layer.msg('操作失败', {icon: 2});
                                 return;
                             }
-                            $('button.vote-btn[data-id=' + id + ']').removeClass('active').find('span').text(0);
+                            var btn = $('button.vote-btn[data-id=' + id + ']');
+                            btn.removeClass('active').find('span').text(0);
                             if (d.data[action] > 0) {
                                 that.addClass('active');
                             }
-                            that.find('span').eq(0).text(d.data[action]);
+                            btn.find('span').eq(0).text(d.data['like']);
+                            btn.find('span').eq(1).text(d.data['dislike']);
                         }
                     })
                 });
