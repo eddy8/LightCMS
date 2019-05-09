@@ -22,11 +22,12 @@
             </form>
         </div>
         <div class="layui-card-body">
-            <table class="layui-table" lay-data="{url:'{{ route('admin::comment.list') }}?{{ request()->getQueryString() }}', page:true, limit:50, id:'test', toolbar:'<div><a href=\'{{ route('admin::comment.create') }}\'><i class=\'layui-icon layui-icon-add-1\'></i>新增评论</a></div>'}" lay-filter="test">
+            <table class="layui-table" lay-data="{url:'{{ route('admin::comment.list') }}?{{ request()->getQueryString() }}', page:true, limit:50, id:'test'}" lay-filter="test">
                 <thead>
                 <tr>
                     <th lay-data="{field:'id', width:80, sort: true}">ID</th>
                     @include('admin.listHead', ['data' => App\Model\Admin\Comment::$listField])
+                    <th lay-data="{templet:'#vist'}">访问</th>
                     <th lay-data="{field:'created_at'}">添加时间</th>
                     <th lay-data="{field:'updated_at'}">更新时间</th>
                     <th lay-data="{width:200, templet:'#action'}">操作</th>
@@ -37,8 +38,12 @@
     </div>
 @endsection
 <script type="text/html" id="action">
-    <a href="<% d.editUrl %>" class="layui-table-link" title="编辑"><i class="layui-icon layui-icon-edit"></i></a>
-    <a href="javascript:;" class="layui-table-link" title="删除" style="margin-left: 10px" onclick="deleteMenu('<% d.deleteUrl %>')"><i class="layui-icon layui-icon-delete"></i></a>
+    <!--<a href="<% d.editUrl %>" class="layui-table-link" title="编辑"><i class="layui-icon layui-icon-edit"></i></a>-->
+    <!--<a href="javascript:;" class="layui-table-link" title="删除" style="margin-left: 10px" onclick="deleteMenu('<% d.deleteUrl %>')"><i class="layui-icon layui-icon-delete"></i></a>-->
+</script>
+<script type="text/html" id="vist">
+    <a target="_blank" href="<% d.contentEditUrl %>" class="layui-table-link" title="后台编辑">后台</a>
+    <a target="_blank" href="<% d.vistUrl %>" class="layui-table-link" title="前台访问">前台</a>
 </script>
 
 @section('js')

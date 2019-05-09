@@ -29,6 +29,7 @@ class ContentRepository
             xssFilter($item);
             $item->editUrl = route('admin::content.edit', ['id' => $item->id, 'entity' => $entity]);
             $item->deleteUrl = route('admin::content.delete', ['id' => $item->id, 'entity' => $entity]);
+            $item->commentListUrl = route('admin::comment.index', ['content_id' => $item->id, 'entity_id' => $entity]);
             return $item;
         });
 

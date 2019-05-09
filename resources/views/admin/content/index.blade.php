@@ -39,6 +39,7 @@
 <script type="text/html" id="action">
     <a href="<% d.editUrl %>" class="layui-table-link" title="编辑"><i class="layui-icon layui-icon-edit"></i></a>
     <a href="javascript:;" class="layui-table-link" title="删除" style="margin-left: 10px" onclick="deleteMenu('<% d.deleteUrl %>')"><i class="layui-icon layui-icon-delete"></i></a>
+    <a href="<% d.commentListUrl %>" class="layui-table-link" title="评论列表" style="margin-left: 10px"><i class="layui-icon layui-icon-reply-fill"></i></a>
 </script>
 
 @section('js')

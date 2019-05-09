@@ -30,5 +30,9 @@ class Controller extends BaseController
         } else {
             View::share('light_menu', $currentRootMenu);
         }
+
+        if (isset($this->formNames)) {
+            $this->formNames = array_merge($this->formNames, ['created_at']);
+        }
     }
 }

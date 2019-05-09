@@ -18,11 +18,16 @@ class CommentRepository
             ->where(function ($query) use ($condition) {
                 Searchable::buildQuery($query, $condition);
             })
+            ->with('entity:id,name')
             ->orderBy('id', 'desc')
             ->paginate($perPage);
         $data->transform(function ($item) {
+            xssFilter($item);
             $item->editUrl = route('admin::comment.edit', ['id' => $item->id]);
             $item->deleteUrl = route('admin::comment.delete', ['id' => $item->id]);
+            $item->entityName = !is_null($item->entity) ? $item->entity->name : '未知';
+            $item->contentEditUrl = route('admin::content.edit', [$item->entity_id, $item->content_id]);
+            $item->vistUrl = route('web::content', [$item->entity_id, $item->content_id]);
             return $item;
         });
 

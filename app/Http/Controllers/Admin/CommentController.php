@@ -15,7 +15,7 @@ use Illuminate\View\View;
 
 class CommentController extends Controller
 {
-    protected $formNames = [];
+    protected $formNames = ['content', 'content_id', 'entity_id', 'user_id'];
 
     public function __construct()
     {
@@ -48,40 +48,6 @@ class CommentController extends Controller
         $data = CommentRepository::list($perPage, $condition);
 
         return $data;
-    }
-
-    /**
-     * 评论管理-新增评论
-     *
-     */
-    public function create()
-    {
-        $this->breadcrumb[] = ['title' => '新增评论', 'url' => ''];
-        return view('admin.comment.add', ['breadcrumb' => $this->breadcrumb]);
-    }
-
-    /**
-     * 评论管理-保存评论
-     *
-     * @param CommentRequest $request
-     * @return array
-     */
-    public function save(CommentRequest $request)
-    {
-        try {
-            CommentRepository::add($request->only($this->formNames));
-            return [
-                'code' => 0,
-                'msg' => '新增成功',
-                'redirect' => true
-            ];
-        } catch (QueryException $e) {
-            return [
-                'code' => 1,
-                'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前评论已存在' : '其它错误'),
-                'redirect' => false
-            ];
-        }
     }
 
     /**

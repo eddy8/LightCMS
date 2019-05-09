@@ -7,6 +7,18 @@ namespace App\Model\Admin;
 
 class Comment extends Model
 {
+    public static $listField = [
+        'entityName' => '模型',
+        'content' => '内容',
+        'reply_count' => '回复数',
+        'like' => '喜欢',
+        'dislike' => '不喜欢',
+    ];
+
+    public static $searchField = [
+        'content' => '内容',
+    ];
+
     const STATUS_ENABLE = 1;
     const STATUS_DISABLE = 0;
 
