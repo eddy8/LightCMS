@@ -7,8 +7,11 @@ namespace App\Model\Admin;
 
 class Entity extends Model
 {
-    const STATUS_ENABLE = 1;
-    const STATUS_DISABLE = 0;
+    const COMMENT_ENABLE = 1;
+    const COMMENT_DISABLE = 0;
+
+    const INTERNAL_YES = 1;
+    const INTERNAL_NO = 0;
 
     protected $guarded = [];
 

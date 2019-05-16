@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 
 class EntityController extends Controller
 {
-    protected $formNames = ['name', 'table_name', 'description'];
+    protected $formNames = ['name', 'table_name', 'description', 'is_internal', 'enable_comment'];
 
     public function __construct()
     {

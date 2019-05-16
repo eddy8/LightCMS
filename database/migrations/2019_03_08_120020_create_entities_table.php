@@ -18,6 +18,8 @@ class CreateEntitiesTable extends Migration
             $table->string('name', 50)->default('');
             $table->string('table_name', 64)->default('')->unique();
             $table->string('description')->default('');
+            $table->unsignedInteger('is_internal')->default(0);
+            $table->unsignedInteger('enable_comment')->default(0);
             $table->timestamps();
         });
     }

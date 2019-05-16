@@ -26,6 +26,20 @@
                             <input type="text" name="description" autocomplete="off" class="layui-input" value="{{ $model->description ?? ''  }}">
                         </div>
                     </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">内部模型</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="is_internal" value="1" title="是"  @if(!isset($model) || isset($model) && $model->is_internal === App\Model\Admin\Entity::INTERNAL_YES) checked @endif>
+                            <input type="radio" name="is_internal" value="0" title="否"  @if(isset($model) && $model->is_internal === App\Model\Admin\Entity::INTERNAL_NO) checked @endif>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">评论</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="enable_comment" value="1" title="启用"  @if(!isset($model) || isset($model) && $model->enable_comment === App\Model\Admin\Entity::COMMENT_ENABLE) checked @endif>
+                            <input type="radio" name="enable_comment" value="0" title="禁用"  @if(isset($model) && $model->enable_comment === App\Model\Admin\Entity::COMMENT_DISABLE) checked @endif>
+                        </div>
+                    </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button class="layui-btn" lay-submit lay-filter="formAdminUser" id="submitBtn">提交</button>
