@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/public/vendor/layui-v2.4.5/css/layui.css" media="all">
     <link rel="stylesheet" href="/public/css/member.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/css/basic/emojify.css" />
     <!-- 样式文件来自 www.taptap.com 侵删~~~ -->
     <link rel="stylesheet" href="/public/css/app-2adb6bab87.css">
     <style>
@@ -118,11 +119,12 @@
         <form action="{{ route('member::comment.save', ['entityId' => $entityId, 'contentId' => $content->id]) }}" class="layui-form">
             <div class="layui-form-item">
                 <div>
-                <textarea name="content" rows="7" placeholder="请输入评论内容" class="layui-textarea"></textarea>
+                <textarea name="content" rows="7" placeholder="请输入评论内容" class="layui-textarea" id="comment-content"></textarea>
                 </div>
             </div>
             <div class="layui-form-item">
                 <div>
+                    <span id="face">:smirk: :heart_eyes: :kissing_heart: :heartpulse: :two_hearts: :revolving_hearts: :cupid: :sparkling_heart:</span><a target="_blank" href="https://www.webfx.com/tools/emoji-cheat-sheet/" style="margin-left: 5px">更多</a>
                     <button class="layui-btn" style="float: right" lay-submit lay-filter="comment" id="submitBtn">提交</button>
                 </div>
             </div>
@@ -166,6 +168,7 @@
 </footer>
 <script src="/public/vendor/layui-v2.4.5/layui.all.js"></script>
 <script type="text/javascript" src="/public/js/member.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/js/emojify.min.js"></script>
 <script>
     var info = {
         'entityId': {{ $entityId }},
@@ -173,6 +176,21 @@
     };
     var form = layui.form;
     var commentIds = [];
+
+    emojify.setConfig({
+        img_dir : '/public/image/emoji',
+        ignored_tags : {
+            'SCRIPT'  : 1,
+            'TEXTAREA': 1,
+            'A'       : 1,
+            'PRE'     : 1,
+            'CODE'    : 1
+        }
+    });
+    emojify.run(document.getElementById('face'));
+    $("#face img").click(function(){
+        $("#comment-content").val($("#comment-content").val() + ' ' + $(this).attr('title'));
+    });
 
     //监听提交
     form.on('submit(comment)', function(data){
@@ -387,6 +405,8 @@
                 }
 
                 $('#comments').html(html);
+
+                emojify.run(document.getElementById('comments'));
 
                 @auth('member')
                 // 获取登录用户对评论的操作数据

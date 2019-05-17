@@ -15,6 +15,8 @@ class Controller extends BaseController
 
     protected $breadcrumb = [];
 
+    protected $formNames = [];
+
     public function __construct()
     {
         // 面包屑导航
@@ -31,8 +33,6 @@ class Controller extends BaseController
             View::share('light_menu', $currentRootMenu);
         }
 
-        if (isset($this->formNames)) {
-            $this->formNames = array_merge($this->formNames, ['created_at']);
-        }
+        $this->formNames = array_merge($this->formNames, ['created_at']);
     }
 }
