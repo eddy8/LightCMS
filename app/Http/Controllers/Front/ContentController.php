@@ -9,7 +9,7 @@ class ContentController extends BaseController
 {
     public function show($entityId, $contentId)
     {
-        $entity = Entity::query()->findOrFail($entityId);
+        $entity = Entity::query()->NotInternal()->findOrFail($entityId);
 
         ContentRepository::setTable($entity->table_name);
         $content = ContentRepository::findOrFail($contentId);

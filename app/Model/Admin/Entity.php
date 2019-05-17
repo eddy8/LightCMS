@@ -25,4 +25,14 @@ class Entity extends Model
     {
         return $this->hasMany('App\Model\Admin\EntityField', 'entity_id');
     }
+
+    /**
+     * 限制查询外部模型
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNotInternal($query)
+    {
+        return $query->where('is_internal', self::INTERNAL_NO);
+    }
 }
