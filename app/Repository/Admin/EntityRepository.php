@@ -66,6 +66,11 @@ EOF;
         return Entity::query()->find($id);
     }
 
+    public static function external($id)
+    {
+        return Entity::query()->External()->find($id);
+    }
+
     public static function all()
     {
         return Entity::query()->get();

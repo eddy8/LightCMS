@@ -31,7 +31,7 @@ class Entity extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeNotInternal($query)
+    public function scopeExternal($query)
     {
         return $query->where('is_internal', self::INTERNAL_NO);
     }

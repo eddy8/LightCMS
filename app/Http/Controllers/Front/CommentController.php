@@ -170,11 +170,11 @@ class CommentController extends BaseController
 
     protected function checkParam($entityId, $contentId)
     {
-        $entity = EntityRepository::find($entityId);
+        $entity = EntityRepository::external($entityId);
         if (!$entity) {
             return [
                 'code' => 1,
-                'msg' => '模型不存在',
+                'msg' => '模型不存在或未启用评论',
             ];
         }
 

@@ -28,10 +28,11 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">内部模型</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-inline">
                             <input type="radio" name="is_internal" value="1" title="是"  @if(!isset($model) || isset($model) && $model->is_internal === App\Model\Admin\Entity::INTERNAL_YES) checked @endif>
                             <input type="radio" name="is_internal" value="0" title="否"  @if(isset($model) && $model->is_internal === App\Model\Admin\Entity::INTERNAL_NO) checked @endif>
                         </div>
+                        <div class="layui-form-mid layui-word-aux">内部模型前台不可直接访问</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">评论</label>
