@@ -71,6 +71,16 @@
                 <form action="{{ route('member::register') }}" class="w-full max-w-xs" id="register">
                     <div class="md:flex md:items-center mb-6">
                         <div class="md:w-1/3">
+                            <label for="name" class="block font-bold md:text-right mb-1 md:mb-0 pr-4">
+                                用户名
+                            </label>
+                        </div>
+                        <div class="md:w-2/3">
+                            <input class="bg-grey-lighter appearance-none border-2 rounded w-full py-2 px-4 text-grey-darker leading-tight focus:outline-none focus:bg-white focus:border-purple" id="name" name="name" type="text" value="">
+                        </div>
+                    </div>
+                    <div class="md:flex md:items-center mb-6">
+                        <div class="md:w-1/3">
                             <label for="phone" class="block font-bold md:text-right mb-1 md:mb-0 pr-4">
                                 手机号
                             </label>

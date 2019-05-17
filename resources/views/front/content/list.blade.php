@@ -29,6 +29,7 @@
             <ul class="list-reset lg:flex justify-end flex-1 items-center">
                 <li class="mr-3">
                     @auth('member')
+                        <span>{{ \Auth::guard('member')->user()->name }}</span>
                         <a class="inline-block text-grey-dark no-underline hover:text-black hover:text-underline py-2 px-4" href="{{ route('member::logout') }}">退出</a>
                     @else
                     <a class="inline-block text-grey-dark no-underline hover:text-black hover:text-underline py-2 px-4" href="{{ route('member::login.show') }}">登录</a>

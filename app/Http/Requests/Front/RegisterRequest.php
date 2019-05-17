@@ -31,6 +31,11 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
+            'name' => [
+                'required',
+                'regex:/' . Regexp::USERNAME . '/',
+                'unique:users,name'
+            ],
             'phone' => [
                 'required',
                 'regex:/' . Regexp::PHONE . '/',
@@ -52,6 +57,9 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
+            'name.required' => '用户名不能为空',
+            'name.regex' => '用户名格式有误',
+            'name.unique' => '用户名已存在',
             'phone.required' => '手机号不能为空',
             'phone.regex' => '手机号格式有误',
             'phone.unique' => '手机号已存在',

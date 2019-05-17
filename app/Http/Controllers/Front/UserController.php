@@ -132,7 +132,7 @@ class UserController extends BaseController
     {
         event(
             new Registered(
-                $user = UserRepository::create($request->only(['phone', 'password']))
+                $user = UserRepository::create($request->only(['phone', 'password', 'name']))
             )
         );
 
