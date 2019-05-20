@@ -9,10 +9,10 @@ class Comment extends Model
 {
     public static $listField = [
         'entityName' => '模型',
-        'content' => '内容',
-        'reply_count' => '回复数',
-        'like' => '喜欢',
-        'dislike' => '不喜欢',
+        'content' => ['title' => '内容', 'width' => 400],
+        'reply_count' => ['title' => '回复数', 'width' => 80, 'sort' => true],
+        'like' => ['title' => '喜欢', 'width' => 80, 'sort' => true],
+        'dislike' => ['title' => '不喜欢', 'width' => 80, 'sort' => true],
     ];
 
     public static $searchField = [
