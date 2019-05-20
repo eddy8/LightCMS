@@ -1,5 +1,8 @@
 @extends('admin.base')
 
+@section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/css/basic/emojify.css" />
+@endsection
 @section('content')
     @include('admin.breadcrumb')
 
@@ -21,8 +24,21 @@
             </div>
             </form>
         </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/js/emojify.min.js"></script>
+        <script type="text/javascript">
+            emojify.setConfig({
+                img_dir : '/public/image/emoji',
+                ignored_tags : {
+                    'SCRIPT'  : 1,
+                    'TEXTAREA': 1,
+                    'A'       : 1,
+                    'PRE'     : 1,
+                    'CODE'    : 1
+                }
+            });
+        </script>
         <div class="layui-card-body">
-            <table class="layui-table" lay-data="{url:'{{ route('admin::comment.list') }}?{{ request()->getQueryString() }}', page:true, limit:50, id:'test'}" lay-filter="test">
+            <table class="layui-table" lay-data="{url:'{{ route('admin::comment.list') }}?{{ request()->getQueryString() }}', page:true, limit:50, parseData:function(res) { $.each(res.data, function(i, t) { res.data[i].content = emojify.replace(t.content) }) }}" id="table-comment">
                 <thead>
                 <tr>
                     <th lay-data="{field:'id', width:80, sort: true}">ID</th>

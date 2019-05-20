@@ -25,15 +25,8 @@ class LogRequest extends FormRequest
      */
     public function rules()
     {
-        $status_in = [
-            Log::STATUS_DISABLE,
-            Log::STATUS_ENABLE,
-        ];
         return [
             'name' => 'required|max:50',
-            'status' => [
-                Rule::in($status_in),
-            ],
         ];
     }
 

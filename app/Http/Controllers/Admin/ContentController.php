@@ -212,8 +212,7 @@ class ContentController extends Controller
         $entityControllerClass = '\\App\\Http\\Controllers\\Admin\\Entity\\' .
             Str::ucfirst(Str::singular($this->entity->table_name)) . 'Controller';
         if (class_exists($entityControllerClass) && method_exists($entityControllerClass, 'save')) {
-            call_user_func("{$entityControllerClass}::save", $request, $entity);
-            exit();
+            return call_user_func("{$entityControllerClass}::save", $request, $entity);
         }
     }
 
@@ -222,8 +221,7 @@ class ContentController extends Controller
         $entityControllerClass = '\\App\\Http\\Controllers\\Admin\\Entity\\' .
             Str::ucfirst(Str::singular($this->entity->table_name)) . 'Controller';
         if (class_exists($entityControllerClass) && method_exists($entityControllerClass, 'update')) {
-            call_user_func("{$entityControllerClass}::update", $request, $entity, $id);
-            exit();
+            return call_user_func("{$entityControllerClass}::update", $request, $entity, $id);
         }
     }
 }
