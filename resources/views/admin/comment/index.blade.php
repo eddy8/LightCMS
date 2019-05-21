@@ -55,11 +55,12 @@
 @endsection
 <script type="text/html" id="action">
     <!--<a href="<% d.editUrl %>" class="layui-table-link" title="编辑"><i class="layui-icon layui-icon-edit"></i></a>-->
-    <!--<a href="javascript:;" class="layui-table-link" title="删除" style="margin-left: 10px" onclick="deleteMenu('<% d.deleteUrl %>')"><i class="layui-icon layui-icon-delete"></i></a>-->
+    <a href="javascript:;" class="layui-table-link" title="删除" style="margin-left: 10px" onclick="deleteMenu('<% d.deleteUrl %>')"><i class="layui-icon layui-icon-delete"></i></a>
 </script>
 <script type="text/html" id="vist">
     <a target="_blank" href="<% d.contentEditUrl %>" class="layui-table-link" title="后台编辑">后台</a>
     <a target="_blank" href="<% d.vistUrl %>" class="layui-table-link" title="前台访问">前台</a>
+    <a href="<% d.replyUrl %>" class="layui-table-link" title="该评论所有回复">回复</a>
 </script>
 
 @section('js')

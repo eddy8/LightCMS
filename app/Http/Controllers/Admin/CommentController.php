@@ -15,7 +15,7 @@ use Illuminate\View\View;
 
 class CommentController extends Controller
 {
-    protected $formNames = ['content', 'content_id', 'entity_id', 'user_id'];
+    protected $formNames = ['content', 'content_id', 'entity_id', 'user_id', 'rid'];
 
     public function __construct()
     {
@@ -98,6 +98,13 @@ class CommentController extends Controller
     public function delete($id)
     {
         try {
+            $id = intval($id);
+            if (CommentRepository::hasChildren($id)) {
+                return [
+                    'code' => 2,
+                    'msg' => '删除失败：只允许删除无回复的评论',
+                ];
+            }
             CommentRepository::delete($id);
             return [
                 'code' => 0,

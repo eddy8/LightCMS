@@ -8,7 +8,9 @@ namespace App\Model\Admin;
 class Comment extends Model
 {
     public static $listField = [
-        'entityName' => '模型',
+        'pid' => ['title' => '父ID', 'width' => 80],
+        'entityName' => ['title' => '模型', 'width' => 100],
+        'userName' => ['title' => '用户名', 'width' => 100],
         'content' => ['title' => '内容', 'width' => 400],
         'reply_count' => ['title' => '回复数', 'width' => 80, 'sort' => true],
         'like' => ['title' => '喜欢', 'width' => 80, 'sort' => true],
