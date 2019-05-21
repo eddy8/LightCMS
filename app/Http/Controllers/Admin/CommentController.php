@@ -12,6 +12,8 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class CommentController extends Controller
 {
@@ -99,13 +101,27 @@ class CommentController extends Controller
     {
         try {
             $id = intval($id);
+
+            $comment = CommentRepository::find($id);
+            if (!$comment) {
+                throw new \RuntimeException("评论不存在");
+            }
+
             if (CommentRepository::hasChildren($id)) {
                 return [
                     'code' => 2,
                     'msg' => '删除失败：只允许删除无回复的评论',
                 ];
             }
-            CommentRepository::delete($id);
+
+            DB::transaction(function () use ($id, $comment) {
+                CommentRepository::delete($id);
+                // 回复数-1
+                CommentRepository::decrementReplyCount($comment->rid);
+                // 清除缓存
+                Cache::forget('comment_replay:' . $comment->rid);
+            });
+
             return [
                 'code' => 0,
                 'msg' => '删除成功',

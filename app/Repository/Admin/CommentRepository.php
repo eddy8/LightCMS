@@ -66,4 +66,9 @@ class CommentRepository
     {
         return Comment::query()->where('rid', $id)->orWhere('pid', $id)->first();
     }
+
+    public static function decrementReplyCount($id)
+    {
+        return Comment::query()->where('id', $id)->decrement('reply_count');
+    }
 }
