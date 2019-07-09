@@ -174,7 +174,3 @@ print_r($result);
 
 ## 说明
 有问题可以提 issue ，为项目贡献代码可以提 pull request
-
-如果该项目对于您有所帮助，欢迎打赏支持项目开发 ^_^
-
-<img src="https://user-images.githubusercontent.com/2555476/54803956-a7835a00-4cac-11e9-9a10-ede3cfa6cef0.JPG" width="160" height="200" />
