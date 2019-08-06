@@ -74,7 +74,9 @@ class ContentController extends Controller
     public function create($entity)
     {
         $this->breadcrumb[] = ['title' => "新增{$this->entity->name}内容", 'url' => ''];
-        return view('admin.content.add', [
+        $view = $this->getAddOrEditViewPath();
+
+        return view($view, [
             'breadcrumb' => $this->breadcrumb,
             'entity' => $entity,
             'entityModel' => $this->entity,
@@ -121,9 +123,10 @@ class ContentController extends Controller
     public function edit($entity, $id)
     {
         $this->breadcrumb[] = ['title' => "编辑{$this->entity->name}内容", 'url' => ''];
-
+        $view = $this->getAddOrEditViewPath();
         $model = ContentRepository::find($id);
-        return view('admin.content.add', [
+
+        return view($view, [
             'id' => $id,
             'model' => $model,
             'breadcrumb' => $this->breadcrumb,
@@ -223,5 +226,18 @@ class ContentController extends Controller
         if (class_exists($entityControllerClass) && method_exists($entityControllerClass, 'update')) {
             return call_user_func("{$entityControllerClass}::update", $request, $entity, $id);
         }
+    }
+
+    protected function getAddOrEditViewPath()
+    {
+        $view = 'admin.content.add';
+        // 自定义模板
+        $modelName = Str::singular($this->entity->table_name);
+        $path = resource_path('views/admin/content/' . $modelName . '_add.blade.php');
+        if (file_exists($path)) {
+            $view = 'admin.content.' . $modelName . '_add';
+        }
+
+        return $view;
     }
 }
