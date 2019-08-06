@@ -61,9 +61,7 @@ EOF;
             DB::statement($sql);
             return $entity;
         } catch (\Exception $e) {
-            if ($entity) {
-                $entity->delete();
-            }
+            $entity->delete();
             throw new CreateTableException("创建数据库表异常");
         }
     }
