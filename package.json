@@ -15,13 +15,13 @@
         "cross-env": "^5.1",
         "jquery": "^3.2",
         "laravel-mix": "^1.0",
-        "lodash": ">=4.17.13",
+        "lodash": "^4.17.15",
         "tailwindcss": "^0.7.4",
         "vue": "^2.5.7"
     },
     "dependencies": {
         "stylus": "^0.54.5",
         "stylus-loader": "^3.0.2",
-        "webpack": "^4.29.6"
+        "webpack": "^4.39.1"
     }
 }
