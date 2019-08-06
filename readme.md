@@ -120,6 +120,8 @@ $siteName = config('light_config.SITE_NAME');
 
 这里说明下模型的表单验证及后端的保存和更新处理。如果有自定义表单验证需求，只需在`app/Http/Request/Admin/Entity`目录下创建模型的表单请求验证类即可。类名的命名规则：**模型名+Request**。例如`User`模型对应的表单请求验证类为`UserRequest`。
 
+如果想自定义模型的新增/编辑前端模板，只需在`app/resources/views/admin/content`目录下创建模板文件即可。模板文件的命名需遵循如下命名规则：**模型名_add.blade.php**。例如`User`模型对应的模板文件名为`user_add.blade.php`。
+
 同理，如果想自定义模型的保存和更新处理逻辑，只需在`app/Http/Controllers/Admin/Entity`目录下创建模型的控制器类即可，`save`和`update`方法实现可参考`app/Http/Controllers/Admin/ContentController`。类名的命名规则：**模型名+Controller**。例如`User`模型对应的控制器类为`UserController`。
 
 ## 系统日志
