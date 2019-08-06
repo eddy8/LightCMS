@@ -35,6 +35,14 @@
                         <div class="layui-form-mid layui-word-aux">内部模型前台不可直接访问</div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">列表显示</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="is_show_content_manage" value="1" title="是"  @if(!isset($model) || isset($model) && $model->is_show_content_manage === App\Model\Admin\Entity::CONTENT_MANAGE_YES) checked @endif>
+                            <input type="radio" name="is_show_content_manage" value="0" title="否"  @if(isset($model) && $model->is_show_content_manage === App\Model\Admin\Entity::CONTENT_MANAGE_NO) checked @endif>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">是否显示在内容管理列表中</div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">评论</label>
                         <div class="layui-input-block">
                             <input type="radio" name="enable_comment" value="1" title="启用"  @if(!isset($model) || isset($model) && $model->enable_comment === App\Model\Admin\Entity::COMMENT_ENABLE) checked @endif>

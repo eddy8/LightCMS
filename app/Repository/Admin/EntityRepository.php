@@ -90,7 +90,8 @@ EOF;
 
     public static function systemMenu()
     {
-        $entities = Entity::query()->pluck('name', 'id')->all();
+        $entities = Entity::query()->where('is_show_content_manage', Entity::CONTENT_MANAGE_YES)
+            ->pluck('name', 'id')->all();
         $autoMenu = [];
         foreach ($entities as $k => $v) {
             $autoMenu[] = [

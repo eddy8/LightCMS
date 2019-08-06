@@ -13,6 +13,9 @@ class Entity extends Model
     const INTERNAL_YES = 1;
     const INTERNAL_NO = 0;
 
+    const CONTENT_MANAGE_YES = 1;
+    const CONTENT_MANAGE_NO = 0;
+
     protected $guarded = [];
 
     public static $listField = [

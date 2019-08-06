@@ -20,6 +20,7 @@ class CreateEntitiesTable extends Migration
             $table->string('description')->default('');
             $table->unsignedInteger('is_internal')->default(0);
             $table->unsignedInteger('enable_comment')->default(0);
+            $table->unsignedTinyInteger('is_show_content_manage')->default(1);
             $table->timestamps();
         });
     }

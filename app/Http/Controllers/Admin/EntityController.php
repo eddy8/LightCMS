@@ -17,7 +17,9 @@ use App\Exceptions\CreateTableException;
 
 class EntityController extends Controller
 {
-    protected $formNames = ['name', 'table_name', 'description', 'is_internal', 'enable_comment'];
+    protected $formNames = [
+        'name', 'table_name', 'description', 'is_internal', 'enable_comment', 'is_show_content_manage'
+    ];
 
     public function __construct()
     {
