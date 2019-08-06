@@ -8,6 +8,7 @@ namespace App\Repository\Admin;
 use App\Model\Admin\Entity;
 use App\Repository\Searchable;
 use Illuminate\Support\Facades\DB;
+use App\Exceptions\CreateTableException;
 
 class EntityRepository
 {
@@ -39,10 +40,14 @@ class EntityRepository
         ];
     }
 
+    /**
+     * 新增模型
+     */
     public static function add($data)
     {
-        Entity::query()->create($data);
-        $sql = <<<"EOF"
+        $entity = Entity::query()->create($data);
+        try {
+            $sql = <<<"EOF"
 CREATE TABLE `{$data['table_name']}` (
 `id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
 `created_at`  timestamp NULL DEFAULT NULL ,
@@ -53,7 +58,14 @@ ENGINE=InnoDB
 DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci
 ;
 EOF;
-        DB::statement($sql);
+            DB::statement($sql);
+            return $entity;
+        } catch (\Exception $e) {
+            if ($entity) {
+                $entity->delete();
+            }
+            throw new CreateTableException("创建数据库表异常");
+        }
     }
 
     public static function update($id, $data)

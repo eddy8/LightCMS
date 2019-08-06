@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
+use App\Exceptions\CreateTableException;
 
 class EntityController extends Controller
 {
@@ -76,8 +77,13 @@ class EntityController extends Controller
                 'msg' => '新增成功',
                 'redirect' => true
             ];
+        } catch (CreateTableException $e) {
+            return [
+                'code' => 2,
+                'msg' => '新增失败：创建数据库表失败，数据表已存在或其它原因',
+                'redirect' => false
+            ];
         } catch (QueryException $e) {
-            Log::error($e);
             return [
                 'code' => 1,
                 'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前模型已存在' : '其它错误'),
