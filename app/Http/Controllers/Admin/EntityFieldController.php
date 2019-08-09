@@ -24,7 +24,8 @@ class EntityFieldController extends Controller
 {
     protected $formNames = [
         'name', 'type', 'comment', 'form_name', 'form_type', 'is_show', 'is_edit', 'is_required',
-        'form_comment', 'entity_id', 'field_length', 'field_total', 'field_scale', 'order', 'form_params'
+        'form_comment', 'entity_id', 'field_length', 'field_total', 'field_scale', 'order', 'form_params',
+        'default_value'
     ];
 
     public function __construct()
@@ -107,12 +108,22 @@ class EntityFieldController extends Controller
                 $total = intval($data['field_total']);
                 $scale = intval($data['field_scale']);
                 if (in_array($m, ['char', 'string'])) {
-                    $table->$m($data['name'], $length > 0 ? $length : 255)->comment($data['comment'])->default('');
+                    $table->$m($data['name'], $length > 0 ? $length : 255)
+                        ->comment($data['comment'])
+                        ->default(strval($data['default_value']));
+                } elseif (Str::contains(Str::lower($m), 'integer')) {
+                    $table->$m($data['name'])
+                        ->comment($data['comment'])
+                        ->default(intval($data['default_value']));
                 } elseif (in_array($m, ['float', 'double', 'decimal', 'unsignedDecimal'])) {
                     if ($total > 0 && $scale > 0 && $total > $scale) {
-                        $table->$m($data['name'], $total, $scale)->comment($data['comment'])->default(0);
+                        $table->$m($data['name'], $total, $scale)
+                            ->comment($data['comment'])
+                            ->default(doubleval($data['default_value']));
                     } else {
-                        $table->$m($data['name'])->comment($data['comment'])->default(0);
+                        $table->$m($data['name'])
+                            ->comment($data['comment'])
+                            ->default(doubleval($data['default_value']));
                     }
                 } else {
                     $table->$m($data['name'])->comment($data['comment'])->nullable();
@@ -127,7 +138,7 @@ class EntityFieldController extends Controller
                 'msg' => '新增成功',
                 'redirect' => true
             ];
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             \Log::error($e);
             return [
                 'code' => 1,

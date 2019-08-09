@@ -18,6 +18,7 @@ class CreateEntityFieldsTable extends Migration
             $table->string('name', 64)->default('');
             $table->string('type')->default('');
             $table->string('comment', 100)->default('');
+            $table->string('default_value')->default('');
             $table->string('form_name', 20)->default('');
             $table->string('form_type')->default('');
             $table->string('form_comment', 100)->default('');

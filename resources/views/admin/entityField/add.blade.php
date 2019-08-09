@@ -43,6 +43,12 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">字段默认值</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="default_value" autocomplete="off" class="layui-input" placeholder="仅对字符串、数值类型的字段类型有效" value="{{ $model->default_value ?? ''  }}" @if(isset($id)) disabled @endif>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">字段注释</label>
                         <div class="layui-input-block">
                             <input type="text" name="comment" autocomplete="off" class="layui-input" value="{{ $model->comment ?? ''  }}">
