@@ -39,6 +39,11 @@ class ContentController extends Controller
      */
     public function index($entity)
     {
+        $result = $this->useUserDefinedIndexHandler($entity);
+        if (!is_null($result)) {
+            return $result;
+        }
+
         $this->breadcrumb[] = ['title' => $this->entity->name . '内容列表', 'url' => ''];
         Content::$listField = [
             'title' => '标题'
@@ -59,6 +64,11 @@ class ContentController extends Controller
      */
     public function list(Request $request, $entity)
     {
+        $result = $this->useUserDefinedListHandler($request, $entity);
+        if (!is_null($result)) {
+            return $result;
+        }
+
         $perPage = (int) $request->get('limit', 50);
         $condition = $request->only($this->formNames);
 
@@ -94,7 +104,11 @@ class ContentController extends Controller
     public function save(ContentRequest $request, $entity)
     {
         $this->validateEntityRequest();
-        $this->useUserDefinedSaveHandler($request, $entity);
+        $result = $this->useUserDefinedSaveHandler($request, $entity);
+        if (!is_null($result)) {
+            return $result;
+        }
+
         try {
             ContentRepository::add($request->only(
                 EntityFieldRepository::getByEntityId($entity)->pluck('name')->toArray()
@@ -147,7 +161,10 @@ class ContentController extends Controller
     public function update(ContentRequest $request, $entity, $id)
     {
         $this->validateEntityRequest();
-        $this->useUserDefinedUpdateHandler($request, $entity, $id);
+        $result = $this->useUserDefinedUpdateHandler($request, $entity, $id);
+        if (!is_null($result)) {
+            return $result;
+        }
 
         $fieldInfo = EntityFieldRepository::getByEntityId($entity)
                         ->where('is_edit', EntityField::EDIT_ENABLE)
@@ -212,20 +229,55 @@ class ContentController extends Controller
 
     protected function useUserDefinedSaveHandler($request, $entity)
     {
-        $entityControllerClass = '\\App\\Http\\Controllers\\Admin\\Entity\\' .
-            Str::ucfirst(Str::singular($this->entity->table_name)) . 'Controller';
-        if (class_exists($entityControllerClass) && method_exists($entityControllerClass, 'save')) {
-            return call_user_func("{$entityControllerClass}::save", $request, $entity);
+        $entityControllerClass = $this->userDefinedHandlerExists('save');
+        if ($entityControllerClass === false) {
+            return null;
         }
+        return call_user_func([new $entityControllerClass, 'save'], $request, $entity);
     }
 
     protected function useUserDefinedUpdateHandler($request, $entity, $id)
     {
+        $entityControllerClass = $this->userDefinedHandlerExists('update');
+        if ($entityControllerClass === false) {
+            return null;
+        }
+        return call_user_func([new $entityControllerClass, 'update'], $request, $entity, $id);
+    }
+
+    protected function useUserDefinedIndexHandler($entity)
+    {
+        $entityControllerClass = $this->userDefinedHandlerExists('index');
+        if ($entityControllerClass === false) {
+            return null;
+        }
+        return call_user_func([new $entityControllerClass, 'index'], $entity);
+    }
+
+    protected function useUserDefinedListHandler($request, $entity)
+    {
+        $entityControllerClass = $this->userDefinedHandlerExists('list');
+        if ($entityControllerClass === false) {
+            return null;
+        }
+        return call_user_func([new $entityControllerClass, 'list'], $request, $entity);
+    }
+
+    /**
+     * 判断自定义的处理方法是否存在
+     *
+     * @param string $method 方法名
+     * @return string|boolean 存在返回控制器类名，不存在返回false
+     */
+    protected function userDefinedHandlerExists($method)
+    {
         $entityControllerClass = '\\App\\Http\\Controllers\\Admin\\Entity\\' .
             Str::ucfirst(Str::singular($this->entity->table_name)) . 'Controller';
-        if (class_exists($entityControllerClass) && method_exists($entityControllerClass, 'update')) {
-            return call_user_func("{$entityControllerClass}::update", $request, $entity, $id);
+        if (class_exists($entityControllerClass) && method_exists($entityControllerClass, $method)) {
+            return $entityControllerClass;
         }
+
+        return false;
     }
 
     protected function getAddOrEditViewPath()
