@@ -15,6 +15,7 @@ class Category extends Model
 
     public static $listField = [
         'parentName' => '上级分类',
+        'entityName' => '关联模型',
         'order' => '排序',
     ];
 
@@ -26,5 +27,10 @@ class Category extends Model
     public function children()
     {
         return $this->hasMany('App\Model\Admin\Category', 'pid');
+    }
+
+    public function entity()
+    {
+        return $this->belongsTo('App\Model\Admin\Entity', 'model_id');
     }
 }

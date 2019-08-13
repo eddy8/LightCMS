@@ -24,6 +24,7 @@ class CategoryRepository
             xssFilter($item);
             $item->editUrl = route('admin::category.edit', ['id' => $item->id]);
             $item->parentName = $item->pid == 0 ? '顶级菜单' : $item->parent->name;
+            $item->entityName = $item->entity ? $item->entity->name : '';
             return $item;
         });
 
