@@ -5,3 +5,7 @@
 .light-search {
     padding: 5px 0;
 }
+
+.light-danger {
+    color: #FF5722;
+}

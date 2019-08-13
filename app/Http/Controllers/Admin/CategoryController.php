@@ -108,7 +108,8 @@ class CategoryController extends Controller
             'id' => $id,
             'model' => $model,
             'breadcrumb' => $this->breadcrumb,
-            'disabledCategoryIds' => [$id]
+            'disabledCategoryIds' => [$id],
+            'disabledChildren' => true,
         ]);
     }
 

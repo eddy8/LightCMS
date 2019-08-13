@@ -36,6 +36,7 @@
                                     <option value="{{ $v->id }}" @if(isset($model) && $model->model_id == $v->id) selected @endif>{{ $v->name }}</option>
                                 @endforeach
                             </select>
+                            <div class="layui-form-mid light-danger">修改分类关联的模型可能会破坏数据一致性，请谨慎操作</div>
                         </div>
                     </div>
 
