@@ -20,7 +20,7 @@
                         <div class="layui-input-block" style="width: 400px">
                             <select name="pid" lay-verify="required">
                                 <option value="0">顶级分类</option>
-                                @foreach(App\Repository\Admin\CategoryRepository::tree() as $v)
+                                @foreach(App\Repository\Admin\CategoryRepository::tree($model->model_id ?? null) as $v)
                                     @include('admin.menu', $v)
                                 @endforeach
                             </select>
@@ -33,7 +33,7 @@
                             <select name="model_id" lay-verify="required">
                                 <option value="0">不关联</option>
                                 @foreach(App\Model\Admin\Entity::all(['id', 'name']) as $v)
-                                    <option value="{{ $v->id }}">{{ $v->name }}</option>
+                                    <option value="{{ $v->id }}" @if(isset($model) && $model->model_id == $v->id) selected @endif>{{ $v->name }}</option>
                                 @endforeach
                             </select>
                         </div>
