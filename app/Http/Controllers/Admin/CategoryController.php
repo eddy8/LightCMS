@@ -104,7 +104,12 @@ class CategoryController extends Controller
         $this->breadcrumb[] = ['title' => '编辑分类', 'url' => ''];
 
         $model = CategoryRepository::find($id);
-        return view('admin.category.add', ['id' => $id, 'model' => $model, 'breadcrumb' => $this->breadcrumb]);
+        return view('admin.category.add', [
+            'id' => $id,
+            'model' => $model,
+            'breadcrumb' => $this->breadcrumb,
+            'disabledCategoryIds' => [$id]
+        ]);
     }
 
     /**
