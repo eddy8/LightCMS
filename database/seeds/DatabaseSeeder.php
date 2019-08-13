@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MenusTableSeeder::class);
         $this->call(EntitiesTableSeeder::class);
         $this->call(EntityFieldsTableSeeder::class);
+        $this->call(CategoriesTableSeeder::class);
         $this->call(SensitiveWordsTableSeeder::class);
     }
 }
