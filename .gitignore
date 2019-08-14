@@ -12,3 +12,4 @@ yarn-error.log
 .env
 /.phpintel
 /public/upload/
+/composer.lock
