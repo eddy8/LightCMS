@@ -26,7 +26,7 @@ class EntityFieldRepository
             xssFilter($item);
             $item->entityName = $item->entity->name;
             $item->form_type = $formTypes[$item->form_type];
-            $item->editUrl = route('admin::entityField.edit', ['id' => $item->id]);
+            $item->editUrl = route('admin::entityField.edit', ['id' => $item->id]) . '?entity_id=' . $item->entity->id;
             $item->deleteUrl = route('admin::entityField.delete', ['id' => $item->id]);
             return $item;
         });
