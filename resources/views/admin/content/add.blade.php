@@ -114,6 +114,57 @@
                                     </div>
                                 </div>
                                 @break
+                                @case('uploadMulti')
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block">
+                                        <button type="button" class="layui-btn" id="file-upload-{{ $field->name }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled style="background-color: gray" @endif>
+                                            <i class="layui-icon">&#xe67c;</i>上传图片
+                                        </button>
+                                        <script type="text/javascript">
+
+                                            addLoadEvent(function () {
+                                                layui.use('upload', function(){
+                                                    var upload = layui.upload;
+
+                                                    //执行实例
+                                                    var uploadInst = upload.render({
+                                                        elem: '#file-upload-{{ $field->name }}' //绑定元素
+                                                        ,multiple: true
+                                                        ,url: "{{ route('admin::neditor.serve', ['type' => 'uploadimage']) }}" //上传接口
+                                                        ,done: function(res){
+                                                            var obj = $('input[name={{ $field->name }}]');
+                                                            if (obj.val() === '') {
+                                                                obj.val(res.url);
+                                                            } else {
+                                                                obj.val(obj.val() + ',' + res.url);
+                                                            }
+
+                                                            var html = '<div style="float:left"><img style="width: 250px;height: auto;" src="' + res.url + '" class="preview-image-{{ $field->name }}"><i title="移除图片" class="layui-icon remove-image" style="font-size:20px;color:red;cursor:pointer;">&#xe640;</i>';
+                                                            $('#preview-image-{{ $field->name }}').append(html);
+
+                                                            $('i.remove-image').unbind('click').on('click', function () {
+                                                                $(this).parent().remove();
+                                                                var previewArr = [];
+                                                                $('#preview-image-{{ $field->name }} img').each(function (i, v) {
+                                                                    previewArr.push($(v).attr('src'));
+                                                                });
+                                                                obj.val(previewArr.join(','));
+                                                            });
+                                                        }
+                                                        ,error: function(){
+                                                            layer.msg('上传失败')
+                                                        }
+                                                    });
+                                                });
+                                            });
+                                        </script>
+                                        <div style="float: left;width: 50%">
+                                            <input type="input" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif></div>
+                                        <div id="preview-image-{{ $field->name }}"></div>
+                                    </div>
+                                </div>
+                                @break
                             @case('reference_category')
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
