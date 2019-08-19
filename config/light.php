@@ -82,6 +82,10 @@ return [
             'imageAllowFiles' => ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], /* 上传图片格式显示 */
         ]
     ],
+    'image_upload' => [
+        'driver' => 'local', // local 表示上传到本地服务器。上传到其它服务器请设置自定义名称
+        'class' => '', // 自定义 driver 需要填写对应包括命名空间的完整类名，该类需要实现 App\Contracts\ImageUpload 接口
+    ],
 
     // 三方登录
     'auth_login' => [

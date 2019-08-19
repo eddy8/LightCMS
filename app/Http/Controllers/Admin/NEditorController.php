@@ -35,6 +35,11 @@ class NEditorController extends Controller
 
     protected function uploadImage(Request $request)
     {
+        if (config('light.image_upload.driver') !== 'local') {
+            $class = config('light.image_upload.class');
+            return call_user_func([new $class, 'uploadImage'], $request);
+        }
+
         if (!$request->hasFile('file')) {
             return [
                 'code' => 2,
