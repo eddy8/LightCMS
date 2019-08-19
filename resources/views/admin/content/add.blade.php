@@ -163,7 +163,13 @@
                                         </script>
                                         <div style="float: left;width: 50%">
                                             <input type="input" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif></div>
-                                        <div id="preview-image-{{ $field->name }}"></div>
+                                        <div id="preview-image-{{ $field->name }}">
+                                            @if(isset($model))
+                                                    @foreach(explode(',', $model->{$field->name}) as $v)
+                                                    <div style="float:left"><img data-action="zoom" style="width: 250px;height: auto;" src="{{ $v }}" class="preview-image-{{ $field->name }}"><i title="移除图片" class="layui-icon remove-image" style="font-size:20px;color:red;cursor:pointer;">&#xe640;</i></div>
+                                                    @endforeach
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                                 @break
@@ -305,6 +311,18 @@
             return false;
         });
         window.jQuery = $;
+        $('i.remove-image').unbind('click').on('click', function () {
+            var previewArr = [];
+            var container = $(this).parent().parent();
+
+            $(this).parent().remove();
+            container.find('img').each(function (i, v) {
+                previewArr.push($(v).attr('src'));
+            });
+            var inputName = container.attr('id').replace('preview-image-', '');
+            console.log(previewArr.join(','));
+            $("input[name=" + inputName + ']').val(previewArr.join(','));
+        });
     </script>
     <script src="/public/vendor/zoom/transition.js"></script>
     <script src="/public/vendor/zoom/zoom.min.js"></script>
