@@ -92,21 +92,28 @@
                     <div class="layui-form-item">
                         <div class="layui-inline">
                         <label class="layui-form-label">是否显示</label>
-                        <div class="layui-input-block">
+                        <div class="layui-input-inline">
                             <input type="checkbox" name="is_show" lay-skin="switch" lay-text="是|否" value="1" @if(!isset($model) || isset($model) && $model->is_show == App\Model\Admin\EntityField::SHOW_ENABLE) checked @endif>
                         </div>
                         </div>
 
+                        <div class="layui-inline" title="仅对部分表单类型（段文本、下拉选择）有效">
+                            <label class="layui-form-label">行内展示</label>
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="is_show_inline" lay-skin="switch" lay-text="是|否" value="1" @if(!isset($model) || isset($model) && $model->is_show_inline == App\Model\Admin\EntityField::SHOW_INLINE) checked @endif>
+                            </div>
+                        </div>
+
                         <div class="layui-inline">
                             <label class="layui-form-label">是否可编辑</label>
-                            <div class="layui-input-block">
+                            <div class="layui-input-inline">
                                 <input type="checkbox" name="is_edit" lay-skin="switch" lay-text="是|否" value="1" @if(!isset($model) || isset($model) && $model->is_edit == App\Model\Admin\EntityField::EDIT_ENABLE) checked @endif>
                             </div>
                         </div>
 
                         <div class="layui-inline">
                             <label class="layui-form-label">是否必填</label>
-                            <div class="layui-input-block">
+                            <div class="layui-input-inline">
                                 <input type="checkbox" name="is_required" lay-skin="switch" lay-text="是|否" value="1" @if(!isset($model) || isset($model) && $model->is_required == App\Model\Admin\EntityField::REQUIRED_ENABLE) checked @endif>
                             </div>
                         </div>

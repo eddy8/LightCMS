@@ -19,7 +19,11 @@
     <div class="layui-card">
 
         @include('admin.breadcrumb')
-
+        @php
+            $current = 0;
+            $before = 0;
+            $inlineFields = [];
+        @endphp
         <div class="layui-card-body">
             <form class="layui-form" action="@if(isset($id)){{ route('admin::content.update', ['id' => $id, 'entity' => $entity]) }}@else{{ route('admin::content.save', ['entity' => $entity]) }}@endif" method="post">
                 @if(isset($id)) {{ method_field('PUT') }} @endif
@@ -27,6 +31,67 @@
                         @if($field->is_show == \App\Model\Admin\EntityField::SHOW_DISABLE)
                             @continue
                         @endif
+                        @if(in_array($field->form_type, ['input', 'select', 'reference_category'], true) && $field->is_show_inline == \App\Model\Admin\EntityField::SHOW_INLINE)
+                            @php
+                                $before = $current;
+                                $current = 1;
+                                array_push($inlineFields, $field);
+                            @endphp
+                            @continue(!$loop->last)
+                        @else
+                            @php
+                                $before = $current;
+                                $current = 0;
+                            @endphp
+                        @endif
+
+                        @if($current === 0 && $before === 1 || $current === 1 && $loop->last)
+                            @foreach(array_chunk($inlineFields, 4) as $inlineChunkFields)
+                            <div class="layui-form-item">
+                                @foreach($inlineChunkFields as $inlineField)
+                                    @switch($inlineField->form_type)
+                                        @case('input')
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">{{ $inlineField->form_name }}</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="text" name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$inlineField->name} ?? ''  }}" @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                                </div>
+                                            </div>
+                                            @break
+                                        @case('select')
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">{{ $inlineField->form_name }}</label>
+                                                <div class="layui-input-inline" style="width: 400px;z-index: {{99999 - ($inlineField->order + $inlineField->id)}}">
+                                                    <select name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                                        @foreach(parseEntityFieldParams($inlineField->form_params) as $v)
+                                                            <option value="{{ $v[0] }}" @if(isset($model) && $v[0] == $model->{$inlineField->name}) selected @endif>{{ $v[1] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            @break
+                                        @case('reference_category')
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">{{ $inlineField->form_name }}</label>
+                                                <div class="layui-input-inline" style="width: 400px;z-index: {{99999 - ($inlineField->order + $inlineField->id)}}">
+                                                    <select name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                                        @foreach(App\Repository\Admin\CategoryRepository::tree($entityModel->id) as $v)
+                                                            @include('admin.category', [$v, 'fieldName' => $inlineField->name])
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            @break
+                                    @endswitch
+                                @endforeach
+                            </div>
+                            @endforeach
+                            @php
+                                $inlineFields = [];
+                            @endphp
+                            @continue($current === 1 && $loop->last)
+                        @endif
+
                         @switch($field->form_type)
                             @case('input')
                                 <div class="layui-form-item">

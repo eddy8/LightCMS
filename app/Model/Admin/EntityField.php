@@ -10,6 +10,9 @@ class EntityField extends Model
     const SHOW_ENABLE = 1;
     const SHOW_DISABLE = 0;
 
+    const SHOW_INLINE = 1;
+    const SHOW_NOT_INLINE = 0;
+
     const EDIT_ENABLE = 1;
     const EDIT_DISABLE = 0;
 

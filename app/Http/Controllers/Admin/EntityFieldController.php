@@ -25,7 +25,7 @@ class EntityFieldController extends Controller
     protected $formNames = [
         'name', 'type', 'comment', 'form_name', 'form_type', 'is_show', 'is_edit', 'is_required',
         'form_comment', 'entity_id', 'field_length', 'field_total', 'field_scale', 'order', 'form_params',
-        'default_value'
+        'default_value', 'is_show_inline'
     ];
 
     public function __construct()
@@ -186,6 +186,9 @@ class EntityFieldController extends Controller
             }
             if (!isset($data['is_required'])) {
                 $data['is_required'] = EntityField::REQUIRED_DISABLE;
+            }
+            if (!isset($data['is_show_inline'])) {
+                $data['is_show_inline'] = EntityField::SHOW_NOT_INLINE;
             }
 
             unset($data['field_length'], $data['field_total'], $data['field_scale'], $data['entity_id']);

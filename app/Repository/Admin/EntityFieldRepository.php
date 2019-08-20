@@ -61,6 +61,7 @@ class EntityFieldRepository
 
     public static function getByEntityId($id)
     {
-        return  EntityField::query()->where('entity_id', $id)->orderBy('order')->get();
+        return  EntityField::query()->where('entity_id', $id)
+            ->orderBy('order')->orderBy('is_show_inline')->get();
     }
 }
