@@ -22,6 +22,18 @@ class AdminUser extends Authenticatable
 
     protected $guard_name = 'admin';
 
+    public static $searchField = [
+        'name' => '用户名',
+        'status' => [
+            'searchType' => '=',
+            'title' => '状态',
+            'enums' => [
+                0 => '禁用',
+                1 => '启用',
+            ],
+        ],
+    ];
+
     public function comments()
     {
         return $this->hasMany('App\Model\Admin\Comment', 'user_id');

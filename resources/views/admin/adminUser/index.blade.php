@@ -7,12 +7,7 @@
         <div class="layui-form layui-card-header light-search">
             <form>
                 <input type="hidden" name="action" value="search">
-            <div class="layui-inline">
-                <label class="layui-form-label">用户名</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="name" autocomplete="off" class="layui-input" value="{{ request()->get('name') }}">
-                </div>
-            </div>
+                @include('admin.searchField', ['data' => App\Model\Admin\AdminUser::$searchField])
             <div class="layui-inline">
                 <label class="layui-form-label">创建日期</label>
                 <div class="layui-input-inline">

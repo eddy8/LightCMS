@@ -15,6 +15,19 @@ trait Searchable
 {
     public static function buildQuery(Builder $query, array $condition)
     {
+        // 获取模型定义的搜索域
+        $model = $query->getModel();
+        $searchField = [];
+        if (property_exists($model, 'searchField')) {
+            $searchField = $model::$searchField;
+        }
+
+        foreach ($condition as $k => $v) {
+            if (!is_array($v) && isset($searchField[$k]['searchType'])) {
+                $condition[$k] = [$searchField[$k]['searchType'], $v];
+            }
+        }
+
         foreach ($condition as $k => $v) {
             $type = 'like';
             $value = $v;
@@ -22,7 +35,8 @@ trait Searchable
                 list($type, $value) = $v;
             }
             $value = trim($value);
-            if ($type ==='like' && $value === '') {
+            // 搜索值为空字符串则忽略该条件
+            if ($value === '') {
                 continue;
             }
 
