@@ -100,7 +100,7 @@
                         <div class="layui-inline" title="仅对部分表单类型（段文本、下拉选择）有效">
                             <label class="layui-form-label">行内展示</label>
                             <div class="layui-input-inline">
-                                <input type="checkbox" name="is_show_inline" lay-skin="switch" lay-text="是|否" value="1" @if(!isset($model) || isset($model) && $model->is_show_inline == App\Model\Admin\EntityField::SHOW_INLINE) checked @endif>
+                                <input type="checkbox" name="is_show_inline" lay-skin="switch" lay-text="是|否" value="1" @if(isset($model) && $model->is_show_inline == App\Model\Admin\EntityField::SHOW_INLINE) checked @endif>
                             </div>
                         </div>
 
