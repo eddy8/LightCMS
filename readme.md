@@ -152,6 +152,22 @@ php artisan light:basic config 配置
 
 最后，如果想让生成的路由展示在菜单中，只需在[菜单管理](/admin/menus)页面点击**自动更新菜单**即可。
 
+### 搜索字段（$searchField）配置说明
+通过配置搜索字段，可以很方便的在模型的列表页展示搜索项。如下是一个示例配置：
+```php
+    public static $searchField = [
+        'name' => '用户名', // input搜索类型。key 为字段名称，value 为标题
+        'status' => [ // select搜索类型。key 为字段名称，value 为相关配置
+            'searchType' => '=', // 说明字段在数据库的搜索匹配方式，默认为like查询
+            'title' => '状态', // 标题
+            'enums' => [ // select下拉搜索项
+                0 => '禁用',
+                1 => '启用',
+            ],
+        ],
+    ];
+```
+
 ## 敏感词检测
 如果需要对发表的内容（文章、评论等）进行内容审查，则可直接调用`LightCMS`提供的`checkSensitiveWords`函数即可。示例如下：
 ```php
