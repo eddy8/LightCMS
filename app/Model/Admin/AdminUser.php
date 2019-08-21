@@ -25,6 +25,7 @@ class AdminUser extends Authenticatable
     public static $searchField = [
         'name' => '用户名',
         'status' => [
+            'showType' => 'select',
             'searchType' => '=',
             'title' => '状态',
             'enums' => [
@@ -32,6 +33,10 @@ class AdminUser extends Authenticatable
                 1 => '启用',
             ],
         ],
+        'created_at' => [
+            'showType' => 'datetime',
+            'title' => '创建时间'
+        ]
     ];
 
     public function comments()

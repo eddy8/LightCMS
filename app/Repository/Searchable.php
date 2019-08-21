@@ -40,7 +40,10 @@ trait Searchable
                 continue;
             }
 
-            if ($k === 'created_at' || $k === 'updated_at') {
+            if ($k === 'created_at' ||
+                $k === 'updated_at' ||
+                (isset($searchField[$k]['showType']) && $searchField[$k]['showType'] === 'datetime')
+            ) {
                 $dates = explode(' ~ ', $value);
                 if (count($dates) === 2) {
                     $query->whereBetween($k, [
