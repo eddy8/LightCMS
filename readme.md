@@ -157,7 +157,8 @@ php artisan light:basic config 配置
 ```php
     public static $searchField = [
         'name' => '用户名', // input搜索类型。key 为字段名称，value 为标题
-        'status' => [ // select搜索类型。key 为字段名称，value 为相关配置
+        'status' => [ // key 为字段名称，value 为相关配置
+            'showType' => 'select', // 下拉框选择搜索类型
             'searchType' => '=', // 说明字段在数据库的搜索匹配方式，默认为like查询
             'title' => '状态', // 标题
             'enums' => [ // select下拉搜索项
@@ -165,6 +166,10 @@ php artisan light:basic config 配置
                 1 => '启用',
             ],
         ],
+        'created_at' => [ // key 为字段名称，value 为相关配置
+            'showType' => 'datetime', // 日期时间搜索类型
+            'title' => '创建时间' // 标题
+        ]
     ];
 ```
 
