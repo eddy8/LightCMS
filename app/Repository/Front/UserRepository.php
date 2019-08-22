@@ -25,6 +25,7 @@ class UserRepository
         if (!isset(UserAuth::AUTH_TYPE_NAME[$type])) {
             throw new \InvalidArgumentException('三方授权类型未注册');
         }
+        $data = [];
         $data['type'] = UserAuth::AUTH_TYPE_NAME[$type];
 
         $data['user_id'] = $userId;

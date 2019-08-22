@@ -101,7 +101,7 @@ function mapTypeToVerbOfSensitiveWords()
  *
  * @param string $text 待检查文本
  * @param string $type 名词、动词的检测方法。默认为 join 。join：名词和动词相连组合在一起视为违规 all：名词和动词只要同时出现即为违规
- * @param null $mode 检查模式。仅 $type 为 all 时有效。默认名词、动词、专用词都检查，显示可指定为 noun verb exclusive
+ * @param mixed $mode 检查模式。仅 $type 为 all 时有效。默认名词、动词、专用词都检查，显示可指定为 noun verb exclusive
  * @return array
  */
 function checkSensitiveWords(string $text, $type = 'join', $mode = null)

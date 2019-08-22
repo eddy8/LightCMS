@@ -269,7 +269,7 @@ class MenuController extends Controller
                 if (!empty($deleteIds)) {
                     Menu::query()->whereIn('id', $deleteIds)->delete();
                 }
-                if ($hasChildren) {
+                if (!empty($hasChildren)) {
                     $message = ' 以下菜单ID因有子菜单不能直接删除：' . implode(',', $hasChildren);
                 }
                 break;

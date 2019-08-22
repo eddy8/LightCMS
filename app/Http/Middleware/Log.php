@@ -18,6 +18,7 @@ class Log
      */
     public function handle($request, Closure $next, $guard = '')
     {
+        $data = [];
         if ($guard !== '') {
             $user = Auth::guard($guard)->user();
             if ($user) {
