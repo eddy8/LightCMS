@@ -27,7 +27,7 @@ Route::delete('/{{-$model_plural-}}/{id}', '{{-$model_uc_first-}}Controller@dele
     @include('admin.breadcrumb')
 
     <div class="layui-card">
-        <div class="layui-form layui-card-header light-search">
+        <div class="layui-form layui-card-header light-search" style="height: auto">
             <form>
                 <input type="hidden" name="action" value="search">
             @include('admin.searchField', ['data' => App\Model\Admin\{{-$model_uc_first-}}::$searchField])

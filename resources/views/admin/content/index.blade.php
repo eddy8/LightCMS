@@ -4,7 +4,7 @@
     @include('admin.breadcrumb')
 
     <div class="layui-card">
-        <div class="layui-form layui-card-header light-search">
+        <div class="layui-form layui-card-header light-search" style="height: auto">
             <form>
                 <input type="hidden" name="action" value="search">
             @include('admin.searchField', ['data' => App\Model\Admin\Content::$searchField])
