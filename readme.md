@@ -187,7 +187,14 @@ print_r($result);
 ```
 
 ## 图片上传
-LightCMS中图片默认上传到本地服务器。如果有自定义需求，比如上传到三方云服务器，可参考`config/light.php`配置文件中的`image_upload`配置项说明，自定义处理类需要实现`App\Contracts\ImageUpload`接口。
+LightCMS中图片默认上传到本地服务器。如果有自定义需求，比如上传到三方云服务器，可参考`config/light.php`配置文件中的`image_upload`配置项说明，自定义处理类需要实现`App\Contracts\ImageUpload`接口，方法的返回值数据结构和系统原方法保持一致即可。
+```json
+{
+    "code":200,
+    "msg":"",
+    "url":"xxx"
+}
+```
 
 ## 系统核心函数、方法说明
 做这个说明的主要目的是让开发者了解一些核心功能，方便自定义各类功能开发。毕竟框架是不可能代劳所有事情滴^_
