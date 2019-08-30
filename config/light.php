@@ -10,6 +10,12 @@ return [
     // 加载数据库自定义配置
     'light_config' => false,
 
+    // 系统日志保留时间。单位：天
+    'log_reserve_days' => 180,
+
+    // 异步写入系统日志
+    'log_async_write' => true,
+
     // 数据库表字段类型 参考：https://laravel.com/docs/5.5/migrations#columns
     'db_table_field_type' => [
         'char',

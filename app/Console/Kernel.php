@@ -24,8 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        // 系统日志清理
+        $schedule->command('light:clearSystemLog')->dailyAt('00:00');
     }
 
     /**

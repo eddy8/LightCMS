@@ -6,6 +6,7 @@ use App\Repository\Admin\LogRepository;
 use Closure;
 use function GuzzleHttp\Psr7\build_query;
 use Illuminate\Support\Facades\Auth;
+use App\Jobs\WriteSystemLog;
 
 class Log
 {
@@ -34,7 +35,12 @@ class Log
             $input['password'] = '******';
         }
         $data['data'] = build_query($input, false);
-        LogRepository::add($data);
+
+        if (config('light.log_async_write')) {
+            dispatch(new WriteSystemLog($data));
+        } else {
+            LogRepository::add($data);
+        }
         return $next($request);
     }
 }
