@@ -127,6 +127,16 @@ $siteName = config('light_config.SITE_NAME');
 ## 系统日志
 `lightCMS`集成了一套简单的日志系统，默认情况下记录后台的所有操作相关信息，具体实现可以参考`Log`中间件。
 
+可以利用`Laravel`的[任务调度](https://laravel.com/docs/5.8/scheduling#introduction)来自动清理系统日志。启用任务调度需要在系统的计划任务中添加如下内容：
+```
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+可以通过配置`log_async_write`项来决定是否启用异步写入日志（默认未启用），异步写入日志需要运行`Laravel`的[队列处理器](https://laravel.com/docs/5.8/queues#running-the-queue-worker)：
+```bash
+php artisan queue:work
+```
+
 ## 代码一键生成
 对于一个普通的模型，管理后台通常有增删改查相关的业务需求。`lightCMS`拥有一键生成相关代码的能力，在建好模型的数据库表结构后，可以使用如下`artisan`命令生成相关代码：
 ```bash
