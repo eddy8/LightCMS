@@ -31,10 +31,18 @@ class EntityField extends Model
         'name' => '字段名称',
         'type' => '字段类型',
         'form_name' => '表单名称',
-        'form_type' => '表单类型',
+        'form_type' => ['title' => '表单类型', 'sort' => true],
+        'is_show_inline' => ['title' => '行内展示', 'sort' => true],
+        'is_show' => '显示',
     ];
 
     public static $searchField = [
         'name' => '字段名称',
+        'entity_id' => [
+            'title' => '模型',
+            'searchType' => '=',
+            'showType' => 'select',
+            'enums' => [],
+        ]
     ];
 }

@@ -42,6 +42,7 @@ class EntityFieldController extends Controller
     public function index()
     {
         $this->breadcrumb[] = ['title' => '模型字段列表', 'url' => ''];
+        EntityField::$searchField['entity_id']['enums'] = EntityRepository::all()->pluck('name', 'id');
         return view('admin.entityField.index', ['breadcrumb' => $this->breadcrumb]);
     }
 
