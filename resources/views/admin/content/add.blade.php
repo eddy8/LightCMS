@@ -46,7 +46,7 @@
                         @endif
 
                         @if($current === 0 && $before === 1 || $current === 1 && $loop->last)
-                            @foreach(array_chunk($inlineFields, 4) as $inlineChunkFields)
+                            @foreach(array_chunk($inlineFields, config('light_config.FORM_INLINE_NUM', 4)) as $inlineChunkFields)
                             <div class="layui-form-item">
                                 @foreach($inlineChunkFields as $inlineField)
                                     @switch($inlineField->form_type)
@@ -61,7 +61,7 @@
                                         @case('select')
                                             <div class="layui-inline">
                                                 <label class="layui-form-label">{{ $inlineField->form_name }}</label>
-                                                <div class="layui-input-inline" style="width: 400px;z-index: {{99999 - ($inlineField->order + $inlineField->id)}}">
+                                                <div class="layui-input-inline" style="z-index: {{99999 - ($inlineField->order + $inlineField->id)}}">
                                                     <select name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                                         @foreach(parseEntityFieldParams($inlineField->form_params) as $v)
                                                             <option value="{{ $v[0] }}" @if(isset($model) && $v[0] == $model->{$inlineField->name}) selected @endif>{{ $v[1] }}</option>
