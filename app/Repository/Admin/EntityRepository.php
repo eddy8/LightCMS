@@ -95,6 +95,7 @@ EOF;
             $autoMenu[] = [
                 'url' => route('admin::content.index', ['entity' => $k]),
                 'name' => $v,
+                'id' => $k,
             ];
         }
 

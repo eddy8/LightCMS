@@ -70,7 +70,7 @@
                             <a class="" href="javascript:;">系统菜单</a>
                             <dl class="layui-nav-child">
                                 @foreach($autoMenu as $v)
-                                    <dd><a href="{{ $v['url'] }}">{{ $v['name'] }}</a></dd>
+                                    <dd @if(isset($entity) && $v['id'] === intval($entity)) class="layui-this" @endif><a href="{{ $v['url'] }}">{{ $v['name'] }}</a></dd>
                                 @endforeach
                             </dl>
                         </li>
