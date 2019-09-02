@@ -7,7 +7,8 @@ namespace App\Repository\Admin;
 
 use App\Model\Admin\Entity;
 use App\Repository\Searchable;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use App\Exceptions\CreateTableException;
 
 class EntityRepository
@@ -47,18 +48,16 @@ class EntityRepository
     {
         $entity = Entity::query()->create($data);
         try {
-            $sql = <<<"EOF"
-CREATE TABLE `{$data['table_name']}` (
-`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
-`created_at`  timestamp NULL DEFAULT NULL ,
-`updated_at`  timestamp NULL DEFAULT NULL ,
-PRIMARY KEY (`id`)
-)
-ENGINE=InnoDB
-DEFAULT CHARACTER SET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-;
-EOF;
-            DB::statement($sql);
+            if (Schema::hasTable($data['table_name'])) {
+                throw new \RuntimeException("数据库表已存在");
+            }
+
+            Schema::create($data['table_name'], function (Blueprint $table) {
+                $table->increments('id');
+                $table->timestamps();
+                $table->engine = 'InnoDB';
+            });
+
             return $entity;
         } catch (\Exception $e) {
             $entity->delete();
