@@ -3,6 +3,11 @@
     <link rel="stylesheet" type="text/css" href="/public/vendor/zoom/zoom.css">
 @endsection
 @section('content')
+    <style>
+        .layui-form-item {
+            margin-bottom: 5px;
+        }
+    </style>
     <script>
         function addLoadEvent(func) {
             var oldonload = window.onload;
@@ -73,7 +78,7 @@
                                         @case('reference_category')
                                             <div class="layui-inline">
                                                 <label class="layui-form-label">{{ $inlineField->form_name }}</label>
-                                                <div class="layui-input-inline" style="width: 400px;z-index: {{99999 - ($inlineField->order + $inlineField->id)}}">
+                                                <div class="layui-input-inline" style="z-index: {{99999 - ($inlineField->order + $inlineField->id)}}">
                                                     <select name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                                         @foreach(App\Repository\Admin\CategoryRepository::tree($entityModel->id) as $v)
                                                             @include('admin.category', [$v, 'fieldName' => $inlineField->name])
