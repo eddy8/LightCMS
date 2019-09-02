@@ -73,6 +73,9 @@ Route::group(
             Route::get('/logs/list', 'LogController@list')->name('log.list');
             Route::get('/logs/create', 'LogController@create')->name('log.create');
 
+            // 模型字段
+            Route::put('/entityFields/list/{id}', 'EntityFieldController@listUpdate')->name('entityField.listUpdate');
+
             // 自动加载生成的其它路由
             foreach (new DirectoryIterator(base_path('routes/auto')) as $f) {
                 if ($f->isDot()) {

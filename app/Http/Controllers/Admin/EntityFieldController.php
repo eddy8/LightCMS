@@ -242,4 +242,26 @@ class EntityFieldController extends Controller
             ];
         }
     }
+
+    public function listUpdate(Request $request, $id)
+    {
+        try {
+            $entityField = EntityField::query()->findOrFail($id);
+
+            $order = $request->post('order', 77);
+            $entityField->order = $order;
+            $entityField->save();
+            return [
+                'code' => 0,
+                'msg' => '保存成功',
+                'redirect' => true
+            ];
+        } catch (ModelNotFoundException $e) {
+            return [
+                'code' => 2,
+                'msg' => '保存失败：记录不存在',
+                'redirect' => false
+            ];
+        }
+    }
 }

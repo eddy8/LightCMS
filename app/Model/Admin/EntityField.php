@@ -34,6 +34,7 @@ class EntityField extends Model
         'form_type' => ['title' => '表单类型', 'sort' => true],
         'is_show_inline' => ['title' => '行内展示', 'sort' => true],
         'is_show' => '显示',
+        'order' => ['title' => '排序', 'sort' => true, 'edit' => true, 'width' => 80],
     ];
 
     public static $searchField = [
