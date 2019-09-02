@@ -177,7 +177,7 @@
                                         </script>
                                         <div style="float: left;width: 50%">
                                         <input type="input" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif></div>
-                                        <div><img data-action="zoom" style="width: 200px;height: auto" src="{{ $model->{$field->name} ?? ''  }}" id="img-{{ $field->name }}"></div>
+                                        <div><img data-action="zoom" style="max-width: 200px;height: auto" src="{{ $model->{$field->name} ?? ''  }}" id="img-{{ $field->name }}"></div>
                                     </div>
                                 </div>
                                 @break
@@ -207,7 +207,7 @@
                                                                 obj.val(obj.val() + ',' + res.url);
                                                             }
 
-                                                            var html = '<div style="float:left"><img data-action="zoom" style="width: 250px;height: auto;" src="' + res.url + '" class="preview-image-{{ $field->name }}"><i title="移除图片" class="layui-icon remove-image" style="font-size:20px;color:red;cursor:pointer;">&#xe640;</i>';
+                                                            var html = '<div style="float:left"><img data-action="zoom" style="max-width: 200px;height: auto;" src="' + res.url + '" class="preview-image-{{ $field->name }}"><i title="移除图片" class="layui-icon remove-image" style="font-size:20px;color:red;cursor:pointer;">&#xe640;</i>';
                                                             $('#preview-image-{{ $field->name }}').append(html);
 
                                                             $('i.remove-image').unbind('click').on('click', function () {
