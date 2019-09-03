@@ -63,7 +63,7 @@ cp .env.example .env.pro
 ```
 初始化系统：
 ```
-php artisan migrate --seed
+php artisan migrate --seed --env=pro
 ```
 
 ### 配置Web服务器（此处以`Nginx`为例）
