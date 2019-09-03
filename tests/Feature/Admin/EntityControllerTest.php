@@ -35,7 +35,6 @@ class EntityControllerTest extends TestCase
 
     public function testEntityCanBeCreated()
     {
-
         $data = ['name' => '测试', 'table_name' => 'tests'];
         $response = $this->actingAs($this->user, 'admin')
             ->post('/admin/entities', $data);

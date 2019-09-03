@@ -44,7 +44,7 @@
                     <th lay-data="{field:'parentName'}">上级菜单</th>
                     <th lay-data="{field:'route'}">路由</th>
                     <th lay-data="{field:'url'}">URL</th>
-                    <th lay-data="{field:'order', sort: true}">排序</th>
+                    <th lay-data="{field:'order', sort: true, edit: true}">排序</th>
                     <th lay-data="{field:'statusText', sort: true}">状态</th>
                     <th lay-data="{field:'created_at'}">添加时间</th>
                     <th lay-data="{field:'updated_at'}">更新时间</th>
@@ -96,6 +96,23 @@
         laytpl.config({
             open: '<%',
             close: '%>'
+        });
+
+        var table = layui.table;
+        table.on('edit(test)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+            $.ajax({
+                url: '{{ route('admin::menu.batch') }}',
+                method: 'post',
+                dataType: 'json',
+                data: {params: obj.value, ids: [obj.data.id], 'type': 'order'},
+                success: function (result) {
+                    if (result.code !== 0) {
+                        layer.msg(result.msg, {shift: 3});
+                        return false;
+                    }
+                    layer.msg(result.msg, {icon: 1});
+                }
+            });
         });
 
         var laydate = layui.laydate;

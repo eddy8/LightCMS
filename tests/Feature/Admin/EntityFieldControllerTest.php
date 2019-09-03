@@ -3,7 +3,6 @@
 namespace Tests\Feature\Admin;
 
 use App\Model\Admin\AdminUser;
-use App\Model\Admin\EntityField;
 use App\Repository\Admin\EntityRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
