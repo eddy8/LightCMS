@@ -57,12 +57,17 @@ cd lightCMS
 composer install
 ```
 ### 系统配置并初始化
-新建一份环境配置，并配置好数据库等相关配置:
+设置目录权限：`storage/`和`bootstrap/cache/`目录需要写入权限。
+```bash
+# 此处权限设置为777只是为了演示操作方便，实际只需要给web服务器写入权限即可
+sudo chmod 777 -R storage/ bootstrap/cache/
 ```
+新建一份环境配置，并配置好数据库等相关配置:
+```base
 cp .env.example .env.pro
 ```
 初始化系统：
-```
+```base
 php artisan migrate --seed --env=pro
 ```
 
