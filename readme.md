@@ -37,6 +37,15 @@
 ## 系统环境
 `linux/windows & nginx/apache/iis & mysql 5.5+ & php 7.0+`
 
+* PHP >= 7.0.0
+* OpenSSL PHP Extension
+* PDO PHP Extension
+* Mbstring PHP Extension
+* Tokenizer PHP Extension
+* XML PHP Extension
+
+备注：如果缓存、队列、session用的是 redis 驱动，那还需要安装 redis 和 php redis 扩展
+
 ## 系统部署
 
 ### 获取代码并安装依赖
@@ -50,7 +59,7 @@ composer install
 ### 系统配置并初始化
 新建一份环境配置，并配置好数据库等相关配置:
 ```
-copy .env.example .env.pro
+cp .env.example .env.pro
 ```
 初始化系统：
 ```
