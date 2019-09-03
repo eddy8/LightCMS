@@ -40,7 +40,7 @@
 ## 系统部署
 
 ### 获取代码并安装依赖
-首先请确保系统已安装好[composer](https://getcomposer.org/)。
+首先请确保系统已安装好[composer](https://getcomposer.org/)。国内用户建议先[设置 composer 镜像](https://developer.aliyun.com/composer)，避免安装过程缓慢。
 ```bash
 cd /data/www
 git clone git_repository_url
