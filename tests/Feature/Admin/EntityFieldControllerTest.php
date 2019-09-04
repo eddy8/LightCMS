@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Model\Admin\AdminUser;
+use App\Model\Admin\EntityField;
 use App\Repository\Admin\EntityRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
@@ -43,7 +44,17 @@ class EntityFieldControllerTest extends TestCase
         $response = $this->actingAs($this->user, 'admin')
             ->post('/admin/entityFields', $data);
         $response->assertJson(['code' => 0]);
-        $this->assertDatabaseHas('entity_fields', ['entity_id' => $this->entity->id, 'name' => 'title']);
+        $this->assertDatabaseHas(
+            'entity_fields',
+            [
+                'entity_id' => $this->entity->id,
+                'name' => 'title',
+                'is_show' => EntityField::SHOW_DISABLE,
+                'is_edit' => EntityField::EDIT_DISABLE,
+                'is_required' => EntityField::REQUIRED_DISABLE,
+                'is_show_inline' => EntityField::SHOW_NOT_INLINE,
+            ]
+        );
         $this->assertTrue(Schema::hasColumn($this->entity->table_name, $data['name']));
     }
 }

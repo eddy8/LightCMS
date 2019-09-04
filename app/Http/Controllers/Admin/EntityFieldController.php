@@ -83,6 +83,11 @@ class EntityFieldController extends Controller
     {
         try {
             $data = $request->only($this->formNames);
+            $data['is_show'] = $data['is_show'] ?? EntityField::SHOW_DISABLE;
+            $data['is_edit'] = $data['is_edit'] ?? EntityField::EDIT_DISABLE;
+            $data['is_required'] = $data['is_required'] ?? EntityField::REQUIRED_DISABLE;
+            $data['is_show_inline'] = $data['is_show_inline'] ?? EntityField::SHOW_NOT_INLINE;
+
             $table = EntityRepository::find($data['entity_id']);
             if (!$table) {
                 return [
@@ -178,20 +183,11 @@ class EntityFieldController extends Controller
     public function update(EntityFieldRequest $request, $id)
     {
         $data = $request->only($this->formNames);
+        $data['is_show'] = $data['is_show'] ?? EntityField::SHOW_DISABLE;
+        $data['is_edit'] = $data['is_edit'] ?? EntityField::EDIT_DISABLE;
+        $data['is_required'] = $data['is_required'] ?? EntityField::REQUIRED_DISABLE;
+        $data['is_show_inline'] = $data['is_show_inline'] ?? EntityField::SHOW_NOT_INLINE;
         try {
-            if (!isset($data['is_show'])) {
-                $data['is_show'] = EntityField::SHOW_DISABLE;
-            }
-            if (!isset($data['is_edit'])) {
-                $data['is_edit'] = EntityField::EDIT_DISABLE;
-            }
-            if (!isset($data['is_required'])) {
-                $data['is_required'] = EntityField::REQUIRED_DISABLE;
-            }
-            if (!isset($data['is_show_inline'])) {
-                $data['is_show_inline'] = EntityField::SHOW_NOT_INLINE;
-            }
-
             unset($data['field_length'], $data['field_total'], $data['field_scale'], $data['entity_id']);
             EntityFieldRepository::update($id, $data);
             return [
