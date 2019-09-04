@@ -25,6 +25,10 @@ class Controller extends BaseController
 
 
         // 菜单
+        $route = request()->route();
+        if (is_null($route)) {
+            return;
+        }
         $route = request()->route()->getName();
         View::share('light_cur_route', $route);
         if (is_null($currentRootMenu = MenuRepository::root($route))) {

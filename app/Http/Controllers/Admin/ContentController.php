@@ -27,7 +27,11 @@ class ContentController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $entity = request()->route()->parameter('entity');
+        $route = request()->route();
+        if (is_null($route)) {
+            return;
+        }
+        $entity = $route->parameter('entity');
         $this->entity = Entity::query()->findOrFail($entity);
         ContentRepository::setTable($this->entity->table_name);
         $this->breadcrumb[] = ['title' => '内容列表', 'url' => route('admin::content.index', ['entity' => $entity])];
