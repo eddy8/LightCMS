@@ -237,7 +237,7 @@
                                             @if(isset($model))
                                                     @foreach(explode(',', $model->{$field->name}) as $v)
                                                         @if($v)
-                                                            <div style="float:left"><img data-action="zoom" style="width: 250px;height: auto;" src="{{ $v }}" class="preview-image-{{ $field->name }}"><i title="移除图片" class="layui-icon remove-image" style="font-size:20px;color:red;cursor:pointer;">&#xe640;</i></div>
+                                                            <div style="float:left"><img data-action="zoom" style="max-width: 200px;height: auto;" src="{{ $v }}" class="preview-image-{{ $field->name }}"><i title="移除图片" class="layui-icon remove-image" style="font-size:20px;color:red;cursor:pointer;">&#xe640;</i></div>
                                                         @endif
                                                     @endforeach
                                             @endif
