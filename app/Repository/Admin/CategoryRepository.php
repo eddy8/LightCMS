@@ -12,7 +12,7 @@ class CategoryRepository
 {
     use Searchable;
 
-    public static function list($perPage, $condition = [])
+    public static function listSingle($perPage, $condition = [])
     {
         $data = Category::query()
             ->where(function ($query) use ($condition) {
@@ -34,6 +34,42 @@ class CategoryRepository
             'msg' => '',
             'count' => $data->total(),
             'data' => $data->items(),
+        ];
+    }
+
+    public static function list($perPage, $condition = [])
+    {
+        $list = [];
+        $data = Category::query()
+            ->where(function ($query) use ($condition) {
+                Searchable::buildQuery($query, $condition);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate($perPage);
+        $data->each(function ($item, $key) use (&$list) {
+            xssFilter($item);
+            $item->editUrl = route('admin::category.edit', ['id' => $item->id]);
+            $item->parentName = $item->pid == 0 ? '顶级菜单' : $item->parent->name;
+            $item->entityName = $item->entity ? $item->entity->name : '';
+            unset($item->entity);
+
+            array_push($list, $item);
+
+            $item->children->each(function ($v, $k) use (&$list) {
+                $v->editUrl = route('admin::category.edit', ['id' => $v->id]);
+                //$v->parentName = $v->pid == 0 ? '顶级菜单' : $v->parent->name;
+                //$v->entityName = $v->entity ? $v->entity->name : '';
+                $v->name = '|--------' . $v->name;
+                array_push($list, $v);
+            });
+            unset($item->children);
+        });
+
+        return [
+            'code' => 0,
+            'msg' => '',
+            'count' => count($list),
+            'data' => $list,
         ];
     }
 

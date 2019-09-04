@@ -22,7 +22,7 @@
             </form>
         </div>
         <div class="layui-card-body">
-            <table class="layui-table" lay-data="{url:'{{ route('admin::category.list') }}?{{ request()->getQueryString() }}', page:true, limit:50, id:'test', toolbar:'<div><a href=\'{{ route('admin::category.create') }}\'><i class=\'layui-icon layui-icon-add-1\'></i>新增分类</a></div>'}" lay-filter="test">
+            <table class="layui-table" lay-data="{url:'{{ route('admin::category.list') }}?{{ request()->getQueryString() }}', page:true, limit:50, id:'test', toolbar:'<div><a href=\'{{ route('admin::category.create') }}\'><i class=\'layui-icon layui-icon-add-1\'></i>新增分类</a><div class=\'layui-input-inline\'><input type=\'text\' name=\'word\' class=\'layui-input\' id=\'word\' placeholder=\'当前表格内搜索\'></div></div>'}" lay-filter="test">
                 <thead>
                 <tr>
                     <th lay-data="{field:'id', width:80, sort: true}">ID</th>
@@ -57,5 +57,26 @@
             elem: '#created_at',
             range: '~'
         });
+
+        $('#word').keyup(function () {
+            $('.layui-table tr').each(function(i, v){
+                $(v).css({"background-color": ""});
+            });
+
+            var word = $.trim($(this).val()).toLowerCase();
+            if (word.length === 0) {
+                return;
+            }
+            $('.layui-table tr').each(function(i, v){
+                $(v).find('td').each(function(ii, vv) {
+                    if ($(vv).text().toLowerCase().indexOf(word) >= 0) {
+                        $(v).css({"background-color": "yellow"});
+                        return false;
+                    }
+                });
+            });
+        });
+
+
     </script>
 @endsection
