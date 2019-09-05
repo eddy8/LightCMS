@@ -40,6 +40,20 @@
     <a href="<% d.editUrl %>" class="layui-table-link"><i class="layui-icon layui-icon-edit"></i></a>
     <a href="javascript:;" class="layui-table-link" title="删除" style="margin-left: 10px" onclick="deleteMenu('<% d.deleteUrl %>')"><i class="layui-icon layui-icon-delete"></i></a>
 </script>
+<script type="text/html" id="isShowTemplet">
+    <input data-id="<% d.id %>" type="checkbox" name="is_show" lay-skin="switch" lay-text="是|否"
+    <%# if (d.is_show === 1) { %>
+        checked
+    <%# } %>
+    >
+</script>
+<script type="text/html" id="isShowInlineTemplet">
+    <input data-id="<% d.id %>" type="checkbox" name="is_show_inline" lay-skin="switch" lay-text="是|否"
+    <%# if (d.is_show_inline === 1) { %>
+        checked
+    <%# } %>
+    >
+</script>
 
 @section('js')
     <script>
@@ -62,6 +76,30 @@
                 method: 'put',
                 dataType: 'json',
                 data: {order: obj.value},
+                success: function (result) {
+                    if (result.code !== 0) {
+                        layer.msg(result.msg, {shift: 3});
+                        return false;
+                    }
+                    layer.msg(result.msg, {icon: 1});
+                }
+            });
+        });
+
+        table.on('tool(test)', function (obj) {
+            var event = obj.event, tr = obj.tr;
+            var maps = {
+                showEvent: "is_show",
+                showInlineEvent: "is_show_inline"
+            };
+
+            var key = maps[event];
+            var val = tr.find("input[name='" + key + "']").prop('checked') ? 1 : 0;
+            $.ajax({
+                url: '{{ route('admin::entityField.listUpdate', ['id' => '__replace_id']) }}'.replace('__replace_id', obj.data.id),
+                method: 'put',
+                dataType: 'json',
+                data: {[key]: val},
                 success: function (result) {
                     if (result.code !== 0) {
                         layer.msg(result.msg, {shift: 3});

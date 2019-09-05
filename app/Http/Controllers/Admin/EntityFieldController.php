@@ -244,8 +244,10 @@ class EntityFieldController extends Controller
         try {
             $entityField = EntityField::query()->findOrFail($id);
 
-            $order = $request->post('order', 77);
-            $entityField->order = $order;
+            $data = $request->only(['is_show', 'is_edit', 'is_required', 'order', 'is_show_inline']);
+            foreach ($data as $key => $value) {
+                $entityField->$key = $value;
+            }
             $entityField->save();
             return [
                 'code' => 0,

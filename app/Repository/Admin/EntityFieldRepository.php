@@ -25,8 +25,6 @@ class EntityFieldRepository
         $data->transform(function ($item) use ($formTypes) {
             xssFilter($item);
             $item->entityName = $item->entity->name;
-            $item->is_show_inline = $item->is_show_inline === EntityField::SHOW_INLINE ? '是' : '否';
-            $item->is_show = $item->is_show === EntityField::SHOW_ENABLE ? '是' : '否';
             $item->form_type = $formTypes[$item->form_type];
             $item->editUrl = route('admin::entityField.edit', ['id' => $item->id]) . '?entity_id=' . $item->entity->id;
             $item->deleteUrl = route('admin::entityField.delete', ['id' => $item->id]);
