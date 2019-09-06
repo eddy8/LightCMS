@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Repository\Admin\LogRepository;
+use Carbon\Carbon;
 use Closure;
 use function GuzzleHttp\Psr7\build_query;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +38,7 @@ class Log
         $data['data'] = build_query($input, false);
 
         if (config('light.log_async_write')) {
+            $data['updated_at'] = $data['created_at'] = Carbon::now();
             dispatch(new WriteSystemLog($data));
         } else {
             LogRepository::add($data);
