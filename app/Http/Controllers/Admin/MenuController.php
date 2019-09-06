@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\MenuUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\MenuRequest;
 use App\Model\Admin\Menu;
@@ -85,6 +86,7 @@ class MenuController extends Controller
     {
         try {
             MenuRepository::add(array_merge($request->only($this->formNames), ['guard_name' => 'admin']));
+            event(new MenuUpdated());
             return [
                 'code' => 0,
                 'msg' => '新增成功',
@@ -131,6 +133,7 @@ class MenuController extends Controller
 
         try {
             MenuRepository::update($id, $data);
+            event(new MenuUpdated());
             return [
                 'code' => 0,
                 'msg' => '编辑成功',
@@ -154,6 +157,7 @@ class MenuController extends Controller
     {
         try {
             MenuRepository::delete($id);
+            event(new MenuUpdated());
             return [
                 'code' => 0,
                 'msg' => '删除成功',
@@ -230,6 +234,9 @@ class MenuController extends Controller
             }
         }
 
+        if ($addNum > 0 || $updateNum > 0) {
+            event(new MenuUpdated());
+        }
         return [
             'code' => 0,
             'msg' => "更新成功。新增菜单数：{$addNum}，更新菜单数：{$updateNum}。",
@@ -310,6 +317,7 @@ class MenuController extends Controller
                 break;
         }
 
+        event(new MenuUpdated());
         return [
             'code' => 0,
             'msg' => '操作成功' . $message,

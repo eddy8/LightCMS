@@ -28,7 +28,7 @@
                         <div class="layui-input-block" style="width: 400px">
                             <select name="pid" lay-verify="required">
                                 <option value="0">顶级菜单</option>
-                                @foreach(App\Repository\Admin\MenuRepository::tree() as $v)
+                                @foreach(App\Repository\Admin\MenuRepository::getTree() as $v)
                                     @include('admin.menu', $v)
                                 @endforeach
                             </select>

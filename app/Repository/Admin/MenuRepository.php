@@ -10,6 +10,7 @@ namespace App\Repository\Admin;
 
 use App\Model\Admin\Menu;
 use App\Repository\Searchable;
+use Illuminate\Support\Facades\Cache;
 
 class MenuRepository
 {
@@ -168,7 +169,9 @@ class MenuRepository
             return $tree;
         }
 
-        $tree = self::tree();
+        $tree = Cache::remember('menu:tree', 60 * 24, function () {
+            return self::tree();
+        });
         return $tree;
     }
 }
