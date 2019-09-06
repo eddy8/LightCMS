@@ -45,7 +45,7 @@
                     <th lay-data="{field:'route'}">路由</th>
                     <th lay-data="{field:'url'}">URL</th>
                     <th lay-data="{field:'order', sort: true, edit: true}">排序</th>
-                    <th lay-data="{field:'statusText', sort: true}">状态</th>
+                    <th lay-data="{field:'status', sort: true, templet: '#statusTemplet', event: 'statusEvent'}">显示</th>
                     <th lay-data="{field:'created_at'}">添加时间</th>
                     <th lay-data="{field:'updated_at'}">更新时间</th>
                     <th lay-data="{width:100, templet:'#action'}">操作</th>
@@ -89,6 +89,13 @@
     <a href="<% d.editUrl %>" class="layui-table-link" title="编辑"><i class="layui-icon layui-icon-edit"></i></a>
     <a href="javascript:;" class="layui-table-link" title="删除" style="margin-left: 10px" onclick="deleteMenu('<% d.deleteUrl %>')"><i class="layui-icon layui-icon-delete"></i></a>
 </script>
+<script type="text/html" id="statusTemplet">
+    <input type="checkbox" name="status" lay-skin="switch" lay-text="是|否"
+    <%# if (d.status === 1) { %>
+    checked
+    <%# } %>
+    >
+</script>
 
 @section('js')
     <script>
@@ -111,6 +118,30 @@
                         return false;
                     }
                     layer.msg(result.msg, {icon: 1});
+                }
+            });
+        });
+
+        table.on('tool(test)', function (obj) {
+            var event = obj.event, tr = obj.tr;
+            var maps = {
+                statusEvent: "status",
+            };
+
+            var key = maps[event];
+            var val = tr.find("input[name='" + key + "']").prop('checked') ? 1 : 0;
+            $.ajax({
+                url: '{{ route('admin::menu.batch') }}',
+                method: 'post',
+                dataType: 'json',
+                data: {ids: [obj.data.id], 'type': val === 1 ? 'enable' : 'disable'},
+                success: function (result) {
+                    if (result.code !== 0) {
+                        layer.msg(result.msg, {shift: 3});
+                        return false;
+                    }
+                    layer.msg(result.msg, {icon: 1});
+                    location.reload();
                 }
             });
         });
@@ -169,6 +200,9 @@
         var form = layui.form,
             table = layui.table;
         form.on('submit(form-batch)', function(data){
+            if(!confirm('确定执行批量操作？')){
+                return false;
+            }
             var checkStatus = table.checkStatus('test'),
                 ids = [];
 

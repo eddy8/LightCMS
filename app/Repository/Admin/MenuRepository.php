@@ -29,9 +29,6 @@ class MenuRepository
             xssFilter($item);
             $item->editUrl = route('admin::menu.edit', ['id' => $item->id]);
             $item->deleteUrl = route('admin::menu.delete', ['id' => $item->id]);
-            $item->statusText = $item->status == Menu::STATUS_ENABLE ?
-                        '<span class="layui-badge layui-bg-green">启用</span>' :
-                        '<span class="layui-badge">禁用</span>';
             $item->parentName = $item->pid == 0 ? '顶级菜单' : $item->parent->name;
             return $item;
         });
