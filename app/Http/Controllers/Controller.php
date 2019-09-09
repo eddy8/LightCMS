@@ -19,6 +19,10 @@ class Controller extends BaseController
 
     public function __construct()
     {
+        if (request()->ajax()) {
+            return;
+        }
+
         // 面包屑导航
         $this->breadcrumb[] = ['title' => '首页', 'url' => route('admin::index')];
         View::share('breadcrumb', $this->breadcrumb);

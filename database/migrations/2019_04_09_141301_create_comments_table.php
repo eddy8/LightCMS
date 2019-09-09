@@ -23,8 +23,8 @@ class CreateCommentsTable extends Migration
             $table->unsignedInteger('like')->default(0);
             $table->unsignedInteger('dislike')->default(0);
             $table->unsignedInteger('grade')->default(0);
-            $table->unsignedInteger('pid')->default(0);
-            $table->unsignedInteger('rid')->default(0);
+            $table->unsignedInteger('pid')->default(0)->comment('父ID。方便获取评论的层级关系');
+            $table->unsignedInteger('rid')->default(0)->comment('根ID。方便获取某条评论下的所有评论');
             $table->unsignedTinyInteger('status')->default(0);
             $table->unsignedInteger('reply_count')->default(0);
             $table->unsignedInteger('reply_user_id')->default(0);
