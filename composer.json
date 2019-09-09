@@ -9,6 +9,7 @@
         "doctrine/dbal": "^2.5",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.0",
+        "laravel/helpers": "^1.1",
         "laravel/tinker": "~1.0",
         "mews/captcha": "^3.0",
         "overtrue/socialite": "^2.0",
