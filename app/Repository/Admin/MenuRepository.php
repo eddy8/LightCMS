@@ -169,7 +169,7 @@ class MenuRepository
             return $tree;
         }
 
-        $tree = Cache::remember('menu:tree', 60 * 24, function () {
+        $tree = Cache::remember('menu:tree', 60 * 60 * 24, function () {
             return self::tree();
         });
         return $tree;
