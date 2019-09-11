@@ -36,7 +36,7 @@
                         @if($field->is_show == \App\Model\Admin\EntityField::SHOW_DISABLE)
                             @continue
                         @endif
-                        @if(in_array($field->form_type, ['input', 'select', 'reference_category'], true) && $field->is_show_inline == \App\Model\Admin\EntityField::SHOW_INLINE)
+                        @if(in_array($field->form_type, ['input', 'select', 'reference_category', 'selectMulti'], true) && $field->is_show_inline == \App\Model\Admin\EntityField::SHOW_INLINE)
                             @php
                                 $before = $current;
                                 $current = 1;
@@ -74,6 +74,30 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            @break
+                                        @case('selectMulti')
+                                            @if(!isset($selects_init))
+                                                @php
+                                                    // select多选组件使用可参考 https://github.com/hnzzmsf/layui-formSelects
+                                                    $selects_init = true
+                                                @endphp
+                                                <link rel="stylesheet" type="text/css" href="/public/vendor/layui-v2.4.5/plugins/formSelects-v4.css"/>
+                                                <script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>
+                                                <script type="text/javascript" src="/public/vendor/layui-v2.4.5/plugins/formSelects-v4.min.js"></script>
+                                            @endif
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">{{ $inlineField->form_name }}</label>
+                                                <div class="layui-input-inline" style="width: 380px;z-index: {{99999 - ($field->order + $field->id)}}">
+                                                    <select xm-select-search xm-select="select-{{ $inlineField->name }}" name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                                        @foreach(parseEntityFieldParams($inlineField->form_params) as $v)
+                                                            <option value="{{ $v[0] }}" @if(isset($model) && isChecked($v[0], $model->{$inlineField->name})) selected @endif>{{ $v[1] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <script>
+                                                formSelects.render('select-{{ $inlineField->name }}');
+                                            </script>
                                             @break
                                         @case('reference_category')
                                             <div class="layui-inline">
@@ -333,6 +357,30 @@
                                         </select>
                                     </div>
                                 </div>
+                                @break
+                                @case('selectMulti')
+                                    @if(!isset($selects_init))
+                                        @php
+                                            // select多选组件使用可参考 https://github.com/hnzzmsf/layui-formSelects
+                                            $selects_init = true
+                                        @endphp
+                                        <link rel="stylesheet" type="text/css" href="/public/vendor/layui-v2.4.5/plugins/formSelects-v4.css"/>
+                                        <script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>
+                                        <script type="text/javascript" src="/public/vendor/layui-v2.4.5/plugins/formSelects-v4.min.js"></script>
+                                    @endif
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">{{ $field->form_name }}</label>
+                                        <div class="layui-input-block" style="width: 600px;z-index: {{99999 - ($field->order + $field->id)}}">
+                                            <select xm-select-search xm-select="select-{{ $field->name }}" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                                @foreach(parseEntityFieldParams($field->form_params) as $v)
+                                                    <option value="{{ $v[0] }}" @if(isset($model) && isChecked($v[0], $model->{$field->name})) selected @endif>{{ $v[1] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        formSelects.render('select-{{ $field->name }}');
+                                    </script>
                                 @break
 
                         @endswitch
