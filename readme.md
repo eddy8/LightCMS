@@ -44,7 +44,10 @@
 * Tokenizer PHP Extension
 * XML PHP Extension
 
-备注：如果缓存、队列、session用的是 redis 驱动，那还需要安装 redis 和 php redis 扩展
+**注意事项**
+
+* 如果缓存、队列、session用的是 redis 驱动，那还需要安装 redis 和 php redis 扩展
+* 如果`PHP`安装了`opcache`扩展，请启用`opcache.save_comments`和`opcache.load_comments`配置（默认是启用的），否则无法正常使用[菜单自动获取](#菜单自动获取)功能
 
 ## 系统部署
 
