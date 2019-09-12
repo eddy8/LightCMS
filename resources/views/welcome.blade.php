@@ -84,6 +84,9 @@
                         <a href="{{ route('admin::login.show') }}">后台登录</a>
                     @endif
                 </div>
+                <div class="m-b-md">
+                    前台功能仅供参考，无需使用可以删除相关路由（routes/web.php、routes/member.php）
+                </div>
             </div>
         </div>
     </body>
