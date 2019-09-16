@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        '/admin/neditor/serve/*'
+        '/admin/neditor/serve/*',
+        '/admin/ueditor/serve'
     ];
 }

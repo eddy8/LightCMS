@@ -64,6 +64,7 @@ class NEditorController extends Controller
 
         return [
             'code' => 200,
+            'state' => 'SUCCESS', // 兼容ueditor
             'msg' => '',
             'url' => Storage::disk(config('light.neditor.disk'))->url($result),
         ];
