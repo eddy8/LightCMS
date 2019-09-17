@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EntityFieldsTableSeeder::class);
         $this->call(CategoriesTableSeeder::class);
         $this->call(SensitiveWordsTableSeeder::class);
+        $this->call(ConfigsTableSeeder::class);
     }
 }

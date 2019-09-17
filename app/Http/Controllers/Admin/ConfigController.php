@@ -16,7 +16,7 @@ use Illuminate\View\View;
 
 class ConfigController extends Controller
 {
-    protected $formNames = ['name', 'key', 'value', 'type', 'group'];
+    protected $formNames = ['name', 'key', 'value', 'type', 'group', 'remark'];
 
     public function __construct()
     {
