@@ -103,6 +103,7 @@ class ContentController extends Controller
      * 内容管理-保存内容
      *
      * @param ContentRequest $request
+     * @param integer $entity
      * @return array
      */
     public function save(ContentRequest $request, $entity)
@@ -120,7 +121,7 @@ class ContentController extends Controller
             return [
                 'code' => 0,
                 'msg' => '新增成功',
-                'redirect' => true
+                'redirect' => route('admin::content.index', ['entity' => $entity])
             ];
         } catch (QueryException $e) {
             \Log::error($e);
@@ -159,6 +160,7 @@ class ContentController extends Controller
      * 内容管理-更新内容
      *
      * @param ContentRequest $request
+     * @param integer $entity
      * @param int $id
      * @return array
      */
@@ -187,7 +189,7 @@ class ContentController extends Controller
             return [
                 'code' => 0,
                 'msg' => '编辑成功',
-                'redirect' => true
+                'redirect' => route('admin::content.index', ['entity' => $entity])
             ];
         } catch (QueryException $e) {
             \Log::error($e);

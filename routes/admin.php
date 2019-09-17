@@ -27,6 +27,8 @@ Route::group(
             //NEditor路由
             Route::post('/neditor/serve/{type}', 'NEditorController@serve')->name('neditor.serve');
 
+            Route::match(['get', 'post'], '/ueditor/serve', 'UEditorController@serve')->name('ueditor.serve');
+
             // 管理员用户管理
             Route::get('/admin_users', 'AdminUserController@index')->name('adminUser.index');
             Route::get('/admin_users/list', 'AdminUserController@list')->name('adminUser.list');

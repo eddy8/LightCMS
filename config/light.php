@@ -68,6 +68,7 @@ return [
         'input' => '短文本（input）',
         'textArea' => '长文本（textarea）',
         'richText' => '富文本',
+        'markdown' => '富文本（markdown）',
         'password' => '密码字符',
         'option' => '单选框',
         'checkbox' => '复选框',
