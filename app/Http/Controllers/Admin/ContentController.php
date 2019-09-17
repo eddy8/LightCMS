@@ -224,6 +224,42 @@ class ContentController extends Controller
         }
     }
 
+    /**
+     * 内容管理-批量操作
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function batch(Request $request)
+    {
+        $type = $request->input('type', '');
+        $ids = $request->input('ids');
+        if (!is_array($ids)) {
+            return [
+                'code' => 1,
+                'msg' => '参数错误'
+            ];
+        }
+        $ids = array_map(function ($item) {
+            return intval($item);
+        }, $ids);
+
+        $message = '';
+        switch ($type) {
+            case 'delete':
+                ContentRepository::model()->whereIn('id', $ids)->delete();
+                break;
+            default:
+                break;
+        }
+
+        return [
+            'code' => 0,
+            'msg' => '操作成功' . $message,
+            'reload' => true
+        ];
+    }
+
     protected function validateEntityRequest()
     {
         $entityRequestClass = '\\App\\Http\\Requests\\Admin\\Entity\\' .

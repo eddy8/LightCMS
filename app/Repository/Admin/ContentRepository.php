@@ -72,6 +72,11 @@ class ContentRepository
         return self::$model->setTable($table);
     }
 
+    public static function model()
+    {
+        return self::$model;
+    }
+
     protected static function processParams($data)
     {
         return array_map(function ($item) {
