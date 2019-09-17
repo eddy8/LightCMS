@@ -42,6 +42,12 @@
                             <input type="text" name="group" autocomplete="off" class="layui-input" value="{{ $model->group ?? ''  }}">
                         </div>
                     </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            <textarea name="remark" class="layui-textarea">{{ $model->remark ?? ''  }}</textarea>
+                        </div>
+                    </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button class="layui-btn" lay-submit lay-filter="formAdminUser" id="submitBtn">提交</button>
