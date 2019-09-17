@@ -25,6 +25,7 @@
             <table class="layui-table" lay-data="{url:'{{ route('admin::content.list', ['entity' => $entity]) }}?{{ request()->getQueryString() }}', page:true, limit:50, id:'test', toolbar:'<div><a href=\'{{ route('admin::content.create', ['entity' => $entity]) }}\'><i class=\'layui-icon layui-icon-add-1\'></i><span class=\'layui-badge\'>新增{{ $entityModel->name }}内容</span></a></div>'}" lay-filter="test">
                 <thead>
                 <tr>
+                    <th lay-data="{width:50, type:'checkbox'}"></th>
                     <th lay-data="{field:'id', width:80, sort: true}">ID</th>
                     @include('admin.listHead', ['data' => App\Model\Admin\Content::$listField])
                     <th lay-data="{field:'created_at'}">添加时间</th>
@@ -33,6 +34,23 @@
                 </tr>
                 </thead>
             </table>
+            <div>
+                <form class="layui-form" method="post" action="{{ route('admin::content.batch', ['entity' => $entity]) }}">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">操作类型</label>
+                        <div class="layui-input-inline">
+                            <select name="type" lay-filter="action-type">
+                                <option value="delete">删除</option>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-list" lay-filter="form-batch" id="batchBtn" lay-submit>
+                                执行批量操作
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 @endsection
@@ -80,5 +98,48 @@
                 layer.close(index);
             });
         }
+
+        var form = layui.form,
+            table = layui.table;
+        form.on('submit(form-batch)', function(data){
+            if(!confirm('确定执行批量操作？')){
+                return false;
+            }
+            var checkStatus = table.checkStatus('test'),
+                ids = [];
+
+            if (checkStatus.data.length === 0) {
+                layer.msg('未选中待操作的行数据');
+                return false;
+            }
+            checkStatus.data.forEach(function (item) {
+                ids.push(item.id);
+            });
+            data.field.ids = ids;
+
+            window.form_submit = $('#batchBtn');
+            form_submit.prop('disabled', true);
+            $.ajax({
+                url: data.form.action,
+                data: data.field,
+                success: function (result) {
+                    if (result.code !== 0) {
+                        form_submit.prop('disabled', false);
+                        layer.msg(result.msg, {shift: 6});
+                        return false;
+                    }
+                    layer.msg(result.msg, {icon: 1}, function () {
+                        if (result.reload) {
+                            location.reload();
+                        }
+                        if (result.redirect) {
+                            location.href = '{!! url()->previous() !!}';
+                        }
+                    });
+                }
+            });
+
+            return false;
+        });
     </script>
 @endsection
