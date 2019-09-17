@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\Storage;
 
 class UEditorController extends NEditorController
 {
+    /**
+     * ueditor-ueditor后端服务
+     *
+     * @param Request $request
+     * @param null $type
+     * @return array|mixed
+     */
     public function serve(Request $request, $type = null)
     {
         $action = $request->input('action');
