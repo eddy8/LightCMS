@@ -138,6 +138,47 @@
                                     </div>
                                 </div>
                                 @break
+                            @case('markdown')
+                                @if(!isset($markdown_init))
+                                    @php
+                                        $markdown_init = true
+                                    @endphp
+                                    <link rel="stylesheet" href="/public/vendor/font-awesome-4.7.0/css/font-awesome.min.css">
+                                    <link rel="stylesheet" href="/public/vendor/simplemde/simplemde.min.css">
+                                    <script type="text/javascript" charset="utf-8" src="/public/vendor/simplemde/simplemde.min.js"> </script>
+                                    <script type="text/javascript" charset="utf-8" src="/public/vendor/inline-attachment/inline-attachment.min.js"> </script>
+                                    <script type="text/javascript" charset="utf-8" src="/public/vendor/inline-attachment/codemirror-4.inline-attachment.min.js"> </script>
+                                @endif
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block">
+                                        <textarea name="{{ $field->name }}" id="simplemde-{{ $field->name }}" placeholder="请使用 Markdown 编写。图片上传直接拖拽图片至此即可~" ></textarea>
+                                    </div></div>
+                                <script>
+                                    var simplemde_{{ $field->name }} = new SimpleMDE({
+                                        autoDownloadFontAwesome: false,
+                                        element: document.getElementById("simplemde-{{ $field->name }}"),
+                                        spellChecker: false,
+                                        hideIcons: ['side-by-side', 'fullscreen'],
+                                        forceSync: true,
+                                        autosave: {
+                                            enabled: true,
+                                            uniqueId: "simplemde-{{ $field->name }}",
+                                            delay: 1000,
+                                        },
+                                    });
+                                    simplemde_{{ $field->name }}.value(`{!! $model->{$field->name} ?? '' !!}`);
+                                    var inlineAttachmentConfig = {
+                                        uploadUrl: "{{ route('admin::neditor.serve', ['type' => 'uploadimage']) }}",//后端上传图片地址
+                                        uploadFieldName: 'file',          //上传的文件名
+                                        jsonFieldName: 'url',              //返回结果中图片地址对应的字段名称
+                                        progressText: '![图片上传中...]()',    //上传过程中用户看到的文案
+                                        errorText: '图片上传失败',
+                                        urlText:'![图片描述]({filename})',    //上传成功后插入编辑器中的文案，{filename} 会被替换成图片地址
+                                    };
+                                    inlineAttachment.editors.codemirror4.attach(simplemde_{{ $field->name }}.codemirror, inlineAttachmentConfig);
+                                </script>
+                                @break
                             @case('richText')
                                 @if(!isset($neditor_init))
                                     @php
