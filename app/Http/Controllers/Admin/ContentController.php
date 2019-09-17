@@ -225,7 +225,7 @@ class ContentController extends Controller
     }
 
     /**
-     * 内容管理-批量操作
+     * 内容管理-内容批量操作
      *
      * @param Request $request
      * @return array

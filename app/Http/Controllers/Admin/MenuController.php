@@ -219,17 +219,35 @@ class MenuController extends Controller
                     $data['url'] = '';
                 }
 
-                $model = MenuRepository::exist($k);
-                if ($model) {
-                    if ($model->is_lock_name === Menu::UNLOCK_NAME &&
-                        ($model->name != $data['name'] || $model->group != $data['group'])) {
-                        unset($data['status']);
-                        MenuRepository::update($model->id, $data);
-                        $updateNum++;
+                try {
+                    $model = MenuRepository::exist($k);
+                    if ($model) {
+                        if ($model->is_lock_name === Menu::UNLOCK_NAME &&
+                            ($model->name != $data['name'] || $model->group != $data['group'])) {
+                            unset($data['status']);
+                            MenuRepository::update($model->id, $data);
+                            $updateNum++;
+                        }
+                    } else {
+                        MenuRepository::add($data);
+                        $addNum++;
                     }
-                } else {
-                    MenuRepository::add($data);
-                    $addNum++;
+                } catch (QueryException $e) {
+                    if ($addNum > 0 || $updateNum > 0) {
+                        event(new MenuUpdated());
+                    }
+
+                    if ($e->getCode() == 23000) {
+                        return [
+                            'code' => 1,
+                            'msg' => "唯一性冲突：请检查菜单名称或路由名称。name: {$data['name']} route: {$data['route']}",
+                        ];
+                    } else {
+                        return [
+                            'code' => 2,
+                            'msg' => $e->getMessage(),
+                        ];
+                    }
                 }
             }
         }
