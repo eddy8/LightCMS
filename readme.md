@@ -67,11 +67,11 @@ sudo chmod 777 -R storage/ bootstrap/cache/
 ```
 新建一份环境配置，并配置好数据库等相关配置:
 ```base
-cp .env.example .env.pro
+cp .env.example .env
 ```
 初始化系统：
 ```base
-php artisan migrate --seed --env=pro
+php artisan migrate --seed
 ```
 
 ### 配置Web服务器（此处以`Nginx`为例）
@@ -90,7 +90,8 @@ server {
         fastcgi_pass 127.0.0.1:9000;
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param   APP_ENV pro; #不同配置对应不同的环境配置文件。比如此处应用会加载.env.pro文件。
+        #不同配置对应不同的环境配置文件。比如此处应用会加载.env.pro文件，默认不配置会加载.env文件。此处可根据项目需要自行配制。
+        #fastcgi_param   APP_ENV pro; 
         include fastcgi_params;
     }
 }
