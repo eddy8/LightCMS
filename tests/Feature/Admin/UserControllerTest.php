@@ -4,6 +4,8 @@ namespace Tests\Feature\Admin;
 
 use App\Model\Admin\AdminUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -23,5 +25,16 @@ class UserControllerTest extends TestCase
         $response->assertStatus(200);
         $content = $response->original;
         $this->assertEquals(3, $content['count']);
+    }
+
+    public function testImageUpload()
+    {
+        Storage::fake('admin_img');
+
+        $user = factory(AdminUser::class)->create();
+        $response = $this->actingAs($user, 'admin')
+            ->post('/admin/neditor/serve/uploadImage', ['file' => UploadedFile::fake()->image('avatar.jpg')]);
+
+        $response->assertJson(['code' => 200]);
     }
 }

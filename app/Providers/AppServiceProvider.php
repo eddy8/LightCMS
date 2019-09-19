@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Repository\Admin\ConfigRepository;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Schema;
 
@@ -16,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        if (config('light.light_config') === true) {
+        if (config('light.light_config') === true && !App::environment('testing')) {
             $this->loadConfig();
         }
 
