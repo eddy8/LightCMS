@@ -46,6 +46,24 @@ class EntityFieldControllerTest extends TestCase
         $this->assertTrue(Schema::hasColumn($this->entity->table_name, $this->filedName));
     }
 
+    public function testEntityFieldCanBeCreatedWithNotModifyDB()
+    {
+        $response = $this->createEntityField(false);
+        $response->assertJson(['code' => 0]);
+        $this->assertDatabaseHas(
+            'entity_fields',
+            [
+                'entity_id' => $this->entity->id,
+                'name' => 'title',
+                'is_show' => EntityField::SHOW_DISABLE,
+                'is_edit' => EntityField::EDIT_DISABLE,
+                'is_required' => EntityField::REQUIRED_DISABLE,
+                'is_show_inline' => EntityField::SHOW_NOT_INLINE,
+            ]
+        );
+        $this->assertFalse(Schema::hasColumn($this->entity->table_name, $this->filedName));
+    }
+
     public function testEntityContentCanBeCreatedAndEdited()
     {
         $this->createEntityField();
@@ -65,7 +83,7 @@ class EntityFieldControllerTest extends TestCase
         $response->assertJson(['code' => 0]);
     }
 
-    protected function createEntityField()
+    protected function createEntityField($modifyDB = true)
     {
         $data = [
             'entity_id' => $this->entity->id,
@@ -80,6 +98,9 @@ class EntityFieldControllerTest extends TestCase
             'comment' => '',
             'default_value' => ''
         ];
+        if ($modifyDB) {
+            $data['is_modify_db'] = 1;
+        }
         return $this->actingAs($this->user, 'admin')
             ->post('/admin/entityFields', $data);
     }
