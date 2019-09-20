@@ -33,11 +33,16 @@ class EntityControllerTest extends TestCase
         $this->assertEquals(1, $content['count']);
     }
 
-    public function testEntityCanBeCreated()
+    public function testEntityCanBeCreatedAndEdited()
     {
         $data = ['name' => '测试', 'table_name' => 'tests', 'is_modify_db' => 1];
         $response = $this->actingAs($this->user, 'admin')
             ->post('/admin/entities', $data);
+        $response->assertJson(['code' => 0]);
+
+        $data['name'] = '测试修改';
+        $response = $this->actingAs($this->user, 'admin')
+            ->put('/admin/entities/1', $data);
         $response->assertJson(['code' => 0]);
 
         $response = $this->actingAs($this->user, 'admin')

@@ -28,7 +28,7 @@ class EntityFieldControllerTest extends TestCase
         $this->user = factory(AdminUser::class)->make(['id' => 1]);
     }
 
-    public function testEntityFieldCanBeCreated()
+    public function testEntityFieldCanBeCreatedAndEdited()
     {
         $response = $this->createEntityField();
         $response->assertJson(['code' => 0]);
@@ -44,6 +44,32 @@ class EntityFieldControllerTest extends TestCase
             ]
         );
         $this->assertTrue(Schema::hasColumn($this->entity->table_name, $this->filedName));
+
+        $data = [
+            'entity_id' => $this->entity->id,
+            'name' => $this->filedName,
+            'type' => 'string',
+            'form_name' => '修改标题',
+            'form_type' => 'input',
+            'order' => 77,
+            'field_length' => '',
+            'field_total' => '',
+            'field_scale' => '',
+            'comment' => '',
+            'default_value' => '',
+            'is_modify_db' => 1
+        ];
+        $response = $this->actingAs($this->user, 'admin')
+            ->put('/admin/entityFields/1', $data);
+        $response->assertJson(['code' => 0]);
+        $this->assertDatabaseHas(
+            'entity_fields',
+            [
+                'entity_id' => $this->entity->id,
+                'name' => 'title',
+                'form_name' => '修改标题'
+            ]
+        );
     }
 
     public function testEntityFieldCanBeCreatedWithNotModifyDB()
