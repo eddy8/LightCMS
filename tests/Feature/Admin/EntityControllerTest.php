@@ -64,7 +64,7 @@ class EntityControllerTest extends TestCase
         $response->assertJson(['code' => 2]);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Schema::dropIfExists('tests');
         Entity::query()->truncate();

@@ -131,7 +131,7 @@ class EntityFieldControllerTest extends TestCase
             ->post('/admin/entityFields', $data);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Schema::dropIfExists('tests');
         Entity::query()->truncate();
