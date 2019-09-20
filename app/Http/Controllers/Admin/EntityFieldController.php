@@ -25,7 +25,7 @@ class EntityFieldController extends Controller
     protected $formNames = [
         'name', 'type', 'comment', 'form_name', 'form_type', 'is_show', 'is_edit', 'is_required',
         'form_comment', 'entity_id', 'field_length', 'field_total', 'field_scale', 'order', 'form_params',
-        'default_value', 'is_show_inline', 'is_modify_db'
+        'default_value', 'is_show_inline'
     ];
 
     public function __construct()
@@ -108,7 +108,8 @@ class EntityFieldController extends Controller
                 ];
             }
 
-            if (isset($data['is_modify_db'])) {
+            $modifyDB = $request->post('is_modify_db', false);
+            if ($modifyDB) {
                 Schema::table($table->table_name, function (Blueprint $table) use ($data) {
                     $m = $data['type'];
                     $length = intval($data['field_length']);
@@ -138,7 +139,7 @@ class EntityFieldController extends Controller
                 });
             }
 
-            unset($data['field_length'], $data['field_total'], $data['field_scale'], $data['is_modify_db']);
+            unset($data['field_length'], $data['field_total'], $data['field_scale']);
             EntityFieldRepository::add($data);
 
             return [

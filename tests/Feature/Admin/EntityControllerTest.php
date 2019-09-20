@@ -35,7 +35,7 @@ class EntityControllerTest extends TestCase
 
     public function testEntityCanBeCreated()
     {
-        $data = ['name' => '测试', 'table_name' => 'tests'];
+        $data = ['name' => '测试', 'table_name' => 'tests', 'is_modify_db' => 1];
         $response = $this->actingAs($this->user, 'admin')
             ->post('/admin/entities', $data);
         $response->assertJson(['code' => 0]);
@@ -47,7 +47,7 @@ class EntityControllerTest extends TestCase
 
     public function testEntityBeCreatedWhenTableHasExists()
     {
-        $data = ['name' => '测试', 'table_name' => 'tests'];
+        $data = ['name' => '测试', 'table_name' => 'tests', 'is_modify_db' => 1];
         Schema::create($data['table_name'], function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();

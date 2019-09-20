@@ -43,11 +43,20 @@ class EntityRepository
 
     /**
      * 新增模型
+     *
+     * @param array $data
+     * @param mixed $createDB
+     * @throws CreateTableException|\Exception
+     * @return Entity
      */
-    public static function add($data)
+    public static function add($data, $createDB = true)
     {
         $entity = Entity::query()->create($data);
         try {
+            if (!$createDB) {
+                return $entity;
+            }
+
             if (Schema::hasTable($data['table_name'])) {
                 throw new \RuntimeException("数据库表已存在");
             }

@@ -55,6 +55,7 @@
                             <input type="text" name="comment" autocomplete="off" class="layui-input" value="{{ $model->comment ?? ''  }}">
                         </div>
                     </div>
+                    @if(!isset($id))
                     <div class="layui-form-item">
                         <label class="layui-form-label">变更表结构</label>
                         <div class="layui-input-inline" style="width: 50px;">
@@ -62,6 +63,7 @@
                         </div>
                         <div class="layui-form-mid layui-word-aux">某些情况下可能数据库表结构已经通过其它方式建好，此处无需操作数据库表，添加字段主要是方便利用框架提供的模型增删改查功能</div>
                     </div>
+                    @endif
                     <hr>
                     <div class="layui-form-item">
                         <label class="layui-form-label">表单名称</label>
