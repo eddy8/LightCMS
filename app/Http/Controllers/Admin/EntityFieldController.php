@@ -108,33 +108,36 @@ class EntityFieldController extends Controller
                 ];
             }
 
-            Schema::table($table->table_name, function (Blueprint $table) use ($data) {
-                $m = $data['type'];
-                $length = intval($data['field_length']);
-                $total = intval($data['field_total']);
-                $scale = intval($data['field_scale']);
-                if (in_array($m, ['char', 'string'])) {
-                    $table->$m($data['name'], $length > 0 ? $length : 255)
-                        ->comment($data['comment'])
-                        ->default(strval($data['default_value']));
-                } elseif (Str::contains(Str::lower($m), 'integer')) {
-                    $table->$m($data['name'])
-                        ->comment($data['comment'])
-                        ->default(intval($data['default_value']));
-                } elseif (in_array($m, ['float', 'double', 'decimal', 'unsignedDecimal'])) {
-                    if ($total > 0 && $scale > 0 && $total > $scale) {
-                        $table->$m($data['name'], $total, $scale)
+            $modifyDB = $request->post('is_modify_db', false);
+            if ($modifyDB) {
+                Schema::table($table->table_name, function (Blueprint $table) use ($data) {
+                    $m = $data['type'];
+                    $length = intval($data['field_length']);
+                    $total = intval($data['field_total']);
+                    $scale = intval($data['field_scale']);
+                    if (in_array($m, ['char', 'string'])) {
+                        $table->$m($data['name'], $length > 0 ? $length : 255)
                             ->comment($data['comment'])
-                            ->default(doubleval($data['default_value']));
-                    } else {
+                            ->default(strval($data['default_value']));
+                    } elseif (Str::contains(Str::lower($m), 'integer')) {
                         $table->$m($data['name'])
                             ->comment($data['comment'])
-                            ->default(doubleval($data['default_value']));
+                            ->default(intval($data['default_value']));
+                    } elseif (in_array($m, ['float', 'double', 'decimal', 'unsignedDecimal'])) {
+                        if ($total > 0 && $scale > 0 && $total > $scale) {
+                            $table->$m($data['name'], $total, $scale)
+                                ->comment($data['comment'])
+                                ->default(doubleval($data['default_value']));
+                        } else {
+                            $table->$m($data['name'])
+                                ->comment($data['comment'])
+                                ->default(doubleval($data['default_value']));
+                        }
+                    } else {
+                        $table->$m($data['name'])->comment($data['comment'])->nullable();
                     }
-                } else {
-                    $table->$m($data['name'])->comment($data['comment'])->nullable();
-                }
-            });
+                });
+            }
 
             unset($data['field_length'], $data['field_total'], $data['field_scale']);
             EntityFieldRepository::add($data);

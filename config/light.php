@@ -18,8 +18,8 @@ return [
 
     // 数据库表字段类型 参考：https://laravel.com/docs/5.5/migrations#columns
     'db_table_field_type' => [
-        'char',
         'string',
+        'char',
         'text',
         'mediumText',
         'longText',

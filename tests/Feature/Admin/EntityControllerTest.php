@@ -20,7 +20,7 @@ class EntityControllerTest extends TestCase
         parent::setUp();
         $this->withoutExceptionHandling();
 
-        $this->user = factory(AdminUser::class)->create();
+        $this->user = factory(AdminUser::class)->make(['id' => 1]);
     }
 
     public function testEntityCanBeListed()
@@ -33,11 +33,16 @@ class EntityControllerTest extends TestCase
         $this->assertEquals(1, $content['count']);
     }
 
-    public function testEntityCanBeCreated()
+    public function testEntityCanBeCreatedAndEdited()
     {
-        $data = ['name' => '测试', 'table_name' => 'tests'];
+        $data = ['name' => '测试', 'table_name' => 'tests', 'is_modify_db' => 1];
         $response = $this->actingAs($this->user, 'admin')
             ->post('/admin/entities', $data);
+        $response->assertJson(['code' => 0]);
+
+        $data['name'] = '测试修改';
+        $response = $this->actingAs($this->user, 'admin')
+            ->put('/admin/entities/1', $data);
         $response->assertJson(['code' => 0]);
 
         $response = $this->actingAs($this->user, 'admin')
@@ -47,7 +52,7 @@ class EntityControllerTest extends TestCase
 
     public function testEntityBeCreatedWhenTableHasExists()
     {
-        $data = ['name' => '测试', 'table_name' => 'tests'];
+        $data = ['name' => '测试', 'table_name' => 'tests', 'is_modify_db' => 1];
         Schema::create($data['table_name'], function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
@@ -57,5 +62,12 @@ class EntityControllerTest extends TestCase
         $response = $this->actingAs($this->user, 'admin')
             ->post('/admin/entities', $data);
         $response->assertJson(['code' => 2]);
+    }
+
+    public function tearDown()
+    {
+        Schema::dropIfExists('tests');
+        Entity::query()->truncate();
+        parent::tearDown();
     }
 }

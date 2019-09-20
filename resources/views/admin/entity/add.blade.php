@@ -20,6 +20,15 @@
                             <input type="text" name="table_name" required  lay-verify="required" autocomplete="off" class="layui-input" value="{{ $model->table_name ?? ''  }}" placeholder="模型对应的数据库表名称，保存后不能修改" @isset($model->table_name) disabled @endisset>
                         </div>
                     </div>
+                    @if(!isset($id))
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">新建数据库表</label>
+                        <div class="layui-input-inline" style="width: 50px;">
+                            <input type="checkbox" name="is_modify_db" lay-skin="switch" lay-text="是|否" value="1" checked>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">某些情况下可能数据库表已经通过其它方式建好，此处无需新建数据库表，添加模型主要是方便利用框架提供的模型增删改查功能</div>
+                    </div>
+                    @endif
                     <div class="layui-form-item">
                         <label class="layui-form-label">描述</label>
                         <div class="layui-input-block">
