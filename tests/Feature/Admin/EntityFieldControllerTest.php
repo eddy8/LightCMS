@@ -135,6 +135,7 @@ class EntityFieldControllerTest extends TestCase
     {
         Schema::dropIfExists('tests');
         Entity::query()->truncate();
+        EntityField::query()->truncate();
         parent::tearDown();
     }
 }
