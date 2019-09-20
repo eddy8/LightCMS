@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Model\Admin\AdminUser;
+use App\Model\Admin\Entity;
 use App\Model\Admin\EntityField;
 use App\Repository\Admin\EntityRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,7 +25,7 @@ class EntityFieldControllerTest extends TestCase
 
         $data = ['name' => '测试', 'table_name' => 'tests'];
         $this->entity = EntityRepository::add($data);
-        $this->user = factory(AdminUser::class)->create();
+        $this->user = factory(AdminUser::class)->make(['id' => 1]);
     }
 
     public function testEntityFieldCanBeCreated()
@@ -81,5 +82,12 @@ class EntityFieldControllerTest extends TestCase
         ];
         return $this->actingAs($this->user, 'admin')
             ->post('/admin/entityFields', $data);
+    }
+
+    public function tearDown()
+    {
+        Schema::dropIfExists('tests');
+        Entity::query()->truncate();
+        parent::tearDown();
     }
 }

@@ -20,7 +20,7 @@ class EntityControllerTest extends TestCase
         parent::setUp();
         $this->withoutExceptionHandling();
 
-        $this->user = factory(AdminUser::class)->create();
+        $this->user = factory(AdminUser::class)->make(['id' => 1]);
     }
 
     public function testEntityCanBeListed()
@@ -57,5 +57,12 @@ class EntityControllerTest extends TestCase
         $response = $this->actingAs($this->user, 'admin')
             ->post('/admin/entities', $data);
         $response->assertJson(['code' => 2]);
+    }
+
+    public function tearDown()
+    {
+        Schema::dropIfExists('tests');
+        Entity::query()->truncate();
+        parent::tearDown();
     }
 }

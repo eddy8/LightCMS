@@ -31,7 +31,7 @@ class UserControllerTest extends TestCase
     {
         Storage::fake('admin_img');
 
-        $user = factory(AdminUser::class)->create();
+        $user = factory(AdminUser::class)->make(['id' => 1]);
         $response = $this->actingAs($user, 'admin')
             ->post('/admin/neditor/serve/uploadImage', ['file' => UploadedFile::fake()->image('avatar.jpg')]);
 
