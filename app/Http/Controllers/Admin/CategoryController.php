@@ -44,6 +44,7 @@ class CategoryController extends Controller
     {
         $perPage = (int) $request->get('limit', 50);
         $action = $request->get('action');
+        $this->formNames[] = 'created_at';
         $condition = $request->only($this->formNames);
 
         if (isset($condition['pid'])) {

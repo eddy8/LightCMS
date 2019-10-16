@@ -47,6 +47,7 @@ class ConfigController extends Controller
     public function list(Request $request)
     {
         $perPage = (int) $request->get('limit', 50);
+        $this->formNames[] = 'created_at';
         $condition = $request->only($this->formNames);
         if (isset($condition['group'])) {
             $condition['group'] = ['=', $condition['group']];

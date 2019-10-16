@@ -20,7 +20,7 @@ use Illuminate\View\View;
 
 class ContentController extends Controller
 {
-    protected $formNames = ['created_at', 'updated_at'];
+    protected $formNames = [];
 
     protected $entity = null;
 
@@ -75,7 +75,7 @@ class ContentController extends Controller
         }
 
         $perPage = (int) $request->get('limit', 50);
-        $this->formNames = array_merge($this->formNames, EntityFieldRepository::getFields($entity));
+        $this->formNames = array_merge(['created_at'], EntityFieldRepository::getFields($entity));
         $condition = $request->only($this->formNames);
 
         $data = ContentRepository::list($entity, $perPage, $condition);
