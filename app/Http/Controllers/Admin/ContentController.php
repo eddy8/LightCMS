@@ -20,7 +20,7 @@ use Illuminate\View\View;
 
 class ContentController extends Controller
 {
-    protected $formNames = [];
+    protected $formNames = ['created_at', 'updated_at'];
 
     protected $entity = null;
 
@@ -64,6 +64,7 @@ class ContentController extends Controller
      * 内容列表数据接口
      *
      * @param Request $request
+     * @param integer $entity
      * @return array
      */
     public function list(Request $request, $entity)
@@ -74,6 +75,7 @@ class ContentController extends Controller
         }
 
         $perPage = (int) $request->get('limit', 50);
+        $this->formNames = array_merge($this->formNames, EntityFieldRepository::getFields($entity));
         $condition = $request->only($this->formNames);
 
         $data = ContentRepository::list($entity, $perPage, $condition);
@@ -116,7 +118,7 @@ class ContentController extends Controller
 
         try {
             ContentRepository::add($request->only(
-                EntityFieldRepository::getByEntityId($entity)->pluck('name')->toArray()
+                EntityFieldRepository::getFields($entity)
             ));
             return [
                 'code' => 0,

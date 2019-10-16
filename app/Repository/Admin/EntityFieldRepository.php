@@ -64,4 +64,10 @@ class EntityFieldRepository
         return  EntityField::query()->where('entity_id', $id)
             ->orderBy('order')->orderBy('is_show_inline')->get();
     }
+
+    public static function getFields($entityId)
+    {
+        return  EntityField::query()->select('name')->where('entity_id', $entityId)->get()
+            ->pluck('name')->toArray();
+    }
 }
