@@ -90,9 +90,10 @@ class EntityFieldControllerTest extends TestCase
         $this->assertFalse(Schema::hasColumn($this->entity->table_name, $this->filedName));
     }
 
-    public function testEntityContentCanBeCreatedAndEdited()
+    public function testEntityContentCanBeCreatedAndEditedAndListed()
     {
-        $this->createEntityField();
+        // 字段可编辑
+        $this->createEntityField(true, true);
         $data = [
             'title' => '测试标题'
         ];
@@ -100,16 +101,41 @@ class EntityFieldControllerTest extends TestCase
             ->post('/admin/entity/' . $this->entity->id . '/contents', $data);
         $response->assertJson(['code' => 0]);
 
-        $data = [
+        $updateData = [
             'title' => '测试修改标题'
         ];
+        $response = $this->actingAs($this->user, 'admin')
+            ->put('/admin/entity/' . $this->entity->id . '/contents/1', $updateData);
+        $response->assertJson(['code' => 0]);
+        $this->assertDatabaseHas($this->entity->table_name, ['title' => $updateData['title']]);
 
         $response = $this->actingAs($this->user, 'admin')
-            ->put('/admin/entity/' . $this->entity->id . '/contents/1', $data);
+            ->get('/admin/entity/' . $this->entity->id . '/contents/list/?action=search&title=修改标题');
         $response->assertJson(['code' => 0]);
+        $response->assertJsonFragment(['title' => $updateData['title']]);
     }
 
-    protected function createEntityField($modifyDB = true)
+    public function testEntityContentCanNotBeEditedWhenFieldIsNotEditable()
+    {
+        // 字段不可编辑
+        $this->createEntityField(true, false);
+        $data = [
+            'title' => '测试标题'
+        ];
+        $response = $this->actingAs($this->user, 'admin')
+            ->post('/admin/entity/' . $this->entity->id . '/contents', $data);
+        $response->assertJson(['code' => 0]);
+
+        $updateData = [
+            'title' => '测试修改标题'
+        ];
+        $response = $this->actingAs($this->user, 'admin')
+            ->put('/admin/entity/' . $this->entity->id . '/contents/1', $updateData);
+        $response->assertJson(['code' => 0]);
+        $this->assertDatabaseMissing($this->entity->table_name, ['title' => $updateData['title']]);
+    }
+
+    protected function createEntityField($modifyDB = true, $is_edit = false)
     {
         $data = [
             'entity_id' => $this->entity->id,
@@ -122,7 +148,8 @@ class EntityFieldControllerTest extends TestCase
             'field_total' => '',
             'field_scale' => '',
             'comment' => '',
-            'default_value' => ''
+            'default_value' => '',
+            'is_edit' => $is_edit === true ? EntityField::EDIT_ENABLE : EntityField::EDIT_DISABLE,
         ];
         if ($modifyDB) {
             $data['is_modify_db'] = 1;

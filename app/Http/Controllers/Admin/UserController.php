@@ -44,6 +44,7 @@ class UserController extends Controller
     public function list(Request $request)
     {
         $perPage = (int) $request->get('limit', 50);
+        $this->formNames[] = 'created_at';
         $condition = $request->only($this->formNames);
 
         $data = UserRepository::list($perPage, $condition);
