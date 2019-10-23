@@ -17,6 +17,9 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use App\Model\Admin\Tag;
+use App\Model\Admin\ContentTag;
+use Illuminate\Support\Facades\DB;
 
 class ContentController extends Controller
 {
@@ -117,15 +120,34 @@ class ContentController extends Controller
         }
 
         try {
-            ContentRepository::add($request->only(
+            DB::beginTransaction();
+
+            $content = ContentRepository::add($request->only(
                 EntityFieldRepository::getFields($entity)
             ));
+
+            // 标签类型字段另外处理 多对多关联
+            $inputTagsField = EntityFieldRepository::getInputTagsField($entity);
+            $tags = null;
+            if ($inputTagsField) {
+                $tags = $request->post($inputTagsField->name);
+            }
+            if (!is_null($tags) && $tags = json_decode($tags, true)) {
+                foreach ($tags as $v) {
+                    $tag = Tag::firstOrCreate(['name' => $v['value']]);
+                    ContentTag::firstOrCreate(['entity_id' => $entity, 'content_id' => $content->id, 'tag_id' => $tag->id]);
+                }
+            }
+
+            DB::commit();
+
             return [
                 'code' => 0,
                 'msg' => '新增成功',
                 'redirect' => route('admin::content.index', ['entity' => $entity])
             ];
         } catch (QueryException $e) {
+            DB::rollBack();
             \Log::error($e);
             return [
                 'code' => 1,
@@ -187,13 +209,36 @@ class ContentController extends Controller
         $data = array_merge($data, $request->only(array_keys($fieldInfo)));
 
         try {
+            DB::beginTransaction();
+
             ContentRepository::update($id, $data);
+
+            // 标签类型字段另外处理 多对多关联
+            $inputTagsField = EntityFieldRepository::getInputTagsField($entity);
+            $tags = null;
+            if ($inputTagsField && $inputTagsField->is_edit === EntityField::EDIT_ENABLE) {
+                $tags = $request->post($inputTagsField->name);
+            }
+            if (!is_null($tags) && $tags = json_decode($tags, true)) {
+                $tagIds = [];
+                foreach ($tags as $v) {
+                    $tag = Tag::firstOrCreate(['name' => $v['value']]);
+                    ContentTag::firstOrCreate(['entity_id' => $entity, 'content_id' => $id, 'tag_id' => $tag->id]);
+                    $tagIds[] = $tag->id;
+                }
+                if ($tagIds) {
+                    ContentTag::where('entity_id', $entity)->where('content_id', $id)->whereNotIn('tag_id', $tagIds)->delete();
+                }
+            }
+
+            DB::commit();
             return [
                 'code' => 0,
                 'msg' => '编辑成功',
                 'redirect' => route('admin::content.index', ['entity' => $entity])
             ];
         } catch (QueryException $e) {
+            DB::rollBack();
             \Log::error($e);
             return [
                 'code' => 1,

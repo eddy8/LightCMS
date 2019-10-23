@@ -43,7 +43,8 @@ class ContentRepository
 
     public static function add($data)
     {
-        return self::$model->setRawAttributes(self::processParams($data))->save();
+        self::$model->setRawAttributes(self::processParams($data))->save();
+        return self::$model;
     }
 
     public static function update($id, $data)

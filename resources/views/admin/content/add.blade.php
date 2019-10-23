@@ -427,6 +427,57 @@
                                         formSelects.render('select-{{ $field->name }}');
                                     </script>
                                 @break
+                            @case('inputTags')
+                                @if(!isset($tagify_init))
+                                    @php
+                                        // https://github.com/yairEO/tagify
+                                        $tagify_init = true
+                                    @endphp
+                                    <link rel="stylesheet" type="text/css" href="/public/vendor/tagify/tagify.css"/>
+                                    <script type="text/javascript" src="/public/vendor/tagify/tagify.min.js"></script>
+                                @endif
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block" style="">
+                                        <input name="{{ $field->name }}" placeholder="输入标签，按回车键或TAB键可新增标签" value="@if(isset($model)) {{ $model->{$field->name} }} @endif" disabled>
+                                    </div>
+                                </div>
+                                <script>
+                                    var input = document.querySelector('input[name={{ $field->name }}]'),
+                                        // init Tagify script on the above inputs
+                                        tagify = new Tagify(input, {
+                                            dropdown: {
+                                                enabled: 1,
+                                                maxItems: 50,
+                                                highlightFirst: true
+                                            }
+                                        });
+
+                                    // Chainable event listeners
+                                    tagify.on('input', onInput);
+
+                                    // on character(s) added/removed (user is typing/deleting)
+                                    function onInput(e){
+                                        var value = e.detail.value;
+                                        tagify.settings.whitelist.length = 0;
+                                        $.ajax({
+                                            url: "{{ route('admin::tag.list') }}" + "?page=1&limit=50" + "&name=" + value,
+                                            method: "GET",
+                                            dataType: "json",
+                                            success: function (d) {
+                                                if (d.code === 0 && d.count > 0) {
+                                                    var data = [];
+                                                    for (var j = 0; j < d.data.length; j++) {
+                                                        data.push(d.data[j].name);
+                                                    }
+                                                    tagify.settings.whitelist = data;
+                                                    tagify.dropdown.show.call(tagify, value);
+                                                }
+                                            }
+                                        });
+                                    }
+                                </script>
+                                @break
 
                         @endswitch
                     @endforeach

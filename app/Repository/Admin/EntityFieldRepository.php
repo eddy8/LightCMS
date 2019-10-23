@@ -70,4 +70,11 @@ class EntityFieldRepository
         return  EntityField::query()->select('name')->where('entity_id', $entityId)->get()
             ->pluck('name')->toArray();
     }
+
+    public static function getInputTagsField($entityId)
+    {
+        return EntityField::query()->where('entity_id', $entityId)
+            ->where('form_type', 'inputTags')
+            ->first();
+    }
 }

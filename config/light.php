@@ -74,6 +74,7 @@ return [
         'checkbox' => '复选框',
         'select' => '下拉选择',
         'selectMulti' => '下拉选择（多选）',
+        'inputTags' => '标签输入框',
         'upload' => '图片上传（单图）',
         'uploadMulti' => '图片上传（多图）',
         'datetime' => '日期时间',
