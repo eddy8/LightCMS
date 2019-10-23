@@ -243,6 +243,12 @@ class EntityFieldController extends Controller
         }
     }
 
+    /**
+     * 模型字段管理-字段快捷更新接口
+     *
+     * @param Request $request
+     * @param int $id
+     */
     public function listUpdate(Request $request, $id)
     {
         try {
