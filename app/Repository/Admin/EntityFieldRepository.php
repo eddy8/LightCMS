@@ -70,4 +70,25 @@ class EntityFieldRepository
         return  EntityField::query()->select('name')->where('entity_id', $entityId)->get()
             ->pluck('name')->toArray();
     }
+
+    public static function getSaveFields($entityId)
+    {
+        return  EntityField::query()->select('name')->where('entity_id', $entityId)
+            ->whereNotIn('form_type', ['inputTags'])->get()->pluck('name')->toArray();
+    }
+
+    public static function getUpdateFields($entityId)
+    {
+        return  EntityField::query()->select('name')->where('entity_id', $entityId)
+            ->where('is_edit', EntityField::EDIT_ENABLE)
+            ->whereNotIn('form_type', ['inputTags'])
+            ->get()->pluck('form_type', 'name')->toArray();
+    }
+
+    public static function getInputTagsField($entityId)
+    {
+        return EntityField::query()->where('entity_id', $entityId)
+            ->where('form_type', 'inputTags')
+            ->first();
+    }
 }

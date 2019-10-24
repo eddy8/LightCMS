@@ -108,8 +108,19 @@ class EntityFieldController extends Controller
                     'msg' => '新增失败：无效字段类型',
                 ];
             }
+            // 一个模型只能有一个 inputTags 表单类型
+            if (EntityFieldRepository::getInputTagsField($data['entity_id'])) {
+                return [
+                    'code' => 4,
+                    'msg' => '新增失败：一个模型只能有一个标签输入框表单类型',
+                ];
+            }
 
-            $modifyDB = $request->post('is_modify_db', false);
+            $modifyDB = $request->post('is_modify_db');
+            // inputTags类型表单不需要添加数据库字段
+            if (in_array($data['type'], ['inputTags'], true)) {
+                $modifyDB = false;
+            }
             if ($modifyDB) {
                 Schema::table($table->table_name, function (Blueprint $table) use ($data) {
                     $m = $data['type'];
@@ -191,6 +202,13 @@ class EntityFieldController extends Controller
         $data['is_edit'] = $data['is_edit'] ?? EntityField::EDIT_DISABLE;
         $data['is_required'] = $data['is_required'] ?? EntityField::REQUIRED_DISABLE;
         $data['is_show_inline'] = $data['is_show_inline'] ?? EntityField::SHOW_NOT_INLINE;
+        // 一个模型只能有一个 inputTags 表单类型
+        if (EntityFieldRepository::getInputTagsField($data['entity_id'])) {
+            return [
+                'code' => 4,
+                'msg' => '编辑失败：一个模型只能有一个标签输入框表单类型',
+            ];
+        }
         try {
             unset($data['field_length'], $data['field_total'], $data['field_scale'], $data['entity_id']);
             EntityFieldRepository::update($id, $data);
@@ -243,6 +261,12 @@ class EntityFieldController extends Controller
         }
     }
 
+    /**
+     * 模型字段管理-字段快捷更新接口
+     *
+     * @param Request $request
+     * @param int $id
+     */
     public function listUpdate(Request $request, $id)
     {
         try {

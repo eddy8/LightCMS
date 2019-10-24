@@ -8,7 +8,7 @@
 
 `LightCMS&Laravel`学习交流QQ群：**972796921**
 
-**注意：如果想使用基于最新`Laravel 6.0`的版本，可使用`laravel-6.0`分支。**
+**注意：如果想使用基于最新`Laravel 6.0(6.x)`的版本，可使用`laravel-6.x`分支。**
 
 ## 功能点一览
 后台：
@@ -91,7 +91,7 @@ server {
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         #不同配置对应不同的环境配置文件。比如此处应用会加载.env.pro文件，默认不配置会加载.env文件。此处可根据项目需要自行配制。
-        #fastcgi_param   APP_ENV pro; 
+        #fastcgi_param   APP_ENV pro;
         include fastcgi_params;
     }
 }
@@ -132,6 +132,11 @@ public function index()
 // 获取 key 为 SITE_NAME 的配置项值
 $siteName = config('light_config.SITE_NAME');
 ```
+
+## 标签管理
+模型内容**打标签**是站点的一项常用功能，`lightCMS`内置了打标签功能。添加模型字段时选择表单类型为`标签输入框`即可。
+
+`lightCMS`采用中间表（content_tags）来实现标签和模型内容的多对多关联关系。
 
 ## 模型管理
 `lightCMS`支持在后台直接创建模型，并可对模型的表字段进行自定义设置。设置完模型字段后，就不需要做其它工作了，模型的增删改查功能系统已经内置。

@@ -19,10 +19,9 @@ class UEditorController extends NEditorController
      * ueditor-ueditor后端服务
      *
      * @param Request $request
-     * @param null $type
      * @return array|mixed
      */
-    public function serve(Request $request, $type = null)
+    public function serve(Request $request)
     {
         $action = $request->input('action');
         if (!method_exists(\self::class, $action)) {

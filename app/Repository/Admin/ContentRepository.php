@@ -6,8 +6,13 @@
 namespace App\Repository\Admin;
 
 use App\Model\Admin\Content;
+use App\Model\Admin\ContentTag;
 use App\Repository\Searchable;
 
+/**
+ * 使用当前类时必须先调用 setTable 方法设置所要操作的数据库表
+ * @package App\Repository\Admin
+ */
 class ContentRepository
 {
     use Searchable;
@@ -43,7 +48,8 @@ class ContentRepository
 
     public static function add($data)
     {
-        return self::$model->setRawAttributes(self::processParams($data))->save();
+        self::$model->setRawAttributes(self::processParams($data))->save();
+        return self::$model;
     }
 
     public static function update($id, $data)
@@ -101,5 +107,17 @@ class ContentRepository
         return self::$model->newQuery()
             ->orderBy('id', 'desc')
             ->paginate($perPage);
+    }
+
+    public static function tags($entityId, $contentId)
+    {
+        return ContentTag::query()->where('entity_id', $entityId)->where('content_id', $contentId)
+            ->leftJoin('tags', 'tags.id', '=', 'content_tags.tag_id')
+            ->get(['name', 'tag_id']);
+    }
+
+    public static function tagNames($entityId, $contentId)
+    {
+        return self::tags($entityId, $contentId)->implode('name', ',');
     }
 }

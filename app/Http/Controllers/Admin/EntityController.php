@@ -73,7 +73,7 @@ class EntityController extends Controller
     public function save(EntityRequest $request)
     {
         try {
-            $createDB = $request->post('is_modify_db', false);
+            $createDB = $request->post('is_modify_db');
             EntityRepository::add($request->only($this->formNames), $createDB);
             return [
                 'code' => 0,
