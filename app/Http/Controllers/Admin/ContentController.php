@@ -123,7 +123,7 @@ class ContentController extends Controller
             DB::beginTransaction();
 
             $content = ContentRepository::add($request->only(
-                EntityFieldRepository::getFields($entity)
+                EntityFieldRepository::getSaveFields($entity)
             ));
 
             // 标签类型字段另外处理 多对多关联
@@ -135,7 +135,9 @@ class ContentController extends Controller
             if (!is_null($tags) && $tags = json_decode($tags, true)) {
                 foreach ($tags as $v) {
                     $tag = Tag::firstOrCreate(['name' => $v['value']]);
-                    ContentTag::firstOrCreate(['entity_id' => $entity, 'content_id' => $content->id, 'tag_id' => $tag->id]);
+                    ContentTag::firstOrCreate(
+                        ['entity_id' => $entity, 'content_id' => $content->id, 'tag_id' => $tag->id]
+                    );
                 }
             }
 
@@ -196,10 +198,7 @@ class ContentController extends Controller
             return $result;
         }
 
-        $fieldInfo = EntityFieldRepository::getByEntityId($entity)
-                        ->where('is_edit', EntityField::EDIT_ENABLE)
-                        ->pluck('form_type', 'name')
-                        ->toArray();
+        $fieldInfo = EntityFieldRepository::getUpdateFields($entity);
         $data = [];
         foreach ($fieldInfo as $k => $v) {
             if ($v === 'checkbox') {
