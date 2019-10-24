@@ -12,6 +12,8 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use App\Model\Admin\ContentTag;
+use Illuminate\Support\Facades\DB;
 
 class TagController extends Controller
 {
@@ -132,13 +134,19 @@ class TagController extends Controller
     public function delete($id)
     {
         try {
+            DB::beginTransaction();
+
             TagRepository::delete($id);
+            ContentTag::where('tag_id', $id)->delete();
+
+            DB::commit();
             return [
                 'code' => 0,
                 'msg' => '删除成功',
                 'redirect' => route('admin::tag.index')
             ];
         } catch (\RuntimeException $e) {
+            DB::rollBack();
             return [
                 'code' => 1,
                 'msg' => '删除失败：' . $e->getMessage(),

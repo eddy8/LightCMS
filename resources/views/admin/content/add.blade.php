@@ -439,7 +439,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block" style="">
-                                        <input name="{{ $field->name }}" placeholder="输入标签，按回车键或TAB键可新增标签" value="@if(isset($model)) {{ $model->{$field->name} }} @endif" disabled>
+                                        <input name="{{ $field->name }}" placeholder="输入标签，按回车键或TAB键可新增标签" value="@if(isset($model)) {{ \App\Repository\Admin\ContentRepository::tagNames($entity, $model->id) }} @endif">
                                     </div>
                                 </div>
                                 <script>
@@ -459,7 +459,8 @@
                                     // on character(s) added/removed (user is typing/deleting)
                                     function onInput(e){
                                         var value = e.detail.value;
-                                        tagify.settings.whitelist.length = 0;
+                                        tagify.settings.whitelist = [];
+                                        tagify.dropdown.hide.call(tagify);
                                         $.ajax({
                                             url: "{{ route('admin::tag.list') }}" + "?page=1&limit=50" + "&name=" + value,
                                             method: "GET",
