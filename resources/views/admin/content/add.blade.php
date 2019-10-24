@@ -503,6 +503,7 @@
 
         //监听提交
         form.on('submit(formAdminUser)', function(data){
+            window.onbeforeunload = null;
             window.form_submit = $('#submitBtn');
             form_submit.prop('disabled', true);
             $.ajax({
@@ -540,6 +541,16 @@
             console.log(previewArr.join(','));
             $("input[name=" + inputName + ']').val(previewArr.join(','));
         });
+
+        window.onbeforeunload = function (e) {
+          e = e || window.event;
+          // 兼容IE8和Firefox 4之前的版本
+          if (e) {
+            e.returnValue = '确定离开当前页面吗？';
+          }
+          // Chrome, Safari, Firefox 4+, Opera 12+ , IE 9+
+          return '确定离开当前页面吗？';
+        };
     </script>
     <script src="/public/vendor/zoom/transition.js"></script>
     <script src="/public/vendor/zoom/zoom.min.js"></script>
