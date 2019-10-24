@@ -21,7 +21,7 @@ class UEditorController extends NEditorController
      * @param Request $request
      * @return array|mixed
      */
-    public function serve(Request $request)
+    public function serve(Request $request, $type = null)
     {
         $action = $request->input('action');
         if (!method_exists(\self::class, $action)) {
