@@ -116,7 +116,7 @@ class EntityFieldController extends Controller
                 ];
             }
 
-            $modifyDB = $request->post('is_modify_db', false);
+            $modifyDB = $request->post('is_modify_db');
             // inputTags类型表单不需要添加数据库字段
             if (in_array($data['type'], ['inputTags'], true)) {
                 $modifyDB = false;

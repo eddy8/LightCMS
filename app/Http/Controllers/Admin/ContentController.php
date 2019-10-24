@@ -198,20 +198,11 @@ class ContentController extends Controller
             return $result;
         }
 
-        $fieldInfo = EntityFieldRepository::getUpdateFields($entity);
-        $data = [];
-        foreach ($fieldInfo as $k => $v) {
-            if ($v === 'checkbox') {
-                $data[$k] = '';
-            }
-        }
-        $data = array_merge($data, $request->only(array_keys($fieldInfo)));
-
+        $data = $this->getUpdateData($request, $entity);
         try {
             DB::beginTransaction();
 
             ContentRepository::update($id, $data);
-
             // 标签类型字段另外处理 多对多关联
             $inputTagsField = EntityFieldRepository::getInputTagsField($entity);
             $tags = null;
@@ -379,5 +370,17 @@ class ContentController extends Controller
         }
 
         return $view;
+    }
+
+    protected function getUpdateData($request, $entity)
+    {
+        $fieldInfo = EntityFieldRepository::getUpdateFields($entity);
+        $data = [];
+        foreach ($fieldInfo as $k => $v) {
+            if ($v === 'checkbox') {
+                $data[$k] = '';
+            }
+        }
+        return array_merge($data, $request->only(array_keys($fieldInfo)));
     }
 }
