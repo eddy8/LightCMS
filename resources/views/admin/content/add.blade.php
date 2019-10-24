@@ -503,6 +503,7 @@
 
         //监听提交
         form.on('submit(formAdminUser)', function(data){
+            window.onbeforeunload = null;
             window.form_submit = $('#submitBtn');
             form_submit.prop('disabled', true);
             $.ajax({
