@@ -109,7 +109,7 @@ class EntityFieldController extends Controller
                 ];
             }
             // 一个模型只能有一个 inputTags 表单类型
-            if (EntityFieldRepository::getInputTagsField($data['entity_id'])) {
+            if (EntityFieldRepository::formTypeBeUnique($data['form_type']) && EntityFieldRepository::getInputTagsField($data['entity_id'])) {
                 return [
                     'code' => 4,
                     'msg' => '新增失败：一个模型只能有一个标签输入框表单类型',
@@ -118,7 +118,7 @@ class EntityFieldController extends Controller
 
             $modifyDB = $request->post('is_modify_db');
             // inputTags类型表单不需要添加数据库字段
-            if (in_array($data['type'], ['inputTags'], true)) {
+            if (in_array($data['form_type'], ['inputTags'], true)) {
                 $modifyDB = false;
             }
             if ($modifyDB) {
@@ -203,7 +203,7 @@ class EntityFieldController extends Controller
         $data['is_required'] = $data['is_required'] ?? EntityField::REQUIRED_DISABLE;
         $data['is_show_inline'] = $data['is_show_inline'] ?? EntityField::SHOW_NOT_INLINE;
         // 一个模型只能有一个 inputTags 表单类型
-        if (EntityFieldRepository::getInputTagsField($data['entity_id'])) {
+        if (EntityFieldRepository::formTypeBeUnique($data['form_type']) && EntityFieldRepository::getInputTagsField($data['entity_id'])) {
             return [
                 'code' => 4,
                 'msg' => '编辑失败：一个模型只能有一个标签输入框表单类型',

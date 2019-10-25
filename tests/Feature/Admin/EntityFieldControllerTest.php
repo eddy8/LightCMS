@@ -154,6 +154,24 @@ class EntityFieldControllerTest extends TestCase
         if ($modifyDB) {
             $data['is_modify_db'] = 1;
         }
+        $this->actingAs($this->user, 'admin')
+            ->post('/admin/entityFields', $data);
+
+        // 标签字段
+        $data = [
+            'entity_id' => $this->entity->id,
+            'name' => 'tags',
+            'type' => 'string',
+            'form_name' => '标题',
+            'form_type' => 'inputTags',
+            'order' => 77,
+            'field_length' => '',
+            'field_total' => '',
+            'field_scale' => '',
+            'comment' => '',
+            'default_value' => '',
+            'is_edit' => EntityField::EDIT_ENABLE,
+        ];
         return $this->actingAs($this->user, 'admin')
             ->post('/admin/entityFields', $data);
     }
