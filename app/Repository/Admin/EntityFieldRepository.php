@@ -91,4 +91,9 @@ class EntityFieldRepository
             ->where('form_type', 'inputTags')
             ->first();
     }
+
+    public static function formTypeBeUnique($formType)
+    {
+        return in_array($formType, ['inputTags'], true);
+    }
 }
