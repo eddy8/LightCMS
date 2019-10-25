@@ -6,6 +6,7 @@ use App\Model\Admin\AdminUser;
 use App\Model\Admin\Entity;
 use App\Model\Admin\EntityField;
 use App\Repository\Admin\EntityRepository;
+use App\Repository\Admin\ContentRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
@@ -111,6 +112,7 @@ class EntityFieldControllerTest extends TestCase
         $response = $this->actingAs($this->user, 'admin')
             ->put('/admin/entity/' . $this->entity->id . '/contents/1', $updateData);
         $response->assertJson(['code' => 0]);
+        $this->assertEquals('tag1,tag3', ContentRepository::tagNames($this->entity->id, 1));
         $this->assertDatabaseHas($this->entity->table_name, ['title' => $updateData['title']]);
 
         $response = $this->actingAs($this->user, 'admin')

@@ -23,14 +23,14 @@ class NEditorController extends Controller
      */
     public function serve(Request $request, $type)
     {
-        if (!method_exists(\self::class, $type)) {
+        if (!method_exists(self::class, $type)) {
             return [
                 'code' => 1,
                 'msg' => '未知操作'
             ];
         }
 
-        return call_user_func(\self::class . '::' . $type, $request);
+        return call_user_func(self::class . '::' . $type, $request);
     }
 
     protected function uploadImage(Request $request)
