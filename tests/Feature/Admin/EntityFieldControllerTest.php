@@ -172,6 +172,25 @@ class EntityFieldControllerTest extends TestCase
             'default_value' => '',
             'is_edit' => EntityField::EDIT_ENABLE,
         ];
+        $this->actingAs($this->user, 'admin')
+            ->post('/admin/entityFields', $data);
+
+        // select类型字段
+        $data = [
+            'entity_id' => $this->entity->id,
+            'name' => 'gender',
+            'type' => 'integer',
+            'form_name' => '性别',
+            'form_type' => 'select',
+            'order' => 77,
+            'field_length' => '',
+            'field_total' => '',
+            'field_scale' => '',
+            'comment' => '性别',
+            'default_value' => '0',
+            'form_params' => '0=男' . PHP_EOL . '1=女',
+            'is_edit' => EntityField::EDIT_ENABLE,
+        ];
         return $this->actingAs($this->user, 'admin')
             ->post('/admin/entityFields', $data);
     }
