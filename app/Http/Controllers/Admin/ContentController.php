@@ -206,7 +206,7 @@ class ContentController extends Controller
             // 标签类型字段另外处理 多对多关联
             $inputTagsField = EntityFieldRepository::getInputTagsField($entity);
             $tags = null;
-            if ($inputTagsField && $inputTagsField->is_edit === EntityField::EDIT_ENABLE) {
+            if ($inputTagsField && intval($inputTagsField->is_edit) === EntityField::EDIT_ENABLE) {
                 $tags = $request->post($inputTagsField->name);
             }
             if (!is_null($tags) && $tags = json_decode($tags, true)) {

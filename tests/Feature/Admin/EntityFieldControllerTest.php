@@ -95,14 +95,18 @@ class EntityFieldControllerTest extends TestCase
         // 字段可编辑
         $this->createEntityField(true, true);
         $data = [
-            'title' => '测试标题'
+            'title' => '测试标题',
+            'tags' => '[{"value":"tag1"},{"value":"tag2"}]',
+            'gender' => 1
         ];
         $response = $this->actingAs($this->user, 'admin')
             ->post('/admin/entity/' . $this->entity->id . '/contents', $data);
         $response->assertJson(['code' => 0]);
 
         $updateData = [
-            'title' => '测试修改标题'
+            'title' => '测试修改标题',
+            'tags' => '[{"value":"tag1"},{"value":"tag3"}]',
+            'gender' => 0
         ];
         $response = $this->actingAs($this->user, 'admin')
             ->put('/admin/entity/' . $this->entity->id . '/contents/1', $updateData);
@@ -162,7 +166,7 @@ class EntityFieldControllerTest extends TestCase
             'entity_id' => $this->entity->id,
             'name' => 'tags',
             'type' => 'string',
-            'form_name' => '标题',
+            'form_name' => '标签',
             'form_type' => 'inputTags',
             'order' => 77,
             'field_length' => '',
@@ -171,6 +175,7 @@ class EntityFieldControllerTest extends TestCase
             'comment' => '',
             'default_value' => '',
             'is_edit' => EntityField::EDIT_ENABLE,
+            'is_modify_db' => 1,
         ];
         $this->actingAs($this->user, 'admin')
             ->post('/admin/entityFields', $data);
@@ -190,6 +195,7 @@ class EntityFieldControllerTest extends TestCase
             'default_value' => '0',
             'form_params' => '0=男' . PHP_EOL . '1=女',
             'is_edit' => EntityField::EDIT_ENABLE,
+            'is_modify_db' => 1,
         ];
         return $this->actingAs($this->user, 'admin')
             ->post('/admin/entityFields', $data);
