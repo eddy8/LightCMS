@@ -24,13 +24,13 @@ class UEditorController extends NEditorController
     public function serve(Request $request, $type = null)
     {
         $action = $request->input('action');
-        if (!method_exists(\self::class, $action)) {
+        if (!method_exists(self::class, $action)) {
             return [
                 'state' => '未知操作',
             ];
         }
 
-        return call_user_func(\self::class . '::' . $action, $request);
+        return call_user_func(self::class . '::' . $action, $request);
     }
 
     protected function config()

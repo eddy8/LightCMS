@@ -17,8 +17,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Exceptions\UrlGenerationException;
 use Illuminate\Support\Str;
-use Log;
-use Route;
+use Illuminate\Support\Facades\Route;
 
 class MenuController extends Controller
 {
@@ -45,6 +44,7 @@ class MenuController extends Controller
      * 菜单管理-菜单列表数据
      *
      * @param Request $request
+     * @return array
      */
     public function list(Request $request)
     {
@@ -72,7 +72,6 @@ class MenuController extends Controller
      */
     public function create()
     {
-        //dd(\App\Repository\Admin\MenuRepository::tree());
         $this->breadcrumb[] = ['title' => '新增菜单', 'url' => ''];
         return view('admin.menu.add', ['breadcrumb' => $this->breadcrumb]);
     }
@@ -153,6 +152,7 @@ class MenuController extends Controller
      * 菜单管理-删除菜单
      *
      * @param int $id
+     * @return array
      */
     public function delete($id)
     {

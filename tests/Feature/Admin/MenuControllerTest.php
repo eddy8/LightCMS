@@ -7,7 +7,7 @@ use App\Model\Admin\AdminUser;
 use App\Model\Admin\Menu;
 use Tests\TestCase;
 
-class MenuController extends TestCase
+class MenuControllerTest extends TestCase
 {
     use RefreshDatabase;
 
