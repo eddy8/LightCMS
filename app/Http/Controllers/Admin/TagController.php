@@ -130,6 +130,7 @@ class TagController extends Controller
      * 标签管理-删除标签
      *
      * @param int $id
+     * @return array
      */
     public function delete($id)
     {

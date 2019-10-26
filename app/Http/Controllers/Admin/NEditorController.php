@@ -19,6 +19,7 @@ class NEditorController extends Controller
      * 基础功能-图片上传
      *
      * @param Request $request
+     * @param string $type
      * @return array
      */
     public function serve(Request $request, $type)

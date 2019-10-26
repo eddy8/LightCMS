@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Schema;
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class EntityFieldController extends Controller
 {
@@ -160,7 +160,7 @@ class EntityFieldController extends Controller
                 'redirect' => true
             ];
         } catch (\Exception $e) {
-            \Log::error($e);
+            Log::error($e);
             return [
                 'code' => 1,
                 'msg' => '新增失败：' . $e->getMessage(),
@@ -218,7 +218,7 @@ class EntityFieldController extends Controller
                 'redirect' => true
             ];
         } catch (QueryException $e) {
-            \Log::error($e);
+            Log::error($e);
             return [
                 'code' => 1,
                 'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前模型字段已存在' : '其它错误'),
@@ -231,6 +231,7 @@ class EntityFieldController extends Controller
      * 模型字段管理-删除模型字段
      *
      * @param int $id
+     * @return array
      */
     public function delete($id)
     {
@@ -266,6 +267,7 @@ class EntityFieldController extends Controller
      *
      * @param Request $request
      * @param int $id
+     * @return array
      */
     public function listUpdate(Request $request, $id)
     {

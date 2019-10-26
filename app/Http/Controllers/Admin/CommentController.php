@@ -96,6 +96,7 @@ class CommentController extends Controller
      * 评论管理-删除评论
      *
      * @param int $id
+     * @return array
      */
     public function delete($id)
     {

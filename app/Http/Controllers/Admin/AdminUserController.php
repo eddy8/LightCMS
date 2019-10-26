@@ -16,7 +16,6 @@ use App\Repository\Admin\RoleRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Auth;
 
 class AdminUserController extends Controller
 {
@@ -43,6 +42,7 @@ class AdminUserController extends Controller
      * 管理员管理-管理员列表数据
      *
      * @param Request $request
+     * @return array
      */
     public function list(Request $request)
     {
@@ -107,6 +107,7 @@ class AdminUserController extends Controller
      *
      * @param AdminUserRequest $request
      * @param int $id
+     * @return array
      */
     public function update(AdminUserRequest $request, $id)
     {

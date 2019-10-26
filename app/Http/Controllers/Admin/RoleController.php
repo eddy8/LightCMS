@@ -16,7 +16,6 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Log;
 
 class RoleController extends Controller
 {
@@ -159,21 +158,13 @@ class RoleController extends Controller
      */
     public function updatePermission(Request $request, $id)
     {
-        try {
-            $role = RoleRepository::find($id);
-            $permissions = $request->input('permission');
-            $role->syncPermissions(MenuRepository::get(array_keys($permissions)));
-            return [
-                'code' => 0,
-                'msg' => '操作成功',
-                'redirect' => true
-            ];
-        } catch (\Throwable $e) {
-            Log::debug($e);
-            return [
-                'code' => 1,
-                'msg' => '操作失败',
-            ];
-        }
+        $role = RoleRepository::find($id);
+        $permissions = $request->input('permission');
+        $role->syncPermissions(MenuRepository::get(array_keys($permissions)));
+        return [
+            'code' => 0,
+            'msg' => '操作成功',
+            'redirect' => true
+        ];
     }
 }
