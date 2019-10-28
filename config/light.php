@@ -14,7 +14,7 @@ return [
     'log_reserve_days' => 180,
 
     // 异步写入系统日志
-    'log_async_write' => true,
+    'log_async_write' => false,
 
     // 数据库表字段类型 参考：https://laravel.com/docs/5.5/migrations#columns
     'db_table_field_type' => [
