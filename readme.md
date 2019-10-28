@@ -171,7 +171,7 @@ php artisan light:basic config 配置
 * routes/auto/config.php
 路由：包含模型增删改查相关路由，应用会自动加载`routes/auto/`目录下的路由。
 * app/Model/Admin/Config.php
-模型：[$searchField](#搜索字段（$searchField）配置说明) 属性用来配置搜索字段，[$listField](#列表字段（$listField）配置说明) 用来配置列表视图中需要展示哪些字段数据。
+模型：[$searchField](#搜索字段searchField配置说明) 属性用来配置搜索字段，[$listField](#列表字段listfield配置说明) 用来配置列表视图中需要展示哪些字段数据。
 * app/Repository/Admin/ConfigRepository.php
 模型服务层：默认有一个`list`方法，该方法用来返回列表数据。需要注意的是如果列表中的数据不能和数据库字段数据直接对应，则可对数据库字段数据做相应转换，可参考`list`方法中的`transform`部分。
 * app/Http/Controllers/Admin/ConfigController.php
