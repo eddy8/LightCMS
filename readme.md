@@ -206,6 +206,21 @@ php artisan light:basic config 配置
     ];
 ```
 
+### 列表字段（$listField）配置说明
+通过配置列表字段，可以很方便的在模型的列表页展示列表项。如下是一个示例配置：
+```php
+    public static $listField = [
+        // pid 是列表字段名（不一定是模型数据库表的字段名，只要列表数据接口返回数据包含该字段即可）;title、width、sort 等属性参考 layui 的 table 组件表头参数配置即可
+        'pid' => ['title' => '父ID', 'width' => 80],
+        'entityName' => ['title' => '模型', 'width' => 100], 
+        'userName' => ['title' => '用户名', 'width' => 100],
+        'content' => ['title' => '内容', 'width' => 400],
+        'reply_count' => ['title' => '回复数', 'width' => 80, 'sort' => true],
+        'like' => ['title' => '喜欢', 'width' => 80, 'sort' => true],
+        'dislike' => ['title' => '不喜欢', 'width' => 80, 'sort' => true],
+    ];
+```
+
 ## 敏感词检测
 如果需要对发表的内容（文章、评论等）进行内容审查，则可直接调用`LightCMS`提供的`checkSensitiveWords`函数即可。示例如下：
 ```php
