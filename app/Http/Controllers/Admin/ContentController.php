@@ -351,7 +351,7 @@ class ContentController extends Controller
     protected function userDefinedHandlerExists($method)
     {
         $entityControllerClass = '\\App\\Http\\Controllers\\Admin\\Entity\\' .
-            Str::ucfirst(Str::singular($this->entity->table_name)) . 'Controller';
+            Str::ucfirst(Str::camel(Str::singular($this->entity->table_name))) . 'Controller';
         if (class_exists($entityControllerClass) && method_exists($entityControllerClass, $method)) {
             return $entityControllerClass;
         }
