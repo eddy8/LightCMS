@@ -171,7 +171,7 @@ php artisan light:basic config 配置
 * routes/auto/config.php
 路由：包含模型增删改查相关路由，应用会自动加载`routes/auto/`目录下的路由。
 * app/Model/Admin/Config.php
-模型：`$searchField`属性用来配置搜索字段，`$listField`用来配置列表视图中需要展示哪些字段数据。
+模型：[$searchField](#搜索字段searchField配置说明) 属性用来配置搜索字段，[$listField](#列表字段listfield配置说明) 用来配置列表视图中需要展示哪些字段数据。
 * app/Repository/Admin/ConfigRepository.php
 模型服务层：默认有一个`list`方法，该方法用来返回列表数据。需要注意的是如果列表中的数据不能和数据库字段数据直接对应，则可对数据库字段数据做相应转换，可参考`list`方法中的`transform`部分。
 * app/Http/Controllers/Admin/ConfigController.php
@@ -203,6 +203,21 @@ php artisan light:basic config 配置
             'showType' => 'datetime', // 日期时间搜索类型
             'title' => '创建时间' // 标题
         ]
+    ];
+```
+
+### 列表字段（$listField）配置说明
+通过配置列表字段，可以很方便的在模型的列表页展示列表项。如下是一个示例配置：
+```php
+    public static $listField = [
+        // pid 是列表字段名（不一定是模型数据库表的字段名，只要列表数据接口返回数据包含该字段即可）;title、width、sort 等属性参考 layui 的 table 组件表头参数配置即可
+        'pid' => ['title' => '父ID', 'width' => 80],
+        'entityName' => ['title' => '模型', 'width' => 100], 
+        'userName' => ['title' => '用户名', 'width' => 100],
+        'content' => ['title' => '内容', 'width' => 400],
+        'reply_count' => ['title' => '回复数', 'width' => 80, 'sort' => true],
+        'like' => ['title' => '喜欢', 'width' => 80, 'sort' => true],
+        'dislike' => ['title' => '不喜欢', 'width' => 80, 'sort' => true],
     ];
 ```
 
