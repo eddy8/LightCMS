@@ -6,6 +6,7 @@ use App\Model\Admin\AdminUser;
 use App\Model\Admin\Entity;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
@@ -62,6 +63,29 @@ class EntityControllerTest extends TestCase
         $response = $this->actingAs($this->user, 'admin')
             ->post('/admin/entities', $data);
         $response->assertJson(['code' => 2]);
+    }
+
+    /**
+     * @expectedException Illuminate\Database\QueryException
+     * @expectedExceptionMessage no such table
+     */
+    public function testEntityCanBeDeleted()
+    {
+        $entity = factory(Entity::class)->create();
+        $response = $this->actingAs($this->user, 'admin')->delete('/admin/entities/1');
+        $response->assertStatus(200);
+        $response->assertJson(['code' => 1]);
+
+        $user = factory(AdminUser::class)->create(['id' => 1, 'password' => bcrypt('password')]);
+        Schema::create($entity->table_name, function ($table) {
+            $table->increments('id');
+        });
+        $response = $this->actingAs($user, 'admin')->delete('/admin/entities/1', ['password' => 'wrong password']);
+        $response->assertJson(['code' => 2]);
+        $response = $this->actingAs($user, 'admin')->delete('/admin/entities/1', ['password' => 'password']);
+        $response->assertJson(['code' => 0]);
+        $this->assertDatabaseMissing('entities', ['table_name' => $entity->table_name]);
+        DB::table($entity->table_name)->find(1);
     }
 
     public function tearDown()
