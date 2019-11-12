@@ -20,6 +20,7 @@ use Illuminate\View\View;
 use App\Model\Admin\Tag;
 use App\Model\Admin\ContentTag;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ContentController extends Controller
 {
@@ -150,7 +151,7 @@ class ContentController extends Controller
             ];
         } catch (QueryException $e) {
             DB::rollBack();
-            \Log::error($e);
+            Log::error($e);
             return [
                 'code' => 1,
                 'msg' => '新增失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前内容已存在' : '其它错误'),
@@ -229,7 +230,7 @@ class ContentController extends Controller
             ];
         } catch (QueryException $e) {
             DB::rollBack();
-            \Log::error($e);
+            Log::error($e);
             return [
                 'code' => 1,
                 'msg' => '编辑失败：' . (Str::contains($e->getMessage(), 'Duplicate entry') ? '当前内容已存在' : '其它错误'),
@@ -250,13 +251,13 @@ class ContentController extends Controller
             return [
                 'code' => 0,
                 'msg' => '删除成功',
-                'redirect' => route('admin::content.index')
+                'reload' => true
             ];
         } catch (\RuntimeException $e) {
             return [
                 'code' => 1,
                 'msg' => '删除失败：' . $e->getMessage(),
-                'redirect' => route('admin::content.index')
+                'redirect' => false
             ];
         }
     }

@@ -5,9 +5,15 @@
 
 namespace App\Repository\Admin;
 
+use App\Model\Admin\Category;
+use App\Model\Admin\Comment;
+use App\Model\Admin\CommentOperateLog;
+use App\Model\Admin\ContentTag;
 use App\Model\Admin\Entity;
+use App\Model\Admin\EntityField;
 use App\Repository\Searchable;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use App\Exceptions\CreateTableException;
 
@@ -108,5 +114,23 @@ class EntityRepository
         }
 
         return $autoMenu;
+    }
+
+    public static function delete($id)
+    {
+        $table = Entity::query()->findOrFail($id);
+        DB::beginTransaction();
+
+        Schema::dropIfExists($table->table_name);
+        Entity::destroy($id);
+        EntityField::query()->where('entity_id', $id)->delete();
+        Category::query()->where('model_id', $id)->delete();
+        ContentTag::query()->where('entity_id', $id)->delete();
+        CommentOperateLog::query()->join('comments', 'comment_operate_logs.comment_id', '=', 'comments.id')
+            ->where('entity_id', $id)
+            ->delete();
+        Comment::query()->where('entity_id', $id)->delete();
+
+        DB::commit();
     }
 }

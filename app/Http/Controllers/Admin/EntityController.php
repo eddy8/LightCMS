@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\EntityRequest;
 use App\Repository\Admin\EntityRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
@@ -135,5 +136,35 @@ class EntityController extends Controller
                 'redirect' => false
             ];
         }
+    }
+
+    /**
+     * 模型管理-删除模型
+     *
+     * @param Request $request
+     * @param integer $id
+     * @return array
+     */
+    public function delete(Request $request, $id)
+    {
+        $password = $request->post('password');
+        if (!$password) {
+            return [
+                'code' => 1,
+                'msg' => '密码不能为空',
+            ];
+        }
+        if (!Auth::guard('admin')->attempt(['id' => $request->user()->id, 'password' => $password])) {
+            return [
+                'code' => 2,
+                'msg' => '密码错误',
+            ];
+        }
+        EntityRepository::delete($id);
+        return [
+            'code' => 0,
+            'msg' => '删除成功',
+            'reload' => true
+        ];
     }
 }

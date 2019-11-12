@@ -17,6 +17,9 @@ var ajax_options = {
                 layer.msg(parse.errors[key][0], {shift: 6});
             }
             return false;
+        } else if (resp.status === 404) {
+            layer.msg('资源不存在', {icon: 5});
+            return false;
         } else {
             var parse = $.parseJSON(resp.responseText);
             if (parse && parse.err) {
