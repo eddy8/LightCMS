@@ -91,7 +91,7 @@ class EntityFieldControllerTest extends TestCase
         $this->assertFalse(Schema::hasColumn($this->entity->table_name, $this->filedName));
     }
 
-    public function testEntityContentCanBeCreatedAndEditedAndListed()
+    public function testEntityContentCanBeCreatedAndEditedAndListedAndDeleted()
     {
         // 字段可编辑
         $this->createEntityField(true, true);
@@ -119,6 +119,10 @@ class EntityFieldControllerTest extends TestCase
             ->get('/admin/entity/' . $this->entity->id . '/contents/list/?action=search&title=修改标题');
         $response->assertJson(['code' => 0]);
         $response->assertJsonFragment(['title' => $updateData['title']]);
+
+        $response = $this->actingAs($this->user, 'admin')
+            ->post('/admin/entity/' . $this->entity->id . '/contents/1', ['_method' => 'DELETE']);
+        $response->assertJson(['code' => 0]);
     }
 
     public function testEntityContentCanNotBeEditedWhenFieldIsNotEditable()
