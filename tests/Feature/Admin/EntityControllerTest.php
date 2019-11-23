@@ -65,10 +65,6 @@ class EntityControllerTest extends TestCase
         $response->assertJson(['code' => 2]);
     }
 
-    /**
-     * @expectedException Illuminate\Database\QueryException
-     * @expectedExceptionMessage no such table
-     */
     public function testEntityCanBeDeleted()
     {
         $entity = factory(Entity::class)->create();
@@ -85,6 +81,9 @@ class EntityControllerTest extends TestCase
         $response = $this->actingAs($user, 'admin')->delete('/admin/entities/1', ['password' => 'password']);
         $response->assertJson(['code' => 0]);
         $this->assertDatabaseMissing('entities', ['table_name' => $entity->table_name]);
+
+        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectExceptionMessage('no such table');
         DB::table($entity->table_name)->find(1);
     }
 
