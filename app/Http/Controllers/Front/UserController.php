@@ -68,7 +68,7 @@ class UserController extends BaseController
 
         // 检查用户是否已被禁用
         $user = $this->guard()->getProvider()->retrieveByCredentials($this->credentials($request));
-        if ($user && $user->status === User::STATUS_DISABLE) {
+        if ($user && $user->status == User::STATUS_DISABLE) {
             return [
                 'code' => 1,
                 'msg' => '用户被禁用'

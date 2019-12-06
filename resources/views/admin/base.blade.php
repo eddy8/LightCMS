@@ -48,7 +48,7 @@
                     @if($k != '')
                 <li class="layui-nav-item layui-nav-itemed">
                     @foreach($menu as $sub)
-                        @if($sub['status'] === App\Model\Admin\Menu::STATUS_ENABLE && ($isSuperAdmin || $user->can($sub['name'])))
+                        @if(intval($sub['status']) === App\Model\Admin\Menu::STATUS_ENABLE && ($isSuperAdmin || $user->can($sub['name'])))
                             <a class="" href="javascript:;">{{ $k }}</a>
                             @break
                         @endif
@@ -56,7 +56,7 @@
 
                     <dl class="layui-nav-child">
                         @foreach($menu as $sub)
-                            @if($sub['status'] === App\Model\Admin\Menu::STATUS_ENABLE && ($isSuperAdmin || $user->can($sub['name'])))
+                            @if(intval($sub['status']) === App\Model\Admin\Menu::STATUS_ENABLE && ($isSuperAdmin || $user->can($sub['name'])))
                                 <dd @if($sub['route'] == $light_cur_route) class="layui-this" @endif><a href="{{ $sub['url'] }}">{{ $sub['name'] }}</a></dd>
                             @endif
                         @endforeach
@@ -70,7 +70,7 @@
                             <a class="" href="javascript:;">系统菜单</a>
                             <dl class="layui-nav-child">
                                 @foreach($autoMenu as $v)
-                                    <dd @if(isset($entity) && $v['id'] === intval($entity)) class="layui-this" @endif><a href="{{ $v['url'] }}">{{ $v['name'] }}</a></dd>
+                                    <dd @if(isset($entity) && $v['id'] == intval($entity)) class="layui-this" @endif><a href="{{ $v['url'] }}">{{ $v['name'] }}</a></dd>
                                 @endforeach
                             </dl>
                         </li>

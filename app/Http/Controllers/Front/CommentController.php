@@ -59,7 +59,7 @@ class CommentController extends BaseController
         }
 
         try {
-            $rid = $pid === 0 ? $pid : ($parentComment->rid === 0 ? $parentComment->id : $parentComment->rid);
+            $rid = $pid === 0 ? $pid : ($parentComment->rid == 0 ? $parentComment->id : $parentComment->rid);
             \App\Repository\Admin\CommentRepository::add([
                 'entity_id' => $entityId,
                 'content_id' => $contentId,
