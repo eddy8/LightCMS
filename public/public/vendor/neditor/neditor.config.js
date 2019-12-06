@@ -40,7 +40,16 @@
         scrawlUrlPrefix: "",
         videoUrlPrefix: "",
         fileUrlPrefix: "",
-        catcherLocalDomain: "",
+
+         /* 抓取远程图片配置 */
+        catcherLocalDomain : ["127.0.0.1", "localhost", "img.baidu.com"],
+        catcherActionName : "catchimage", /* 执行抓取远程图片的action名称 */
+        catcherFieldName : "file", /* 提交的图片列表表单名称 */
+        catcherPathFormat : "/ueditor/php/upload/image/{yyyy}{mm}{dd}/{time}{rand =>6}", /* 上传保存路径,可以自定义保存路径和文件名格式 */
+        catcherUrlPrefix : "", /* 图片访问路径前缀 */
+        catcherMaxSize : 2048000, /* 上传大小限制，单位B */
+        catcherAllowFiles : [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp"], /* 抓取图片格式显示 */
+
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的重新定义
         toolbars: [
                 [
