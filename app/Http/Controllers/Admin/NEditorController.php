@@ -71,6 +71,32 @@ class NEditorController extends Controller
         ];
     }
 
+    public function catchImage(Request $request)
+    {
+        if (config('light.image_upload.driver') !== 'local') {
+            $class = config('light.image_upload.class');
+            return call_user_func([new $class, 'catchImage'], $request);
+        }
+
+        $files = (array) $request->post('file');
+        $urls = [];
+        foreach ($files as $v) {
+            $extention = pathinfo(parse_url($v, PHP_URL_PATH), PATHINFO_EXTENSION);
+            $path = date('Ym') . '/' . md5($v) . '.' . ($extention == '' ? 'jpg' : $extention);
+            Storage::disk(config('light.neditor.disk'))
+                ->put($path, file_get_contents($v));
+            $urls[] = [
+                'url' => Storage::disk(config('light.neditor.disk'))->url($path),
+                'source' => $v,
+                'state' => 'SUCCESS'
+            ];
+        }
+
+        return [
+           'list' => $urls
+        ];
+    }
+
     protected function isValidImage(UploadedFile $file)
     {
         if (!$file->isValid() ||
