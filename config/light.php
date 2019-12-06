@@ -88,7 +88,7 @@ return [
         'disk' => 'admin_img',
         'upload' => [
             'imageMaxSize' => 8 * 1024 * 1024, /* 上传大小限制，单位B */
-            'imageAllowFiles' => ['.png', '.jpg', '.jpeg', '.gif', '.bmp'], /* 上传图片格式显示 */
+            'imageAllowFiles' => ['.png', '.jpg', '.jpeg', '.gif', '.bmp', ".webp"], /* 上传图片格式显示 */
         ]
     ],
     'image_upload' => [
