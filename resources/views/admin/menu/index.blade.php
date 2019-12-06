@@ -91,7 +91,7 @@
 </script>
 <script type="text/html" id="statusTemplet">
     <input type="checkbox" name="status" lay-skin="switch" lay-text="是|否"
-    <%# if (d.status === 1) { %>
+    <%# if (d.status == 1) { %>
     checked
     <%# } %>
     >

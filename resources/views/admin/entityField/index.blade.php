@@ -42,14 +42,14 @@
 </script>
 <script type="text/html" id="isShowTemplet">
     <input data-id="<% d.id %>" type="checkbox" name="is_show" lay-skin="switch" lay-text="是|否"
-    <%# if (d.is_show === 1) { %>
+    <%# if (d.is_show == 1) { %>
         checked
     <%# } %>
     >
 </script>
 <script type="text/html" id="isShowInlineTemplet">
     <input data-id="<% d.id %>" type="checkbox" name="is_show_inline" lay-skin="switch" lay-text="是|否"
-    <%# if (d.is_show_inline === 1) { %>
+    <%# if (d.is_show_inline == 1) { %>
         checked
     <%# } %>
     >

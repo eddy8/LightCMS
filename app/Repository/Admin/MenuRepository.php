@@ -144,7 +144,7 @@ class MenuRepository
 
                 $rootId = current($menu['path']);
                 foreach (self::getTree() as $v) {
-                    if ($v['id'] === $rootId) {
+                    if ($v['id'] == $rootId) {
                         return $v;
                     }
                 }

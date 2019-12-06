@@ -223,7 +223,7 @@ class MenuController extends Controller
                 try {
                     $model = MenuRepository::exist($k);
                     if ($model) {
-                        if ($model->is_lock_name === Menu::UNLOCK_NAME &&
+                        if ($model->is_lock_name == Menu::UNLOCK_NAME &&
                             ($model->name != $data['name'] || $model->group != $data['group'])) {
                             unset($data['status']);
                             MenuRepository::update($model->id, $data);
