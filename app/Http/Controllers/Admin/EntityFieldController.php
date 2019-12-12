@@ -25,7 +25,7 @@ class EntityFieldController extends Controller
     protected $formNames = [
         'name', 'type', 'comment', 'form_name', 'form_type', 'is_show', 'is_edit', 'is_required',
         'form_comment', 'entity_id', 'field_length', 'field_total', 'field_scale', 'order', 'form_params',
-        'default_value', 'is_show_inline'
+        'default_value', 'is_show_inline', 'form_default_value'
     ];
 
     public function __construct()

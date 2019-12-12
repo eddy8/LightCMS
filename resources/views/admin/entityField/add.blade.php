@@ -94,6 +94,12 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">表单默认值</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="form_default_value" autocomplete="off" class="layui-input" value="{{ $model->form_default_value ?? ''  }}" placeholder="新增内容时表单的默认初始值，仅支持简单表单类型">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">排序</label>
                         <div class="layui-input-inline">
                             <input type="number" name="order" required  lay-verify="required" autocomplete="off" class="layui-input" value="{{ $model->order ?? 77  }}">

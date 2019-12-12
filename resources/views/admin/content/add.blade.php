@@ -59,7 +59,7 @@
                                             <div class="layui-inline">
                                                 <label class="layui-form-label">{{ $inlineField->form_name }}</label>
                                                 <div class="layui-input-inline">
-                                                    <input type="text" name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$inlineField->name} ?? ''  }}" @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                                    <input type="text" name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$inlineField->name} ?? $inlineField->form_default_value  }}" @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                                 </div>
                                             </div>
                                             @break
@@ -69,7 +69,7 @@
                                                 <div class="layui-input-inline" style="z-index: {{99999 - ($inlineField->order + $inlineField->id)}}">
                                                     <select name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                                         @foreach(parseEntityFieldParams($inlineField->form_params) as $v)
-                                                            <option value="{{ $v[0] }}" @if(isset($model) && $v[0] == $model->{$inlineField->name}) selected @endif>{{ $v[1] }}</option>
+                                                            <option value="{{ $v[0] }}" @if((isset($model) && $v[0] == $model->{$inlineField->name}) || $v[0] == $inlineField->form_default_value) selected @endif>{{ $v[1] }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -90,7 +90,7 @@
                                                 <div class="layui-input-inline" style="width: 380px;z-index: {{99999 - ($field->order + $field->id)}}">
                                                     <select xm-select-search xm-select="select-{{ $inlineField->name }}" name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                                         @foreach(parseEntityFieldParams($inlineField->form_params) as $v)
-                                                            <option value="{{ $v[0] }}" @if(isset($model) && isChecked($v[0], $model->{$inlineField->name})) selected @endif>{{ $v[1] }}</option>
+                                                            <option value="{{ $v[0] }}" @if((isset($model) && isChecked($v[0], $model->{$inlineField->name})) || isChecked($v[0], $inlineField->form_default_value)) selected @endif>{{ $v[1] }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -126,7 +126,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                        <input type="text" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? $field->form_default_value  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                     </div>
                                 </div>
                                 @break
@@ -134,7 +134,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                        <textarea name="{{ $field->name }}" placeholder="请输入内容" class="layui-textarea" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>{{ $model->{$field->name} ?? ''  }}</textarea>
+                                        <textarea name="{{ $field->name }}" placeholder="请输入内容" class="layui-textarea" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>{{ $model->{$field->name} ?? $field->form_default_value  }}</textarea>
                                     </div>
                                 </div>
                                 @break
@@ -167,7 +167,7 @@
                                             delay: 1000,
                                         },
                                     });
-                                    simplemde_{{ $field->name }}.value(`{!! $model->{$field->name} ?? '' !!}`);
+                                    simplemde_{{ $field->name }}.value(`{!! $model->{$field->name} ?? $field->form_default_value !!}`);
                                     var inlineAttachmentConfig = {
                                         uploadUrl: "{{ route('admin::neditor.serve', ['type' => 'uploadimage']) }}",//后端上传图片地址
                                         uploadFieldName: 'file',          //上传的文件名
@@ -200,7 +200,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                    <script name="{{ $field->name }}" id="editor-{{ $field->name }}" type="text/plain" style="height:600px;">{!! $model->{$field->name} ?? '' !!}</script>
+                                    <script name="{{ $field->name }}" id="editor-{{ $field->name }}" type="text/plain" style="height:600px;">{!! $model->{$field->name} ?? $field->form_default_value !!}</script>
                                     </div></div>
                                 <script>
                                     //实例化编辑器
@@ -218,7 +218,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
-                                        <input type="password" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                        <input type="password" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? $field->form_default_value  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                     </div>
                                 </div>
                                 @break
@@ -250,8 +250,8 @@
                                             });
                                         </script>
                                         <div style="float: left;width: 50%">
-                                        <input type="input" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? ''  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif></div>
-                                        <div><img data-action="zoom" style="max-width: 200px;height: auto" src="{{ $model->{$field->name} ?? ''  }}" id="img-{{ $field->name }}"></div>
+                                        <input type="input" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? $field->form_default_value  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif></div>
+                                        <div><img data-action="zoom" style="max-width: 200px;height: auto" src="{{ $model->{$field->name} ?? $field->form_default_value  }}" id="img-{{ $field->name }}"></div>
                                     </div>
                                 </div>
                                 @break
@@ -342,7 +342,7 @@
                                         <div class="layui-form-item">
                                             <label class="layui-form-label">{{ $field->form_name }}</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="{{ $field->name }}" class="layui-input" id="{{ $field->name }}" value="{{ $model->{$field->name} ?? '' }}">
+                                                <input type="text" name="{{ $field->name }}" class="layui-input" id="{{ $field->name }}" value="{{ $model->{$field->name} ?? $field->form_default_value }}">
                                             </div>
                                         </div>
                                         <script>
@@ -359,7 +359,7 @@
                                         <div class="layui-form-item">
                                             <label class="layui-form-label">{{ $field->form_name }}</label>
                                             <div class="layui-input-inline">
-                                                <input type="text" name="{{ $field->name }}" class="layui-input" id="{{ $field->name }}" value="{{ $model->{$field->name} ?? '' }}">
+                                                <input type="text" name="{{ $field->name }}" class="layui-input" id="{{ $field->name }}" value="{{ $model->{$field->name} ?? $field->form_default_value }}">
                                             </div>
                                         </div>
                                         <script>
@@ -376,7 +376,7 @@
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
                                         @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                            <input type="checkbox" name="{{ $field->name }}[]" value="{{ $v[0] }}" title="{{ $v[1] }}" lay-skin="primary" @if(isset($model) && isChecked($v[0], $model->{$field->name})) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                            <input type="checkbox" name="{{ $field->name }}[]" value="{{ $v[0] }}" title="{{ $v[1] }}" lay-skin="primary" @if((isset($model) && isChecked($v[0], $model->{$field->name})) || isChecked($v[0], $field->form_default_value)) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                         @endforeach
                                     </div>
                                 </div>
@@ -386,7 +386,7 @@
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
                                         @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                            <input type="radio" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ $v[1] }}" @if((isset($model) && $v[0] == $model->{$field->name}) || $loop->first) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                            <input type="radio" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ $v[1] }}" @if((isset($model) && $v[0] == $model->{$field->name}) || ($v[0] == $field->form_default_value) || $loop->first) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                         @endforeach
                                     </div>
                                 </div>
@@ -397,7 +397,7 @@
                                     <div class="layui-input-block" style="width: 400px;z-index: {{99999 - ($field->order + $field->id)}}">
                                         <select name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                         @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                            <option value="{{ $v[0] }}" @if(isset($model) && $v[0] == $model->{$field->name}) selected @endif>{{ $v[1] }}</option>
+                                            <option value="{{ $v[0] }}" @if((isset($model) && $v[0] == $model->{$field->name}) || $v[0] == $field->form_default_value) selected @endif>{{ $v[1] }}</option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -418,7 +418,7 @@
                                         <div class="layui-input-block" style="width: 600px;z-index: {{99999 - ($field->order + $field->id)}}">
                                             <select xm-select-search xm-select="select-{{ $field->name }}" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                                 @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                                    <option value="{{ $v[0] }}" @if(isset($model) && isChecked($v[0], $model->{$field->name})) selected @endif>{{ $v[1] }}</option>
+                                                    <option value="{{ $v[0] }}" @if((isset($model) && isChecked($v[0], $model->{$field->name})) || isChecked($v[0], $field->form_default_value)) selected @endif>{{ $v[1] }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
