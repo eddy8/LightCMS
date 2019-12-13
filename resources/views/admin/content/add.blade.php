@@ -69,7 +69,7 @@
                                                 <div class="layui-input-inline" style="z-index: {{99999 - ($inlineField->order + $inlineField->id)}}">
                                                     <select name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                                         @foreach(parseEntityFieldParams($inlineField->form_params) as $v)
-                                                            <option value="{{ $v[0] }}" @if((isset($model) && $v[0] == $model->{$inlineField->name}) || $v[0] == $inlineField->form_default_value) selected @endif>{{ $v[1] }}</option>
+                                                            <option value="{{ $v[0] }}" @if((isset($model) && $v[0] == $model->{$inlineField->name}) || (!isset($model) && $v[0] == $inlineField->form_default_value)) selected @endif>{{ $v[1] }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -90,7 +90,7 @@
                                                 <div class="layui-input-inline" style="width: 380px;z-index: {{99999 - ($field->order + $field->id)}}">
                                                     <select xm-select-search xm-select="select-{{ $inlineField->name }}" name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                                         @foreach(parseEntityFieldParams($inlineField->form_params) as $v)
-                                                            <option value="{{ $v[0] }}" @if((isset($model) && isChecked($v[0], $model->{$inlineField->name})) || isChecked($v[0], $inlineField->form_default_value)) selected @endif>{{ $v[1] }}</option>
+                                                            <option value="{{ $v[0] }}" @if((isset($model) && isChecked($v[0], $model->{$inlineField->name})) || (!isset($model) && isChecked($v[0], $inlineField->form_default_value))) selected @endif>{{ $v[1] }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -376,7 +376,7 @@
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
                                         @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                            <input type="checkbox" name="{{ $field->name }}[]" value="{{ $v[0] }}" title="{{ $v[1] }}" lay-skin="primary" @if((isset($model) && isChecked($v[0], $model->{$field->name})) || isChecked($v[0], $field->form_default_value)) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                            <input type="checkbox" name="{{ $field->name }}[]" value="{{ $v[0] }}" title="{{ $v[1] }}" lay-skin="primary" @if((isset($model) && isChecked($v[0], $model->{$field->name})) || (!isset($model) && isChecked($v[0], $field->form_default_value))) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                         @endforeach
                                     </div>
                                 </div>
@@ -386,7 +386,7 @@
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
                                         @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                            <input type="radio" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ $v[1] }}" @if((isset($model) && $v[0] == $model->{$field->name}) || ($v[0] == $field->form_default_value) || $loop->first) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                            <input type="radio" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ $v[1] }}" @if((isset($model) && $v[0] == $model->{$field->name}) || (!isset($model) && $v[0] == $field->form_default_value) || $loop->first) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                         @endforeach
                                     </div>
                                 </div>
@@ -397,7 +397,7 @@
                                     <div class="layui-input-block" style="width: 400px;z-index: {{99999 - ($field->order + $field->id)}}">
                                         <select name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                         @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                            <option value="{{ $v[0] }}" @if((isset($model) && $v[0] == $model->{$field->name}) || $v[0] == $field->form_default_value) selected @endif>{{ $v[1] }}</option>
+                                            <option value="{{ $v[0] }}" @if((isset($model) && $v[0] == $model->{$field->name}) || (!isset($model) && $v[0] == $field->form_default_value)) selected @endif>{{ $v[1] }}</option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -418,7 +418,7 @@
                                         <div class="layui-input-block" style="width: 600px;z-index: {{99999 - ($field->order + $field->id)}}">
                                             <select xm-select-search xm-select="select-{{ $field->name }}" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                                 @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                                    <option value="{{ $v[0] }}" @if((isset($model) && isChecked($v[0], $model->{$field->name})) || isChecked($v[0], $field->form_default_value)) selected @endif>{{ $v[1] }}</option>
+                                                    <option value="{{ $v[0] }}" @if((isset($model) && isChecked($v[0], $model->{$field->name})) || (!isset($model) && isChecked($v[0], $field->form_default_value))) selected @endif>{{ $v[1] }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
