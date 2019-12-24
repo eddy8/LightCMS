@@ -15,6 +15,7 @@
 * 基于`RBAC`的权限管理
 * 管理员、日志、菜单管理
 * 分类管理
+* 标签管理
 * 配置管理
 * 模型、模型字段、模型内容管理（后台可自定义业务模型，方便垂直行业快速开发）
 * 会员管理
@@ -132,6 +133,7 @@ public function index()
 // 获取 key 为 SITE_NAME 的配置项值
 $siteName = config('light_config.SITE_NAME');
 ```
+也可以直接调用全局函数`function getConfig($key, $default = null)`获取配置。
 
 ## 标签管理
 模型内容**打标签**是站点的一项常用功能，`lightCMS`内置了打标签功能。添加模型字段时选择表单类型为`标签输入框`即可。
@@ -212,7 +214,7 @@ php artisan light:basic config 配置
     public static $listField = [
         // pid 是列表字段名（不一定是模型数据库表的字段名，只要列表数据接口返回数据包含该字段即可）;title、width、sort 等属性参考 layui 的 table 组件表头参数配置即可
         'pid' => ['title' => '父ID', 'width' => 80],
-        'entityName' => ['title' => '模型', 'width' => 100], 
+        'entityName' => ['title' => '模型', 'width' => 100],
         'userName' => ['title' => '用户名', 'width' => 100],
         'content' => ['title' => '内容', 'width' => 400],
         'reply_count' => ['title' => '回复数', 'width' => 80, 'sort' => true],
