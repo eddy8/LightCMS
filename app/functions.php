@@ -4,6 +4,20 @@ use Illuminate\Database\Eloquent\Model;
 use App\Foundation\Tire;
 use Illuminate\Support\Facades\Cache;
 use App\Model\Admin\SensitiveWord;
+use App\Model\Admin\Config;
+
+/**
+ * 直接从数据库获取系统后台配置
+ *
+ * @param string $key key
+ * @param mixed $default key不存在时的默认值
+ * @return mixed key对应的value
+ */
+function getConfig($key, $default = null)
+{
+    $v = Config::where('key', $key)->value('value');
+    return !is_null($v) ? $v : $default;
+}
 
 function parseEntityFieldParams($params)
 {
