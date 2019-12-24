@@ -21,6 +21,10 @@ function getConfig($key, $default = null)
 
 function parseEntityFieldParams($params)
 {
+    if (strpos($params, 'getFormItemsFrom') === 0 && function_exists($params)) {
+        $params = call_user_func($params);
+    }
+
     $items = explode("\n", $params);
     return array_map(function ($item) {
         return explode("=", $item);
