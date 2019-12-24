@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Foundation\Tire;
 use Illuminate\Support\Facades\Cache;
 use App\Model\Admin\SensitiveWord;
-use App\Model\Admin\Config;
+use App\Model\Admin\Config as SiteConfig;
 
 /**
  * 直接从数据库获取系统后台配置
@@ -15,7 +15,7 @@ use App\Model\Admin\Config;
  */
 function getConfig($key, $default = null)
 {
-    $v = Config::where('key', $key)->value('value');
+    $v = SiteConfig::where('key', $key)->value('value');
     return !is_null($v) ? $v : $default;
 }
 
