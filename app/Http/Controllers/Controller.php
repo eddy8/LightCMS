@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\View;
+use App\Repository\Admin\EntityRepository;
 
 class Controller extends BaseController
 {
@@ -39,6 +40,9 @@ class Controller extends BaseController
             View::share('light_menu', []);
         } else {
             View::share('light_menu', $currentRootMenu);
+            if ($route !== 'admin::aggregation' && $currentRootMenu['route'] === 'admin::aggregation') {
+                View::share('autoMenu', EntityRepository::systemMenu());
+            }
         }
 
         $this->formNames = array_merge($this->formNames, ['created_at']);
