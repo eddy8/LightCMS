@@ -88,6 +88,7 @@ class EntityFieldController extends Controller
             $data['is_edit'] = $data['is_edit'] ?? EntityField::EDIT_DISABLE;
             $data['is_required'] = $data['is_required'] ?? EntityField::REQUIRED_DISABLE;
             $data['is_show_inline'] = $data['is_show_inline'] ?? EntityField::SHOW_NOT_INLINE;
+            $modifyDB = $request->post('is_modify_db');
 
             $table = EntityRepository::find($data['entity_id']);
             if (!$table) {
@@ -96,7 +97,7 @@ class EntityFieldController extends Controller
                     'msg' => '新增失败：模型不存在',
                 ];
             }
-            if (Schema::hasColumn($table->table_name, $data['name'])) {
+            if ($modifyDB && Schema::hasColumn($table->table_name, $data['name'])) {
                 return [
                     'code' => 2,
                     'msg' => '新增失败：字段已存在',
@@ -109,14 +110,14 @@ class EntityFieldController extends Controller
                 ];
             }
             // 一个模型只能有一个 inputTags 表单类型
-            if (EntityFieldRepository::formTypeBeUnique($data['form_type']) && EntityFieldRepository::getInputTagsField($data['entity_id'])) {
+            if (EntityFieldRepository::formTypeBeUnique($data['form_type'])
+                && EntityFieldRepository::getInputTagsField($data['entity_id'])) {
                 return [
                     'code' => 4,
                     'msg' => '新增失败：一个模型只能有一个标签输入框表单类型',
                 ];
             }
 
-            $modifyDB = $request->post('is_modify_db');
             // inputTags类型表单不需要添加数据库字段
             if (in_array($data['form_type'], ['inputTags'], true)) {
                 $modifyDB = false;
