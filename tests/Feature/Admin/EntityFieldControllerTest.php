@@ -116,7 +116,9 @@ class EntityFieldControllerTest extends TestCase
         $this->assertDatabaseHas($this->entity->table_name, ['title' => $updateData['title']]);
 
         $response = $this->actingAs($this->user, 'admin')
-            ->get('/admin/entity/' . $this->entity->id . '/contents/list/?action=search&title=修改标题');
+            ->get(
+                '/admin/entity/' . $this->entity->id . '/contents/list/?action=search&title=' . urlencode($updateData['title'])
+            );
         $response->assertJson(['code' => 0]);
         $response->assertJsonFragment(['title' => $updateData['title']]);
 
