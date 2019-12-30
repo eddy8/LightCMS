@@ -115,9 +115,9 @@ class Tire
             return ord($utf8_str);
         }
 
-        $ascii = (ord(@$utf8_str{0}) & 0xF) << 12;
-        $ascii |= (ord(@$utf8_str{1}) & 0x3F) << 6;
-        $ascii |= (ord(@$utf8_str{2}) & 0x3F);
+        $ascii = (ord(@$utf8_str[0]) & 0xF) << 12;
+        $ascii |= (ord(@$utf8_str[1]) & 0x3F) << 6;
+        $ascii |= (ord(@$utf8_str[2]) & 0x3F);
 
         return $ascii;
     }
