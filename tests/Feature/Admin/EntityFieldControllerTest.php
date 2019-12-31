@@ -10,6 +10,7 @@ use App\Repository\Admin\ContentRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
+use Illuminate\Database\Schema\Blueprint;
 
 class EntityFieldControllerTest extends TestCase
 {
@@ -38,7 +39,7 @@ class EntityFieldControllerTest extends TestCase
             [
                 'entity_id' => $this->entity->id,
                 'name' => 'title',
-                'is_show' => EntityField::SHOW_DISABLE,
+                'is_show' => EntityField::SHOW_ENABLE,
                 'is_edit' => EntityField::EDIT_DISABLE,
                 'is_required' => EntityField::REQUIRED_DISABLE,
                 'is_show_inline' => EntityField::SHOW_NOT_INLINE,
@@ -82,7 +83,7 @@ class EntityFieldControllerTest extends TestCase
             [
                 'entity_id' => $this->entity->id,
                 'name' => 'title',
-                'is_show' => EntityField::SHOW_DISABLE,
+                'is_show' => EntityField::SHOW_ENABLE,
                 'is_edit' => EntityField::EDIT_DISABLE,
                 'is_required' => EntityField::REQUIRED_DISABLE,
                 'is_show_inline' => EntityField::SHOW_NOT_INLINE,
@@ -147,6 +148,58 @@ class EntityFieldControllerTest extends TestCase
         $this->assertDatabaseMissing($this->entity->table_name, ['title' => $updateData['title']]);
     }
 
+    public function testEntityFieldCanBeCreatedWhenDBFieldHasExist()
+    {
+        Schema::table($this->entity->table_name, function (Blueprint $table) {
+            $table->string('exist_db_field')->default('');
+        });
+
+        $data = [
+            'entity_id' => $this->entity->id,
+            'name' => 'exist_db_field',
+            'type' => 'string',
+            'form_name' => '已存在字段',
+            'form_type' => 'input',
+            'order' => 77,
+            'field_length' => '',
+            'field_total' => '',
+            'field_scale' => '',
+            'comment' => '',
+            'default_value' => '',
+            'is_edit' => EntityField::EDIT_ENABLE,
+            'is_modify_db' => 1,
+        ];
+        $response = $this->actingAs($this->user, 'admin')
+            ->post('/admin/entityFields', $data);
+        $response->assertJson(['code' => 2]);
+
+        unset($data['is_modify_db']);
+        $response = $this->actingAs($this->user, 'admin')
+            ->post('/admin/entityFields', $data);
+        $response->assertJson(['code' => 0]);
+    }
+
+    public function testEntityFieldFormDefaultValueIsOK()
+    {
+        $this->createEntityField(true, true);
+        $response = $this->actingAs($this->user, 'admin')
+            ->get(route('admin::content.create', ['entity' => $this->entity->id]));
+        $response->assertSee('<option value="1"  selected >女</option>');
+        $response->assertSee('value="默认标题"');
+
+        $data = [
+            'title' => '测试标题',
+            'tags' => '[{"value":"tag1"},{"value":"tag2"}]',
+            'gender' => 0
+        ];
+        $this->actingAs($this->user, 'admin')
+            ->post('/admin/entity/' . $this->entity->id . '/contents', $data);
+        $response = $this->actingAs($this->user, 'admin')
+            ->get(route('admin::content.edit', ['entity' => $this->entity->id, 'id' => 1]));
+        $response->assertSee('<option value="0"  selected >男</option>');
+        $response->assertSee('value="测试标题"');
+    }
+
     protected function createEntityField($modifyDB = true, $is_edit = false)
     {
         $data = [
@@ -162,6 +215,8 @@ class EntityFieldControllerTest extends TestCase
             'comment' => '',
             'default_value' => '',
             'is_edit' => $is_edit === true ? EntityField::EDIT_ENABLE : EntityField::EDIT_DISABLE,
+            'form_default_value' => '默认标题',
+            'is_show' => EntityField::SHOW_ENABLE,
         ];
         if ($modifyDB) {
             $data['is_modify_db'] = 1;
@@ -204,6 +259,8 @@ class EntityFieldControllerTest extends TestCase
             'form_params' => '0=男' . PHP_EOL . '1=女',
             'is_edit' => EntityField::EDIT_ENABLE,
             'is_modify_db' => 1,
+            'form_default_value' => '1',
+            'is_show' => EntityField::SHOW_ENABLE,
         ];
         return $this->actingAs($this->user, 'admin')
             ->post('/admin/entityFields', $data);
