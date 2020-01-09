@@ -23,7 +23,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">值</label>
                         <div class="layui-input-block">
-                            <textarea name="value" required lay-verify="required" class="layui-textarea">{{ $model->value ?? ''  }}</textarea>
+                            <textarea name="value" class="layui-textarea">{{ $model->value ?? ''  }}</textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">

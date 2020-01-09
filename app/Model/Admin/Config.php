@@ -13,10 +13,11 @@ class Config extends Model
     ];
 
     public static $listField = [
+        'group' => '分组',
         'name' => '名称',
         'key' => '标志符',
         'type' => '类型',
-        'group' => '分组'
+        'value' => '值',
     ];
 
     const TYPE_NUM = 0;
