@@ -29,7 +29,7 @@ class ConfigRequest extends FormRequest
         $rules = [
             'name' => 'required|max:50',
             'key' => ['required', 'max:100', 'regex:/^[\w]+$/'],
-            'value' => 'required|max:2048',
+            'value' => 'max:2048',
             'type' => [
                 Rule::in(array_keys(Config::$types)),
             ],
