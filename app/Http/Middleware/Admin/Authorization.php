@@ -22,7 +22,7 @@ class Authorization
         $user = Auth::guard($guard)->user();
         $route = Route::currentRouteName();
         $permission = Menu::where('route', $route)->first();
-        if (!in_array($user->id, config('light.superAdmin')) && !$user->can($permission->name)) {
+        if (!in_array($user->id, config('light.superAdmin')) && (!$permission || !$user->can($permission->name))) {
             if ($request->expectsJson()) {
                 return response()->json(['code' => 401, 'msg' => "未授权操作（路由别名：{$route}）"], 401);
             }
