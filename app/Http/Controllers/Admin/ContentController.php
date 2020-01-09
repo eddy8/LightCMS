@@ -65,7 +65,7 @@ class ContentController extends Controller
     }
 
     /**
-     * 内容列表数据接口
+     * 内容管理-内容列表数据接口
      *
      * @param Request $request
      * @param integer $entity
