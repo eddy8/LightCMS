@@ -36,7 +36,7 @@ class UserController extends Controller
     }
 
     /**
-     * 会员列表数据接口
+     * 会员管理-会员列表数据接口
      *
      * @param Request $request
      * @return array
