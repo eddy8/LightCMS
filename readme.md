@@ -6,6 +6,8 @@
 
 `lightCMS`基于`Laravel 6.x`开发，前端框架基于`layui`。
 
+演示站点：[LightCMS Demo](http://lightcms.bituier.com/admin/login)。登录信息：admin/admin。请勿存储/删除重要数据，数据库会定时重置。
+
 `LightCMS&Laravel`学习交流QQ群：**972796921**
 
 **注意：如果想使用基于`Laravel 5.5`的版本，可使用`laravel-5.5`分支。**
