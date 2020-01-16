@@ -37,7 +37,7 @@ class CommentController extends Controller
     }
 
     /**
-     * 评论列表数据接口
+     * 评论管理-评论列表数据接口
      *
      * @param Request $request
      * @return array

@@ -32,7 +32,7 @@ class LogController extends Controller
     }
 
     /**
-     * 日志列表数据接口
+     * 日志管理-日志列表数据接口
      *
      * @param Request $request
      * @return array
