@@ -35,7 +35,7 @@ class TemplateController extends Controller
     }
 
     /**
-     * 模板列表数据接口
+     * 模板管理-模板列表数据接口
      *
      * @param Request $request
      * @return array

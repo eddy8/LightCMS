@@ -37,7 +37,7 @@ class TagController extends Controller
     }
 
     /**
-     * 标签列表数据接口
+     * 标签管理-标签列表数据接口
      *
      * @param Request $request
      * @return array

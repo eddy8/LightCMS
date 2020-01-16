@@ -47,7 +47,7 @@ class EntityFieldController extends Controller
     }
 
     /**
-     * 模型字段列表数据接口
+     * 模型字段管理-模型字段列表数据接口
      *
      * @param Request $request
      * @return array

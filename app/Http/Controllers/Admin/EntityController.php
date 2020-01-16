@@ -40,7 +40,7 @@ class EntityController extends Controller
     }
 
     /**
-     * 模型列表数据接口
+     * 模型管理-模型列表数据接口
      *
      * @param Request $request
      * @return array
