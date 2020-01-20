@@ -33,6 +33,7 @@ class EntityRepository
             xssFilter($item);
             $item->editUrl = route('admin::entity.edit', ['id' => $item->id]);
             $item->deleteUrl = route('admin::entity.delete', ['id' => $item->id]);
+            $item->copyUrl = route('admin::entity.copy', ['id' => $item->id]);
             $item->fieldUrl = route('admin::entityField.index') . '?entity_id=' . $item->id;
             $item->contentUrl = route('admin::content.index', ['entity' => $item->id]);
             $item->commentListUrl = route('admin::comment.index', ['entity_id' => $item->id]);
@@ -77,6 +78,37 @@ class EntityRepository
         } catch (\Exception $e) {
             $entity->delete();
             throw new CreateTableException("创建数据库表异常");
+        }
+    }
+
+    public static function copy($tableName, $id)
+    {
+        $entity = Entity::findOrFail($id);
+        if (Schema::hasTable($tableName)) {
+            throw new \RuntimeException("数据库表已存在");
+        }
+
+        try {
+            // 仅在 Mysql 下测试通过，不支持 Sqlite
+            DB::statement("CREATE TABLE {$tableName} LIKE {$entity->table_name}");
+
+            DB::beginTransaction();
+
+            $newEntity = $entity->replicate();
+            $newEntity->table_name = $tableName;
+            $newEntity->name .= '_copy';
+            $newEntity->save();
+
+            EntityField::where('entity_id', $id)->get()->each(function ($item) use ($newEntity) {
+                $m = $item->replicate();
+                $m->entity_id = $newEntity->id;
+                $m->save();
+            });
+
+            DB::commit();
+        } catch (\Exception $e) {
+            Schema::dropIfExists($tableName);
+            throw $e;
         }
     }
 
