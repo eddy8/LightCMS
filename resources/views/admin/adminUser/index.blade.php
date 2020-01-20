@@ -20,8 +20,7 @@
                 <thead>
                 <tr>
                     <th lay-data="{field:'id', width:80, sort: true}">ID</th>
-                    <th lay-data="{field:'name'}">用户名</th>
-                    <th lay-data="{field:'statusText'}">状态</th>
+                    @include('admin.listHead', ['data' => App\Model\Admin\AdminUser::$listField])
                     <th lay-data="{field:'created_at'}">添加时间</th>
                     <th lay-data="{field:'updated_at'}">更新时间</th>
                     <th lay-data="{width:200, templet:'#action'}">操作</th>

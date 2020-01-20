@@ -39,6 +39,12 @@ class AdminUser extends Authenticatable
         ]
     ];
 
+    public static $listField = [
+        'name' => '用户名',
+        'statusText' => '状态',
+        'roleNames' => '角色',
+    ];
+
     public function comments()
     {
         return $this->hasMany('App\Model\Admin\Comment', 'user_id');

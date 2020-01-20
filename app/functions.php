@@ -36,8 +36,12 @@ function isChecked($value, $options)
     return in_array($value, explode(',', $options), true);
 }
 
-function xssFilter(Model $data)
+function xssFilter($data)
 {
+    if (is_string($data)) {
+        return htmlspecialchars($data, ENT_QUOTES | ENT_SUBSTITUTE, 'utf-8');
+    }
+
     $attributes = $data->getAttributes();
     foreach ($attributes as &$v) {
         if (is_string($v)) {

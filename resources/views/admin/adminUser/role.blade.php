@@ -11,7 +11,7 @@
                     <div class="layui-form-item">
                         <div class="layui-input-block">
                     @foreach($roles as $role)
-                    <input type="checkbox" name="role[{{$role->id}}]" title="{{ $role->name }}" value="{{ $role->name }}" lay-skin="primary" @if(in_array($role->name, $userRoles->toArray())) checked @endif>
+                    <input type="checkbox" name="role[{{$role->id}}]" title="{{ xssFilter($role->name) }}" value="{{ $role->name }}" lay-skin="primary" @if(in_array($role->name, $userRoles->toArray())) checked @endif>
                     @endforeach
                         </div>
                     </div>

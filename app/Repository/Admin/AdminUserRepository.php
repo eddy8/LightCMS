@@ -23,6 +23,7 @@ class AdminUserRepository
             ->where(function ($query) use ($condition) {
                 Searchable::buildQuery($query, $condition);
             })
+            ->with('roles')
             ->orderBy('id', 'desc')
             ->paginate($perPage);
         $data->transform(function ($item) {
@@ -32,6 +33,8 @@ class AdminUserRepository
             $item->statusText = $item->status == AdminUser::STATUS_ENABLE ?
                     '<span class="layui-badge layui-bg-green">启用</span>' :
                     '<span class="layui-badge">禁用</span>';
+            $item->roleNames = xssFilter($item->getRoleNames()->join(','));
+            unset($item->roles);
             return $item;
         });
 
