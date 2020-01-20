@@ -376,7 +376,7 @@
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
                                         @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                            <input type="checkbox" name="{{ $field->name }}[]" value="{{ $v[0] }}" title="{{ $v[1] }}" lay-skin="primary" @if((isset($model) && isChecked($v[0], $model->{$field->name})) || (!isset($model) && isChecked($v[0], $field->form_default_value))) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                            <input type="checkbox" name="{{ $field->name }}[]" value="{{ $v[0] }}" title="{{ xssFilter($v[1]) }}" lay-skin="primary" @if((isset($model) && isChecked($v[0], $model->{$field->name})) || (!isset($model) && isChecked($v[0], $field->form_default_value))) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                         @endforeach
                                     </div>
                                 </div>
@@ -386,7 +386,7 @@
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block">
                                         @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                            <input type="radio" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ $v[1] }}" @if((isset($model) && $v[0] == $model->{$field->name}) || (!isset($model) && $v[0] == $field->form_default_value) || $loop->first) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                            <input type="radio" name="{{ $field->name }}" value="{{ $v[0] }}" title="{{ xssFilter($v[1]) }}" @if((isset($model) && $v[0] == $model->{$field->name}) || (!isset($model) && $v[0] == $field->form_default_value) || $loop->first) checked @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                         @endforeach
                                     </div>
                                 </div>
