@@ -21,8 +21,9 @@
 @endsection
 <script type="text/html" id="action">
     <a href="<% d.editUrl %>" class="layui-table-link" title="编辑"><i class="layui-icon layui-icon-edit"></i></a>
-    <%#  if(d.enable_comment == {{ App\Model\Admin\Entity::COMMENT_ENABLE }}){ %> <a href="<% d.commentListUrl %>" class="layui-table-link" title="评论列表" style="margin-left: 5px"><i class="layui-icon layui-icon-reply-fill"></i></a> <%#  } %>
     <a href="javascript:;" class="layui-table-link" title="删除" style="margin-left: 10px" onclick="deleteEntity('<% d.deleteUrl %>')"><i class="layui-icon layui-icon-delete"></i></a>
+    <a href="javascript:;" class="layui-table-link" title="复制" style="margin-left: 10px" onclick="copyEntity('<% d.copyUrl %>')"><i class="layui-icon layui-icon-file"></i></a>
+    <%#  if(d.enable_comment == {{ App\Model\Admin\Entity::COMMENT_ENABLE }}){ %> <a href="<% d.commentListUrl %>" class="layui-table-link" title="评论列表" style="margin-left: 5px"><i class="layui-icon layui-icon-reply-fill"></i></a> <%#  } %>
     <a href="<% d.fieldUrl %>" class="layui-table-link" title="字段管理" style="margin-left: 5px">字段管理</a>
     <a href="<% d.contentUrl %>" class="layui-table-link" title="字段管理" style="margin-left: 5px">内容管理</a>
 </script>
@@ -50,6 +51,37 @@
                     $.ajax({
                         url: url,
                         data: {'_method': 'DELETE', 'password': value},
+                        success: function (result) {
+                            if (result.code !== 0) {
+                                layer.msg(result.msg, {shift: 6});
+                                return false;
+                            }
+                            layer.msg(result.msg, {icon: 1}, function () {
+                                if (result.reload) {
+                                    location.reload();
+                                }
+                                if (result.redirect) {
+                                    location.href = '{!! url()->previous() !!}';
+                                }
+                            });
+                        }
+                    });
+                    layer.close(index);
+                });
+
+                layer.close(index);
+            });
+        }
+
+        function copyEntity (url) {
+            layer.confirm('复制模型将新建一个和当前模型一样的模型（数据库表结构、表单定义等信息一致），确定要复制？', function(index){
+                layer.prompt({
+                    formType: 0,
+                    title: '请输入新模型的数据库表名称',
+                }, function(value, index, elem){
+                    $.ajax({
+                        url: url,
+                        data: {'table_name': value},
                         success: function (result) {
                             if (result.code !== 0) {
                                 layer.msg(result.msg, {shift: 6});

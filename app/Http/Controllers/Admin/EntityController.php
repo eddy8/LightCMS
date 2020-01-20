@@ -167,4 +167,37 @@ class EntityController extends Controller
             'reload' => true
         ];
     }
+
+    /**
+     * 模型管理-复制模型
+     *
+     * @param Request $request
+     * @param integer $id
+     * @return array
+     */
+    public function copy(Request $request, $id)
+    {
+        $this->validate($request, [
+            'table_name' => ['required', 'max:64', 'regex:/^[0-9a-zA-Z$_]+$/'],
+        ], [
+            'table_name.required' => '表名称不能为空',
+            'table_name.max' => '表名称长度不能超过64',
+            'table_name.regex' => '表名称格式有误',
+        ]);
+
+        try {
+            $tableName = $request->post('table_name');
+            EntityRepository::copy($tableName, $id);
+            return [
+                'code' => 0,
+                'msg' => '复制成功',
+                'reload' => true
+            ];
+        } catch (\RuntimeException $e) {
+            return [
+                'code' => 5,
+                'msg' => $e->getMessage(),
+            ];
+        }
+    }
 }

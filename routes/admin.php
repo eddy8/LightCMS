@@ -81,6 +81,9 @@ Route::group(
             // 内容
             Route::post('/entity/{entity}/batch', 'ContentController@batch')->name('content.batch');
 
+            // 模型
+            Route::post('/entities/{id}/copy', 'EntityController@copy')->name('entity.copy');
+
             // 自动加载生成的其它路由
             foreach (new DirectoryIterator(base_path('routes/auto')) as $f) {
                 if ($f->isDot()) {
