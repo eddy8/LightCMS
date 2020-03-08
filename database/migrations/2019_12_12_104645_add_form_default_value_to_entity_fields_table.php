@@ -26,7 +26,7 @@ class AddFormDefaultValueToEntityFieldsTable extends Migration
     public function down()
     {
         Schema::table('entity_fields', function (Blueprint $table) {
-            $table->dropColumn('votes');
+            $table->dropColumn('form_default_value');
         });
     }
 }
