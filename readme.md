@@ -151,6 +151,22 @@ $siteName = config('light_config.SITE_NAME');
 
 如果想自定义模型的保存和更新处理逻辑，只需在`app/Http/Controllers/Admin/Entity`目录下创建模型的控制器类即可，`save`和`update`方法实现可参考`app/Http/Controllers/Admin/ContentController`。类名的命名规则：**模型名+Controller**。例如`User`模型对应的控制器类为`UserController`。同理，如果想自定义列表页，按上述规则定义`index`和`list`方法即可。
 
+### 模型字段表单类型相关说明
+对于支持远程搜索的`select`表单类型，后端 API 搜索接口需返回的数据格式如下所示。code为0时, 表示正常, 反之异常。
+```json
+{
+    "code": 0,
+    "msg": "success",
+    "data": [
+        {"name":"北京","value":1,"selected":"","disabled":""},
+        {"name":"上海","value":2,"selected":"","disabled":""},
+        {"name":"广州","value":3,"selected":"selected","disabled":""},
+        {"name":"深圳","value":4,"selected":"","disabled":"disabled"},
+        {"name":"天津","value":5,"selected":"","disabled":""}
+    ]
+}
+```
+
 ## 系统日志
 `lightCMS`集成了一套简单的日志系统，默认情况下记录后台的所有操作相关信息，具体实现可以参考`Log`中间件。
 
