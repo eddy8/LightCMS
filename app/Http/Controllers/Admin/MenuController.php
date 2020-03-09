@@ -21,7 +21,9 @@ use Illuminate\Support\Facades\Route;
 
 class MenuController extends Controller
 {
-    protected $formNames = ['name', 'pid', 'status', 'order', 'route', 'group', 'remark', 'url', 'is_lock_name'];
+    protected $formNames = [
+        'name', 'pid', 'status', 'order', 'route', 'group', 'remark', 'url', 'is_lock_name', 'route_params'
+    ];
 
     public function __construct()
     {

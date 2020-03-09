@@ -41,6 +41,13 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">路由参数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="route_params" autocomplete="off" class="layui-input" value="{{ $model->route_params ?? ''  }}">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">用于精确控制同一路由下不同路由参数值的访问权限。填写格式：参数名称:参数值</div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">URL</label>
                         <div class="layui-input-block">
                             <input type="text" name="url" autocomplete="off" class="layui-input" value="{{ $model->url ?? ''  }}">
