@@ -36,7 +36,7 @@
                         @if($field->is_show == \App\Model\Admin\EntityField::SHOW_DISABLE)
                             @continue
                         @endif
-                        @if(in_array($field->form_type, ['input', 'select', 'reference_category', 'selectMulti'], true) && $field->is_show_inline == \App\Model\Admin\EntityField::SHOW_INLINE)
+                        @if(in_array($field->form_type, ['input', 'select', 'reference_category', 'selectMulti', 'selectSingleSearch', 'selectMultiSearch'], true) && $field->is_show_inline == \App\Model\Admin\EntityField::SHOW_INLINE)
                             @php
                                 $before = $current;
                                 $current = 1;
@@ -75,6 +75,15 @@
                                                 </div>
                                             </div>
                                             @break
+
+                                        @case('selectSingleSearch')
+                                        @include('admin.formModule.selectSearch', ['selectMultiItem' => false])
+                                        @break
+
+                                        @case('selectMultiSearch')
+                                        @include('admin.formModule.selectSearch', ['selectMultiItem' => true])
+                                        @break
+
                                         @case('selectMulti')
                                             @if(!isset($selects_init))
                                                 @php

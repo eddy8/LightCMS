@@ -73,13 +73,14 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">表单类型</label>
-                        <div class="layui-input-block" style="width: 400px">
+                        <div class="layui-input-inline" style="width: 400px">
                             <select name="form_type" lay-verify="required" lay-filter="form_type">
                                 @foreach(config('light.form_type') as $k => $v)
                                     <option value="{{ $k }}" @if(isset($model) && $model->form_type == $k) selected @endif>{{ $v }}</option>
                                 @endforeach
                             </select>
                         </div>
+                        <div class="layui-form-mid layui-word-aux"><span style="color:#FF5722">下拉选择（远程搜索）、下拉选择（多选，远程搜索）只支持行内展示</span></div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">表单备注</label>
@@ -90,7 +91,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">表单参数</label>
                         <div class="layui-input-block">
-                            <textarea name="form_params" class="layui-textarea" placeholder="对于表单类型为单选框、多选框、下拉选择的，需在此配置对应参数。参数格式为：key=value，多个以换行分隔。也可以填写自定义的函数名称，函数名称需以getFormItemsFrom开头，返回值需与前述数据格式一致。">{{ $model->form_params ?? ''  }}</textarea>
+                            <textarea name="form_params" class="layui-textarea" placeholder="对于表单类型为单选框、多选框、下拉选择的，需在此配置对应参数。参数格式为：key=value，多个以换行分隔。也可以填写自定义的函数名称，函数名称需以getFormItemsFrom开头，返回值需与前述数据格式一致。对于下拉选择远程搜索表单类型，需在此填写搜索接口URL地址，接口返回数据格式可参考文档说明。">{{ $model->form_params ?? ''  }}</textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">
