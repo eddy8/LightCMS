@@ -73,7 +73,7 @@ class MenuRepository
 
     public static function exist($route)
     {
-        return Menu::query()->where('route', $route)->first();
+        return Menu::query()->where('route', $route)->where('route_params', '')->first();
     }
 
     public static function tree($pid = 0, $allMenus = null, $level = 0, $path = [])
