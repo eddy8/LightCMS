@@ -200,6 +200,29 @@ class EntityFieldControllerTest extends TestCase
         $response->assertSee('value="测试标题"');
     }
 
+    public function testEntityFieldSelectMultiOfUnsignedIntegerIsOK()
+    {
+        $this->createEntityField(true, true);
+        $response = $this->actingAs($this->user, 'admin')
+            ->get(route('admin::content.create', ['entity' => $this->entity->id]));
+        $response->assertSee('<option value="1"  selected >推荐1</option>');
+        $response->assertSee('value="默认标题"');
+
+        $data = [
+            'title' => '测试标题',
+            'recommend' => '1,2',
+            'gender' => 0
+        ];
+        $this->actingAs($this->user, 'admin')
+            ->post('/admin/entity/' . $this->entity->id . '/contents', $data);
+        $this->assertDatabaseHas($this->entity->table_name, ['recommend' => 3]);
+        $response = $this->actingAs($this->user, 'admin')
+            ->get(route('admin::content.edit', ['entity' => $this->entity->id, 'id' => 1]));
+        $response->assertSee('<option value="1"  selected >推荐1</option>');
+        $response->assertSee('<option value="2"  selected >推荐2</option>');
+        $response->assertSee('value="测试标题"');
+    }
+
     protected function createEntityField($modifyDB = true, $is_edit = false)
     {
         $data = [
@@ -257,6 +280,28 @@ class EntityFieldControllerTest extends TestCase
             'comment' => '性别',
             'default_value' => '0',
             'form_params' => '0=男' . PHP_EOL . '1=女',
+            'is_edit' => EntityField::EDIT_ENABLE,
+            'is_modify_db' => 1,
+            'form_default_value' => '1',
+            'is_show' => EntityField::SHOW_ENABLE,
+        ];
+        $this->actingAs($this->user, 'admin')
+            ->post('/admin/entityFields', $data);
+
+        // selectMulti类型字段
+        $data = [
+            'entity_id' => $this->entity->id,
+            'name' => 'recommend',
+            'type' => 'unsignedInteger',
+            'form_name' => '推荐',
+            'form_type' => 'selectMulti',
+            'order' => 77,
+            'field_length' => '',
+            'field_total' => '',
+            'field_scale' => '',
+            'comment' => '推荐',
+            'default_value' => '',
+            'form_params' => '1=推荐1' . PHP_EOL . '2=推荐2',
             'is_edit' => EntityField::EDIT_ENABLE,
             'is_modify_db' => 1,
             'form_default_value' => '1',
