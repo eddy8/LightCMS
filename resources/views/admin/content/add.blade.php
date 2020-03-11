@@ -99,7 +99,11 @@
                                                 <div class="layui-input-inline" style="width: 380px;z-index: {{99999 - ($field->order + $field->id)}}">
                                                     <select xm-select-search xm-select="select-{{ $inlineField->name }}" name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                                         @foreach(parseEntityFieldParams($inlineField->form_params) as $v)
-                                                            <option value="{{ $v[0] }}" @if((isset($model) && isChecked($v[0], $model->{$inlineField->name})) || (!isset($model) && isChecked($v[0], $inlineField->form_default_value))) selected @endif>{{ $v[1] }}</option>
+                                                            @if ($inlineField->type == 'unsignedInteger')
+                                                                <option value="{{ $v[0] }}" @if((isset($model) && isCheckedByAnd($v[0], $model->{$inlineField->name})) || (!isset($model) && isCheckedByAnd($v[0], $inlineField->form_default_value))) selected @endif>{{ $v[1] }}</option>
+                                                            @else
+                                                                <option value="{{ $v[0] }}" @if((isset($model) && isChecked($v[0], $model->{$inlineField->name})) || (!isset($model) && isChecked($v[0], $inlineField->form_default_value))) selected @endif>{{ $v[1] }}</option>
+                                                            @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -427,7 +431,11 @@
                                         <div class="layui-input-block" style="width: 600px;z-index: {{99999 - ($field->order + $field->id)}}">
                                             <select xm-select-search xm-select="select-{{ $field->name }}" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                                 @foreach(parseEntityFieldParams($field->form_params) as $v)
-                                                    <option value="{{ $v[0] }}" @if((isset($model) && isChecked($v[0], $model->{$field->name})) || (!isset($model) && isChecked($v[0], $field->form_default_value))) selected @endif>{{ $v[1] }}</option>
+                                                    @if ($field->type == 'unsignedInteger')
+                                                        <option value="{{ $v[0] }}" @if((isset($model) && isCheckedByAnd($v[0], $model->{$field->name})) || (!isset($model) && isCheckedByAnd($v[0], $field->form_default_value))) selected @endif>{{ $v[1] }}</option>
+                                                    @else
+                                                        <option value="{{ $v[0] }}" @if((isset($model) && isChecked($v[0], $model->{$field->name})) || (!isset($model) && isChecked($v[0], $field->form_default_value))) selected @endif>{{ $v[1] }}</option>
+                                                    @endif
                                                 @endforeach
                                             </select>
                                         </div>

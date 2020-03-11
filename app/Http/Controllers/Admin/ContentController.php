@@ -125,7 +125,7 @@ class ContentController extends Controller
 
             $content = ContentRepository::add($request->only(
                 EntityFieldRepository::getSaveFields($entity)
-            ));
+            ), $this->entity);
 
             // 标签类型字段另外处理 多对多关联
             $inputTagsField = EntityFieldRepository::getInputTagsField($entity);
@@ -203,7 +203,7 @@ class ContentController extends Controller
         try {
             DB::beginTransaction();
 
-            ContentRepository::update($id, $data);
+            ContentRepository::update($id, $data, $this->entity);
             // 标签类型字段另外处理 多对多关联
             $inputTagsField = EntityFieldRepository::getInputTagsField($entity);
             $tags = null;

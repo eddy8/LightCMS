@@ -36,6 +36,11 @@ function isChecked($value, $options)
     return in_array($value, explode(',', $options), true);
 }
 
+function isCheckedByAnd($value, $options)
+{
+    return ($options & $value) == $value;
+}
+
 function xssFilter($data)
 {
     if (is_string($data)) {
