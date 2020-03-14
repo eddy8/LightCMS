@@ -253,8 +253,9 @@ class ContentController extends Controller
     public function delete($entity, $id)
     {
         try {
+            $content = ContentRepository::findOrFail($id);
             ContentRepository::delete($id);
-            event(new ContentDeleted([$id]));
+            event(new ContentDeleted(collect([$content])));
 
             return [
                 'code' => 0,
@@ -293,8 +294,9 @@ class ContentController extends Controller
         $message = '';
         switch ($type) {
             case 'delete':
+                $contents = ContentRepository::model()->whereIn('id', $ids)->get();
                 ContentRepository::model()->whereIn('id', $ids)->delete();
-                event(new ContentDeleted($ids));
+                event(new ContentDeleted($contents));
                 break;
             default:
                 break;

@@ -5,21 +5,22 @@ namespace App\Events;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 
 class ContentDeleted
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $id;
+    public $contents;
 
     /**
      * Create a new event instance.
      *
-     * @param array $id 内容ID
+     * @param Collection $contents 内容ID
      * @return void
      */
-    public function __construct(array $id)
+    public function __construct(Collection $contents)
     {
-        $this->id = $id;
+        $this->contents = $contents;
     }
 }
