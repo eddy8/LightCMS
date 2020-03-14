@@ -146,7 +146,7 @@ class ContentController extends Controller
             }
 
             DB::commit();
-            event(new ContentCreated($content));
+            event(new ContentCreated($content, $this->entity));
 
             return [
                 'code' => 0,
@@ -227,7 +227,7 @@ class ContentController extends Controller
             }
 
             DB::commit();
-            event(new ContentUpdated([$id]));
+            event(new ContentUpdated([$id], $this->entity));
 
             return [
                 'code' => 0,
@@ -255,7 +255,7 @@ class ContentController extends Controller
         try {
             $content = ContentRepository::findOrFail($id);
             ContentRepository::delete($id);
-            event(new ContentDeleted(collect([$content])));
+            event(new ContentDeleted(collect([$content]), $this->entity));
 
             return [
                 'code' => 0,
@@ -296,7 +296,7 @@ class ContentController extends Controller
             case 'delete':
                 $contents = ContentRepository::model()->whereIn('id', $ids)->get();
                 ContentRepository::model()->whereIn('id', $ids)->delete();
-                event(new ContentDeleted($contents));
+                event(new ContentDeleted($contents, $this->entity));
                 break;
             default:
                 break;
