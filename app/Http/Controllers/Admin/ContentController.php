@@ -5,6 +5,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\ContentCreated;
+use App\Events\ContentDeleted;
+use App\Events\ContentUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ContentRequest;
 use App\Model\Admin\Content;
@@ -143,6 +146,7 @@ class ContentController extends Controller
             }
 
             DB::commit();
+            event(new ContentCreated($content));
 
             return [
                 'code' => 0,
@@ -223,6 +227,8 @@ class ContentController extends Controller
             }
 
             DB::commit();
+            event(new ContentUpdated([$id]));
+
             return [
                 'code' => 0,
                 'msg' => '编辑成功',
@@ -248,6 +254,8 @@ class ContentController extends Controller
     {
         try {
             ContentRepository::delete($id);
+            event(new ContentDeleted([$id]));
+
             return [
                 'code' => 0,
                 'msg' => '删除成功',
@@ -286,6 +294,7 @@ class ContentController extends Controller
         switch ($type) {
             case 'delete':
                 ContentRepository::model()->whereIn('id', $ids)->delete();
+                event(new ContentDeleted($ids));
                 break;
             default:
                 break;
