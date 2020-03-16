@@ -456,7 +456,7 @@
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block" style="">
-                                        <input name="{{ $field->name }}" placeholder="输入标签，按回车键或TAB键可新增标签" value="@if(isset($model)) {{ \App\Repository\Admin\ContentRepository::tagNames($entity, $model->id) }} @endif">
+                                        <input name="{{ $field->name }}" placeholder="输入标签，按回车键或TAB键可新增标签" value="@if(isset($model)){{ \App\Repository\Admin\ContentRepository::tagNames($entity, $model->id) }},@endif">
                                     </div>
                                 </div>
                                 <script>

@@ -136,7 +136,7 @@ class ContentController extends Controller
             if ($inputTagsField) {
                 $tags = $request->post($inputTagsField->name);
             }
-            if (!is_null($tags) && $tags = json_decode($tags, true)) {
+            if (is_string($tags) && $tags = json_decode($tags, true)) {
                 foreach ($tags as $v) {
                     $tag = Tag::firstOrCreate(['name' => $v['value']]);
                     ContentTag::firstOrCreate(
@@ -214,7 +214,7 @@ class ContentController extends Controller
             if ($inputTagsField && intval($inputTagsField->is_edit) === EntityField::EDIT_ENABLE) {
                 $tags = $request->post($inputTagsField->name);
             }
-            if (!is_null($tags) && $tags = json_decode($tags, true)) {
+            if (is_string($tags) && $tags = json_decode($tags, true)) {
                 $tagIds = [];
                 foreach ($tags as $v) {
                     $tag = Tag::firstOrCreate(['name' => $v['value']]);

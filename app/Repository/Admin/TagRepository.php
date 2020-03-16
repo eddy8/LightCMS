@@ -21,6 +21,7 @@ class TagRepository
             ->orderBy('id', 'desc')
             ->paginate($perPage);
         $data->transform(function ($item) {
+            xssFilter($item);
             $item->editUrl = route('admin::tag.edit', ['id' => $item->id]);
             $item->deleteUrl = route('admin::tag.delete', ['id' => $item->id]);
             return $item;
