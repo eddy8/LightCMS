@@ -25,4 +25,11 @@ class Model extends BaseModel
      * @var array
      */
     public static $listField = [];
+
+    /**
+     * 列表操作项
+     *
+     * @var array
+     */
+    public static $actionField = [];
 }

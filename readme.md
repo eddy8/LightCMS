@@ -244,6 +244,15 @@ php artisan light:basic config 配置
     ];
 ```
 
+### 列表操作项（$actionField）配置说明
+通过配置列表操作项，可以很方便的在模型的列表页操作列添加自定义链接。如下是一个示例配置：
+```php
+    public static $actionField = [
+        // chapterUrl 是字段名（不一定是模型数据库表的字段名，只要列表数据接口返回数据包含该字段即可）
+        'chapterUrl' => ['title' => '章节', 'description' => '当前小说的所有章节'],
+    ];
+```
+
 ## 敏感词检测
 如果需要对发表的内容（文章、评论等）进行内容审查，则可直接调用`LightCMS`提供的`checkSensitiveWords`函数即可。示例如下：
 ```php
