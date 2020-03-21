@@ -19,6 +19,25 @@ function getConfig($key, $default = null)
     return !is_null($v) ? $v : $default;
 }
 
+/**
+ * 后台配置嵌套解析。支持配置值中包含其它配置：{{CONFIG_KEY}}
+ *
+ * @param string $value
+ * @return string
+ */
+function parseConfig($value)
+{
+    if (preg_match_all('/\{\{(\w+)\}\}/', $value, $matches)) {
+        foreach ($matches[1] as $key => $match) {
+            $value = str_replace($matches[0][$key], strval(config('light_config.' . $match)), $value);
+        }
+    } else {
+        return $value;
+    }
+
+    return parseConfig($value);
+}
+
 function parseEntityFieldParams($params)
 {
     if (strpos($params, 'getFormItemsFrom') === 0 && function_exists($params)) {
