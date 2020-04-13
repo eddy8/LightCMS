@@ -16,6 +16,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use App\Exceptions\CreateTableException;
+use App\Model\Admin\Menu;
 
 class EntityRepository
 {
@@ -34,6 +35,7 @@ class EntityRepository
             $item->editUrl = route('admin::entity.edit', ['id' => $item->id]);
             $item->deleteUrl = route('admin::entity.delete', ['id' => $item->id]);
             $item->copyUrl = route('admin::entity.copy', ['id' => $item->id]);
+            $item->menuUrl = route('admin::entity.menu', ['id' => $item->id]);
             $item->fieldUrl = route('admin::entityField.index') . '?entity_id=' . $item->id;
             $item->contentUrl = route('admin::content.index', ['entity' => $item->id]);
             $item->commentListUrl = route('admin::comment.index', ['entity_id' => $item->id]);
@@ -163,6 +165,47 @@ class EntityRepository
             ->delete();
         Comment::query()->where('entity_id', $id)->delete();
 
+        DB::commit();
+    }
+
+    public static function addDefaultMenus(Entity $entity)
+    {
+        $params = "entity:{$entity->id}";
+        $menus = [
+            '更新内容' => 'admin::content.update',
+            '保存内容' => 'admin::content.save',
+            '内容列表数据接口' => 'admin::content.list',
+            '内容列表' => 'admin::content.index',
+            '编辑内容' => 'admin::content.edit',
+            '删除内容' => 'admin::content.delete',
+            '新增内容' => 'admin::content.create',
+            '内容批量操作' => 'admin::content.batch',
+        ];
+        DB::beginTransaction();
+        foreach ($menus as $k => $v) {
+            $data = [
+                'name' => $entity->name . $k,
+                'route' => $v,
+                'route_params' => $params,
+                'group' => $entity->name . '内容管理',
+                'pid' => 107,
+                'is_lock_name' => 1,
+                'status' => 0,
+            ];
+
+            $menu = Menu::select('id')
+                ->where('name', $data['name'])
+                ->orWhere(function ($query) use ($data) {
+                    $query->where('route', $data['route'])
+                        ->where('route_params', $data['route_params']);
+                })
+                ->lockForUpdate()
+                ->first();
+            if ($menu) {
+                continue;
+            }
+            Menu::create($data);
+        }
         DB::commit();
     }
 }

@@ -83,6 +83,7 @@ Route::group(
 
             // 模型
             Route::post('/entities/{id}/copy', 'EntityController@copy')->name('entity.copy');
+            Route::post('/entities/{id}/menu', 'EntityController@menu')->name('entity.menu');
 
             // 自动加载生成的其它路由
             foreach (new DirectoryIterator(base_path('routes/auto')) as $f) {
