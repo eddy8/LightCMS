@@ -12,7 +12,7 @@ use Illuminate\View\View;
 
 class LogController extends Controller
 {
-    protected $formNames = ['user_name', 'url'];
+    protected $formNames = ['user_name', 'url', 'data'];
 
     public function __construct()
     {
