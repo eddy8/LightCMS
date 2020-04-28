@@ -221,6 +221,17 @@ class EntityFieldControllerTest extends TestCase
         $response->assertSee('<option value="1"  selected >推荐1</option>');
         $response->assertSee('<option value="2"  selected >推荐2</option>');
         $response->assertSee('value="测试标题"');
+
+        // 不选推荐
+        $data = [
+            'title' => '测试标题',
+            'recommend' => '',
+            'gender' => 0
+        ];
+        $response = $this->actingAs($this->user, 'admin')
+            ->post('/admin/entity/' . $this->entity->id . '/contents', $data);
+        $this->assertDatabaseHas($this->entity->table_name, ['recommend' => 0]);
+        $response->assertJson(['code' => 0]);
     }
 
     protected function createEntityField($modifyDB = true, $is_edit = false)
