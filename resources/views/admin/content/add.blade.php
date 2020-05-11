@@ -36,7 +36,7 @@
                         @if($field->is_show == \App\Model\Admin\EntityField::SHOW_DISABLE)
                             @continue
                         @endif
-                        @if(in_array($field->form_type, ['input', 'select', 'reference_category', 'selectMulti', 'selectSingleSearch', 'selectMultiSearch'], true) && $field->is_show_inline == \App\Model\Admin\EntityField::SHOW_INLINE)
+                        @if(in_array($field->form_type, ['input', 'select', 'reference_category', 'selectMulti', 'selectSingleSearch', 'selectMultiSearch', 'inputAutoComplete'], true) && $field->is_show_inline == \App\Model\Admin\EntityField::SHOW_INLINE)
                             @php
                                 $before = $current;
                                 $current = 1;
@@ -63,6 +63,37 @@
                                                 </div>
                                             </div>
                                             @break
+                                        @case('inputAutoComplete')
+                                            @if(!isset($input_autocomplete_init))
+                                                @php
+                                                    // https://www.devbridge.com/sourcery/components/jquery-autocomplete/
+                                                    $input_autocomplete_init = true
+                                                @endphp
+                                                <style>
+                                                    .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+                                                    .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+                                                    .autocomplete-selected { background: #F0F0F0; }
+                                                    .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+                                                    .autocomplete-group { padding: 2px 5px; }
+                                                    .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+                                                </style>
+                                                <script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>
+                                                <script type="text/javascript" src="https://cdn.staticfile.org/jquery.devbridge-autocomplete/1.4.11/jquery.autocomplete.min.js"></script>
+                                            @endif
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">{{ $inlineField->form_name }}</label>
+                                                <div class="layui-input-inline">
+                                                    <input type="text" name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$inlineField->name} ?? $inlineField->form_default_value  }}" @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                                </div>
+                                            </div>
+                                            <script>
+                                                $('input[name={{ $inlineField->name }}]').autocomplete({
+                                                    dataType: 'json',
+                                                    deferRequestBy: 700,
+                                                    serviceUrl: '{{$inlineField->form_params}}',
+                                                });
+                                            </script>
+                                        @break
                                         @case('select')
                                             <div class="layui-inline">
                                                 <label class="layui-form-label">{{ $inlineField->form_name }}</label>
@@ -142,6 +173,37 @@
                                         <input type="text" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? $field->form_default_value  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
                                     </div>
                                 </div>
+                                @break
+                            @case('inputAutoComplete')
+                                @if(!isset($input_autocomplete_init))
+                                    @php
+                                        // https://www.devbridge.com/sourcery/components/jquery-autocomplete/
+                                        $input_autocomplete_init = true
+                                    @endphp
+                                    <style>
+                                        .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+                                        .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+                                        .autocomplete-selected { background: #F0F0F0; }
+                                        .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+                                        .autocomplete-group { padding: 2px 5px; }
+                                        .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+                                    </style>
+                                    <script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>
+                                    <script type="text/javascript" src="https://cdn.staticfile.org/jquery.devbridge-autocomplete/1.4.11/jquery.autocomplete.min.js"></script>
+                                @endif
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? $field->form_default_value  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                    </div>
+                                </div>
+                                <script>
+                                    $('input[name={{ $field->name }}]').autocomplete({
+                                        dataType: 'json',
+                                        deferRequestBy: 700,
+                                        serviceUrl: '{{$field->form_params}}',
+                                    });
+                                </script>
                                 @break
                             @case('textArea')
                                 <div class="layui-form-item">

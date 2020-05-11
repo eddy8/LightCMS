@@ -66,6 +66,7 @@ return [
     // 表单类型
     'form_type' => [
         'input' => '短文本（input）',
+        'inputAutoComplete' => '短文本（input，自动完成）',
         'textArea' => '长文本（textarea）',
         'richText' => '富文本',
         'markdown' => '富文本（markdown）',
