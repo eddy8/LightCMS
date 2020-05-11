@@ -8,6 +8,7 @@
             margin-bottom: 5px;
         }
     </style>
+    <script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>
     <script>
         function addLoadEvent(func) {
             var oldonload = window.onload;
@@ -77,7 +78,7 @@
                                                     .autocomplete-group { padding: 2px 5px; }
                                                     .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
                                                 </style>
-                                                <script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>
+                                                <!--<script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>-->
                                                 <script type="text/javascript" src="https://cdn.staticfile.org/jquery.devbridge-autocomplete/1.4.11/jquery.autocomplete.min.js"></script>
                                             @endif
                                             <div class="layui-inline">
@@ -122,7 +123,7 @@
                                                     $selects_init = true
                                                 @endphp
                                                 <link rel="stylesheet" type="text/css" href="/public/vendor/layui-v2.4.5/plugins/formSelects-v4.css"/>
-                                                <script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>
+                                                <!--<script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>-->
                                                 <script type="text/javascript" src="/public/vendor/layui-v2.4.5/plugins/formSelects-v4.min.js"></script>
                                             @endif
                                             <div class="layui-inline">
@@ -188,7 +189,7 @@
                                         .autocomplete-group { padding: 2px 5px; }
                                         .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
                                     </style>
-                                    <script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>
+                                    <!--<script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>-->
                                     <script type="text/javascript" src="https://cdn.staticfile.org/jquery.devbridge-autocomplete/1.4.11/jquery.autocomplete.min.js"></script>
                                 @endif
                                 <div class="layui-form-item">
@@ -265,7 +266,7 @@
                                         <script type="text/javascript" charset="utf-8" src="/public/vendor/neditor/neditor.service.js"></script>
                                         <script type="text/javascript" charset="utf-8" src="/public/vendor/neditor/i18n/zh-cn/zh-cn.js"></script>
                                         <script type="text/javascript" src="/public/vendor/neditor/third-party/browser-md5-file.min.js"></script>
-                                        <script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>
+                                        <!--<script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>-->
                                     @else
                                         <script type="text/javascript" charset="utf-8" src="/public/vendor/ueditor/ueditor.config.js"></script>
                                         <script type="text/javascript" charset="utf-8" src="/public/vendor/ueditor/ueditor.all.min.js"> </script>
@@ -485,7 +486,7 @@
                                             $selects_init = true
                                         @endphp
                                         <link rel="stylesheet" type="text/css" href="/public/vendor/layui-v2.4.5/plugins/formSelects-v4.css"/>
-                                        <script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>
+                                        <!--<script type="text/javascript" src="/public/vendor/neditor/third-party/jquery-1.10.2.min.js"></script>-->
                                         <script type="text/javascript" src="/public/vendor/layui-v2.4.5/plugins/formSelects-v4.min.js"></script>
                                     @endif
                                     <div class="layui-form-item">
