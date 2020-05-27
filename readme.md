@@ -151,7 +151,15 @@ $siteName = config('light_config.SITE_NAME');
 
 如果想自定义模型的保存和更新处理逻辑，只需在`app/Http/Controllers/Admin/Entity`目录下创建模型的控制器类即可，`save`和`update`方法实现可参考`app/Http/Controllers/Admin/ContentController`。类名的命名规则：**模型名+Controller**。例如`User`模型对应的控制器类为`UserController`。同理，如果想自定义列表页，按上述规则定义`index`和`list`方法即可。
 
-另外，模型内容在新增、更新、删除完成时系统会触发对应的`App\Events\ContentCreated`、`App\Events\ContentUpdated`、`App\Events\ContentDeleted`事件，你可以监听这些事件做相应的业务处理。
+另外，模型内容在新增、更新、删除时系统会触发相应的事件，你可以监听这些事件做相应的业务处理。下表所示为相应的事件说明：
+
+事件名 | 事件参数 | 触发时间 | 备注
+:-: | :-: | :-: | :-:
+App\Events\ContentCreating    |   Illuminate\Http\Request $request |  新增内容前  |
+App\Events\ContentCreated    |   App\Model\Admin\Content $content, App\Model\Admin\Entity $entity |  新增内容后  |
+App\Events\ContentUpdating    |   Illuminate\Http\Request $request |  更新内容前  |
+App\Events\ContentUpdated    |   Array $id, App\Model\Admin\Entity $entity |  更新内容后  | $id 为更新内容的 ID 合集
+App\Events\ContentDeleted    |   Illuminate\Support\Collection $contents, App\Model\Admin\Entity $entity |  删除内容后  | $contents 为被删除内容的 App\Model\Admin\Content 对象合集
 
 ### 模型字段表单类型相关说明
 对于支持远程搜索的`select`表单类型，后端 API 搜索接口需返回的数据格式如下所示。code为0时, 表示正常, 反之异常。
