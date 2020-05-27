@@ -6,8 +6,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Events\ContentCreated;
+use App\Events\ContentCreating;
 use App\Events\ContentDeleted;
 use App\Events\ContentUpdated;
+use App\Events\ContentUpdating;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ContentRequest;
 use App\Model\Admin\Content;
@@ -118,6 +120,7 @@ class ContentController extends Controller
     public function save(ContentRequest $request, $entity)
     {
         $this->validateEntityRequest();
+        event(new ContentCreating($request));
         $result = $this->useUserDefinedSaveHandler($request, $entity);
         if (!is_null($result)) {
             return $result;
@@ -198,6 +201,7 @@ class ContentController extends Controller
     public function update(ContentRequest $request, $entity, $id)
     {
         $this->validateEntityRequest();
+        event(new ContentUpdating($request));
         $result = $this->useUserDefinedUpdateHandler($request, $entity, $id);
         if (!is_null($result)) {
             return $result;
