@@ -155,9 +155,9 @@ $siteName = config('light_config.SITE_NAME');
 
 事件名 | 事件参数 | 触发时间 | 备注
 :-: | :-: | :-: | :-:
-App\Events\ContentCreating    |   Illuminate\Http\Request $request |  新增内容前  |
+App\Events\ContentCreating    |   Illuminate\Http\Request $request, App\Model\Admin\Entity $entity |  新增内容前  |
 App\Events\ContentCreated    |   App\Model\Admin\Content $content, App\Model\Admin\Entity $entity |  新增内容后  |
-App\Events\ContentUpdating    |   Illuminate\Http\Request $request |  更新内容前  |
+App\Events\ContentUpdating    |   Illuminate\Http\Request $request, App\Model\Admin\Entity $entity |  更新内容前  |
 App\Events\ContentUpdated    |   Array $id, App\Model\Admin\Entity $entity |  更新内容后  | $id 为更新内容的 ID 合集
 App\Events\ContentDeleted    |   Illuminate\Support\Collection $contents, App\Model\Admin\Entity $entity |  删除内容后  | $contents 为被删除内容的 App\Model\Admin\Content 对象合集
 
