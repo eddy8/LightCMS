@@ -120,7 +120,7 @@ class ContentController extends Controller
     public function save(ContentRequest $request, $entity)
     {
         $this->validateEntityRequest();
-        event(new ContentCreating($request));
+        event(new ContentCreating($request, $this->entity));
         $result = $this->useUserDefinedSaveHandler($request, $entity);
         if (!is_null($result)) {
             return $result;
@@ -201,7 +201,7 @@ class ContentController extends Controller
     public function update(ContentRequest $request, $entity, $id)
     {
         $this->validateEntityRequest();
-        event(new ContentUpdating($request));
+        event(new ContentUpdating($request, $this->entity));
         $result = $this->useUserDefinedUpdateHandler($request, $entity, $id);
         if (!is_null($result)) {
             return $result;
