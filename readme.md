@@ -280,6 +280,8 @@ php artisan light:basic config 配置
     ];
 ```
 
+> 小提示：如果你是自定义模型，建议自定义模型继承`App\Model\Admin\Model`模型，方便对上述配置项进行自定义。
+
 ## 敏感词检测
 如果需要对发表的内容（文章、评论等）进行内容审查，则可直接调用`LightCMS`提供的`checkSensitiveWords`函数即可。示例如下：
 ```php
