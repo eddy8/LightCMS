@@ -280,6 +280,16 @@ php artisan light:basic config 配置
     ];
 ```
 
+### 排序字段（$sortFields）配置说明
+通过配置排序字段，可以很方便的在模型的列表页自定义数据的排序规则。如下是一个示例配置：
+```php
+    public static $actionField = [
+        // 数组的键为排序字段名和升序/降序配置（半角逗号分隔），值为前台展示名称
+        'updated_at,desc' => '更新时间（降序）',
+        'id,asc' => 'id（升序）',
+    ];
+```
+
 > 小提示：如果你是自定义模型，建议自定义模型继承`App\Model\Admin\Model`模型，方便对上述配置项进行自定义。
 
 ## 敏感词检测
