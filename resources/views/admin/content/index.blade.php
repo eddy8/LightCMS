@@ -14,6 +14,19 @@
                     <input type="text" name="created_at" class="layui-input" id="created_at" value="{{ request()->get('created_at') }}">
                 </div>
             </div>
+            @if(!empty(App\Model\Admin\Content::$sortFields))
+            <div class="layui-inline">
+                <label class="layui-form-label">排序</label>
+                <div class="layui-input-inline">
+                    <select name="light_sort_fields">
+                        <option value="" @if(!request()->has('light_sort_fields')) selected @endif>请选择</option>
+                        @foreach(App\Model\Admin\Content::$sortFields as $ik => $iv)
+                            <option value="{{ $ik }}" @if(request()->has('light_sort_fields') && request()->get('light_sort_fields') !== "" && request()->get('light_sort_fields') == $ik) selected @endif>{{ $iv }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            @endif
             <div class="layui-inline">
                 <button class="layui-btn layuiadmin-btn-list" lay-filter="form-search" id="submitBtn">
                     <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>

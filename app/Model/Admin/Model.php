@@ -32,4 +32,11 @@ class Model extends BaseModel
      * @var array
      */
     public static $actionField = [];
+
+    /**
+     * 搜索排序
+     *
+     * @var array
+     */
+    public static $sortFields = [];
 }

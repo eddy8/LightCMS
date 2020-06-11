@@ -26,11 +26,20 @@ class ContentRepository
 
     public static function list($entity, $perPage, $condition = [])
     {
+        $sortField = 'id';
+        $sortType = 'desc';
+        if (isset($condition['light_sort_fields'])) {
+            $tmp = explode(',', $condition['light_sort_fields']);
+            $sortField = isset($tmp[0]) && ($tmp[0] != '') ? $tmp[0] : $sortField;
+            $sortType = isset($tmp[1]) && in_array($tmp[1], ['asc', 'desc'], true) ? $tmp[1] : $sortType;
+            unset($condition['light_sort_fields']);
+        }
+
         $data = self::$model->newQuery()
             ->where(function ($query) use ($condition) {
                 Searchable::buildQuery($query, $condition);
             })
-            ->orderBy('id', 'desc')
+            ->orderBy($sortField, $sortType)
             ->paginate($perPage);
         $data->transform(function ($item) use ($entity) {
             xssFilter($item);
