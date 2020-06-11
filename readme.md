@@ -197,44 +197,6 @@ App\Events\ContentDeleted    |   Illuminate\Support\Collection $contents, App\Mo
 
 对于`select`多选类型表单，默认数据库保存值为半角逗号分隔的多个选择值。当你设置字段类型为无符号整型时，数据库会保存多个选择值的求和值（当然前提是选择值都是整型数据）。
 
-## 系统日志
-`lightCMS`集成了一套简单的日志系统，默认情况下记录后台的所有操作相关信息，具体实现可以参考`Log`中间件。
-
-可以利用`Laravel`的[任务调度](https://laravel.com/docs/5.8/scheduling#introduction)来自动清理系统日志。启用任务调度需要在系统的计划任务中添加如下内容：
-```
-* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
-```
-
-可以通过配置`log_async_write`项来决定是否启用异步写入日志（默认未启用），异步写入日志需要运行`Laravel`的[队列处理器](https://laravel.com/docs/5.8/queues#running-the-queue-worker)：
-```bash
-php artisan queue:work
-```
-
-## 代码一键生成
-对于一个普通的模型，管理后台通常有增删改查相关的业务需求。`lightCMS`拥有一键生成相关代码的能力，在建好模型的数据库表结构后，可以使用如下`artisan`命令生成相关代码：
-```bash
-# config 为模型名称 配置 为模型中文名称
-php artisan light:basic config 配置
-```
-成功执行完成后，会创建如下文件（注意：相关目录需要有写入权限）：
-
-* routes/auto/config.php
-路由：包含模型增删改查相关路由，应用会自动加载`routes/auto/`目录下的路由。
-* app/Model/Admin/Config.php
-模型：[$searchField](#搜索字段searchField配置说明) 属性用来配置搜索字段，[$listField](#列表字段listfield配置说明) 用来配置列表视图中需要展示哪些字段数据。
-* app/Repository/Admin/ConfigRepository.php
-模型服务层：默认有一个`list`方法，该方法用来返回列表数据。需要注意的是如果列表中的数据不能和数据库字段数据直接对应，则可对数据库字段数据做相应转换，可参考`list`方法中的`transform`部分。
-* app/Http/Controllers/Admin/ConfigController.php
-控制器：默认有一个`$formNames`属性，用来配置新增/编辑表单请求字段的白名单。此属性必需配置，否则获取不到表单数据。参考 [request 对象的 only 方法](https://laravel.com/docs/5.5/requests#retrieving-input)
-* app/Http/Requests/Admin/ConfigRequest.php
-表单请求类：可在此类中编写表单验证规则，参考 [Form Request Validation](https://laravel.com/docs/5.5/validation#form-request-validation)
-* resources/views/admin/config/index.blade.php
-列表视图：列表数据、搜索表单。
-* resources/views/admin/config/index.blade.php
-新增/编辑视图：只列出了基本架构，需要自定义相关字段的表单展示。参考 [layui form](https://www.layui.com/doc/element/form.html)
-
-最后，如果想让生成的路由展示在菜单中，只需在[菜单管理](/admin/menus)页面点击**自动更新菜单**即可。
-
 ### 搜索字段（$searchField）配置说明
 通过配置搜索字段，可以很方便的在模型的列表页展示搜索项。如下是一个示例配置：
 ```php
@@ -291,6 +253,44 @@ php artisan light:basic config 配置
 ```
 
 > 小提示：如果你是自定义模型，建议自定义模型继承`App\Model\Admin\Model`模型，方便对上述配置项进行自定义。
+
+## 系统日志
+`lightCMS`集成了一套简单的日志系统，默认情况下记录后台的所有操作相关信息，具体实现可以参考`Log`中间件。
+
+可以利用`Laravel`的[任务调度](https://laravel.com/docs/5.8/scheduling#introduction)来自动清理系统日志。启用任务调度需要在系统的计划任务中添加如下内容：
+```
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+可以通过配置`log_async_write`项来决定是否启用异步写入日志（默认未启用），异步写入日志需要运行`Laravel`的[队列处理器](https://laravel.com/docs/5.8/queues#running-the-queue-worker)：
+```bash
+php artisan queue:work
+```
+
+## 代码一键生成
+对于一个普通的模型，管理后台通常有增删改查相关的业务需求。`lightCMS`拥有一键生成相关代码的能力，在建好模型的数据库表结构后，可以使用如下`artisan`命令生成相关代码：
+```bash
+# config 为模型名称 配置 为模型中文名称
+php artisan light:basic config 配置
+```
+成功执行完成后，会创建如下文件（注意：相关目录需要有写入权限）：
+
+* routes/auto/config.php
+路由：包含模型增删改查相关路由，应用会自动加载`routes/auto/`目录下的路由。
+* app/Model/Admin/Config.php
+模型：[$searchField](#搜索字段searchField配置说明) 属性用来配置搜索字段，[$listField](#列表字段listfield配置说明) 用来配置列表视图中需要展示哪些字段数据。
+* app/Repository/Admin/ConfigRepository.php
+模型服务层：默认有一个`list`方法，该方法用来返回列表数据。需要注意的是如果列表中的数据不能和数据库字段数据直接对应，则可对数据库字段数据做相应转换，可参考`list`方法中的`transform`部分。
+* app/Http/Controllers/Admin/ConfigController.php
+控制器：默认有一个`$formNames`属性，用来配置新增/编辑表单请求字段的白名单。此属性必需配置，否则获取不到表单数据。参考 [request 对象的 only 方法](https://laravel.com/docs/5.5/requests#retrieving-input)
+* app/Http/Requests/Admin/ConfigRequest.php
+表单请求类：可在此类中编写表单验证规则，参考 [Form Request Validation](https://laravel.com/docs/5.5/validation#form-request-validation)
+* resources/views/admin/config/index.blade.php
+列表视图：列表数据、搜索表单。
+* resources/views/admin/config/index.blade.php
+新增/编辑视图：只列出了基本架构，需要自定义相关字段的表单展示。参考 [layui form](https://www.layui.com/doc/element/form.html)
+
+最后，如果想让生成的路由展示在菜单中，只需在[菜单管理](/admin/menus)页面点击**自动更新菜单**即可。
 
 ## 敏感词检测
 如果需要对发表的内容（文章、评论等）进行内容审查，则可直接调用`LightCMS`提供的`checkSensitiveWords`函数即可。示例如下：
