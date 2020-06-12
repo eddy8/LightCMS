@@ -49,5 +49,8 @@ class AppServiceProvider extends ServiceProvider
     protected function loadConfig()
     {
         config(['light_config' => ConfigRepository::all()]);
+        foreach (config('light_config') as $key => $value) {
+            config(["light_config.{$key}" => parseConfig($value)]);
+        }
     }
 }
