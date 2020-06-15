@@ -33,7 +33,7 @@ class AdminUserRepository
             $item->statusText = $item->status == AdminUser::STATUS_ENABLE ?
                     '<span class="layui-badge layui-bg-green">启用</span>' :
                     '<span class="layui-badge">禁用</span>';
-            $item->roleNames = xssFilter($item->getRoleNames()->join(','));
+            $item->roleNames = xssFilter(implode(',', $item->getRoleNames()->toArray()));
             unset($item->roles);
             return $item;
         });
