@@ -51,6 +51,9 @@ trait Searchable
                         Carbon::parse($dates[1])->endOfDay(),
                     ]);
                 }
+            } elseif (isset($searchField[$k]['searchType']) && $searchField[$k]['searchType'] === 'whereRaw') {
+                $queryParams = array_pad([], substr_count($searchField[$k]['searchCondition'], '?'), $value);
+                $query->whereRaw($searchField[$k]['searchCondition'], $queryParams);
             } else {
                 $query->where($k, $type, $type === 'like' ? "%{$value}%" : $value);
             }
