@@ -211,6 +211,17 @@ App\Events\ContentDeleted    |   Illuminate\Support\Collection $contents, App\Mo
                 1 => '启用',
             ],
         ],
+        'recommend' => [ // key 为字段名称，value 为相关配置
+            'showType' => 'select', // 下拉框选择搜索类型
+            'searchType' => 'whereRaw', // 对于一些特殊的查询条件，无法通过上述普通的搜索匹配值来实现时，可将此值设置为 whereRaw
+            'searchCondition' => 'recommend & ? = ?', // 与 whereRaw 配合使用，? 表示查询条件值参数绑定。例：如果用户输入的查询值为 2，则最终生成的 sql 查询条件是： recommend & 2 = 2
+            'title' => '推荐位', // 标题
+            'enums' => [ // select下拉搜索项
+                1 => '推荐位1',
+                2 => '推荐位2',
+                4 => '推荐位3',
+            ],
+        ],
         'created_at' => [ // key 为字段名称，value 为相关配置
             'showType' => 'datetime', // 日期时间搜索类型
             'title' => '创建时间' // 标题
