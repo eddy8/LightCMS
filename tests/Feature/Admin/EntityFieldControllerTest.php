@@ -184,8 +184,8 @@ class EntityFieldControllerTest extends TestCase
         $this->createEntityField(true, true);
         $response = $this->actingAs($this->user, 'admin')
             ->get(route('admin::content.create', ['entity' => $this->entity->id]));
-        $response->assertSee('<option value="1"  selected >女</option>');
-        $response->assertSee('value="默认标题"');
+        $response->assertSee('<option value="1"  selected >女</option>', false);
+        $response->assertSee('value="默认标题"', false);
 
         $data = [
             'title' => '测试标题',
@@ -196,8 +196,8 @@ class EntityFieldControllerTest extends TestCase
             ->post('/admin/entity/' . $this->entity->id . '/contents', $data);
         $response = $this->actingAs($this->user, 'admin')
             ->get(route('admin::content.edit', ['entity' => $this->entity->id, 'id' => 1]));
-        $response->assertSee('<option value="0"  selected >男</option>');
-        $response->assertSee('value="测试标题"');
+        $response->assertSee('<option value="0"  selected >男</option>', false);
+        $response->assertSee('value="测试标题"', false);
     }
 
     public function testEntityFieldSelectMultiOfUnsignedIntegerIsOK()
@@ -205,8 +205,8 @@ class EntityFieldControllerTest extends TestCase
         $this->createEntityField(true, true);
         $response = $this->actingAs($this->user, 'admin')
             ->get(route('admin::content.create', ['entity' => $this->entity->id]));
-        $response->assertSee('<option value="1"  selected >推荐1</option>');
-        $response->assertSee('value="默认标题"');
+        $response->assertSee('<option value="1"  selected >推荐1</option>', false);
+        $response->assertSee('value="默认标题"', false);
 
         $data = [
             'title' => '测试标题',
@@ -218,9 +218,9 @@ class EntityFieldControllerTest extends TestCase
         $this->assertDatabaseHas($this->entity->table_name, ['recommend' => 3]);
         $response = $this->actingAs($this->user, 'admin')
             ->get(route('admin::content.edit', ['entity' => $this->entity->id, 'id' => 1]));
-        $response->assertSee('<option value="1"  selected >推荐1</option>');
-        $response->assertSee('<option value="2"  selected >推荐2</option>');
-        $response->assertSee('value="测试标题"');
+        $response->assertSee('<option value="1"  selected >推荐1</option>', false);
+        $response->assertSee('<option value="2"  selected >推荐2</option>', false);
+        $response->assertSee('value="测试标题"', false);
 
         // 不选推荐
         $data = [
