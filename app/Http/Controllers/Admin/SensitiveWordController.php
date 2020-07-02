@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use App\Model\Admin\SensitiveWord;
+use Illuminate\Support\Facades\Cache;
 
 class SensitiveWordController extends Controller
 {
@@ -66,6 +67,13 @@ class SensitiveWordController extends Controller
         ];
     }
 
+    private function flushCache()
+    {
+        Cache::forget('sensitive_words_tire');
+        Cache::forget('sensitive_words_tire_single');
+        Cache::forget('sensitive_verb_words');
+    }
+
     private function checkData($request, $id = 0)
     {
         $data = array_filter($request->only($this->formNames));
@@ -117,6 +125,7 @@ class SensitiveWordController extends Controller
             }
 
             SensitiveWordRepository::add($request->only($this->formNames));
+            $this->flushCache();
             return [
                 'code' => 0,
                 'msg' => '新增成功',
@@ -161,6 +170,7 @@ class SensitiveWordController extends Controller
         $data = $request->only($this->formNames);
         try {
             SensitiveWordRepository::update($id, $data);
+            $this->flushCache();
             return [
                 'code' => 0,
                 'msg' => '编辑成功',
@@ -184,6 +194,7 @@ class SensitiveWordController extends Controller
     {
         try {
             SensitiveWordRepository::delete($id);
+            $this->flushCache();
             return [
                 'code' => 0,
                 'msg' => '删除成功',
