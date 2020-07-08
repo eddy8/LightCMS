@@ -208,5 +208,4 @@ class SensitiveWordController extends Controller
             ];
         }
     }
-
 }
