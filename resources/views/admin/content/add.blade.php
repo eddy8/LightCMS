@@ -208,7 +208,7 @@
                                     var ue_{{ $field->name }} = UE.getEditor('editor-{{ $field->name }}', {autoFloatEnabled:false});
                                     ue_{{ $field->name }}.ready(function(){
                                         ue_{{ $field->name }}.focus();
-                                        @if(isset($model) && $field->is_required == \App\Model\Admin\EntityField::EDIT_DISABLE)
+                                        @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE)
                                         ue_{{ $field->name }}.setDisabled();
                                         @endif
                                     });
