@@ -318,7 +318,7 @@ class ContentController extends Controller
         $entityRequestClass = '\\App\\Http\\Requests\\Admin\\Entity\\' .
             Str::ucfirst(Str::singular($this->entity->table_name)) . 'Request';
         if (class_exists($entityRequestClass)) {
-            $entityRequestClass::capture()->setContainer(app())->setRedirector(app()->make('redirect'))->validate();
+            $entityRequestClass::capture()->setContainer(app())->setRedirector(app()->make('redirect'))->validateResolved();
         }
     }
 
