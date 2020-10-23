@@ -104,6 +104,10 @@ class NEditorController extends Controller
             !in_array(
                 '.' . strtolower($file->getClientOriginalExtension()),
                 config('light.neditor.upload.imageAllowFiles')
+            ) ||
+            !in_array(
+                '.' . strtolower($file->guessExtension()),
+                config('light.neditor.upload.imageAllowFiles')
             )
         ) {
             return false;
