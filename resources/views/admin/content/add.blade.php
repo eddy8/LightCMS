@@ -239,6 +239,10 @@
                                                         elem: '#file-upload-{{ $field->name }}' //绑定元素
                                                         ,url: "{{ route('admin::neditor.serve', ['type' => 'uploadimage']) }}" //上传接口
                                                         ,done: function(res){
+                                                            if (res.code != 200) {
+                                                                layer.msg(res.msg)
+                                                                return;
+                                                            }
                                                             $('input[name={{ $field->name }}]').val(res.url);
                                                             $('#img-'+'{{ $field->name }}').attr('src', res.url);
                                                         }
@@ -274,6 +278,10 @@
                                                         ,multiple: true
                                                         ,url: "{{ route('admin::neditor.serve', ['type' => 'uploadimage']) }}" //上传接口
                                                         ,done: function(res){
+                                                            if (res.code != 200) {
+                                                                layer.msg(res.msg);
+                                                                return;
+                                                            }
                                                             var obj = $('input[name={{ $field->name }}]');
                                                             if (obj.val() === '') {
                                                                 obj.val(res.url);
