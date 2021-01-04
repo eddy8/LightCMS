@@ -97,17 +97,124 @@ class NEditorController extends Controller
         ];
     }
 
+    public function uploadVideo(Request $request)
+    {
+        if (config('light.image_upload.driver') !== 'local') {
+            $class = config('light.image_upload.class');
+            return call_user_func([new $class, 'uploadImage'], $request);
+        }
+
+        if (!$request->hasFile('file')) {
+            return [
+                'code' => 2,
+                'msg' => '非法请求'
+            ];
+        }
+        $file = $request->file('file');
+        if (!$this->isValidVideo($file)) {
+            return [
+                'code' => 3,
+                'msg' => '文件不合要求'
+            ];
+        }
+
+        $result = $file->store('video/' . date('Ym'), config('light.neditor.disk'));
+        if (!$result) {
+            return [
+                'code' => 3,
+                'msg' => '上传失败'
+            ];
+        }
+
+        return [
+            'code' => 200,
+            'state' => 'SUCCESS', // 兼容ueditor
+            'msg' => '',
+            'url' => Storage::disk(config('light.neditor.disk'))->url($result),
+        ];
+    }
+
+    public function uploadFile(Request $request)
+    {
+        if (config('light.image_upload.driver') !== 'local') {
+            $class = config('light.image_upload.class');
+            return call_user_func([new $class, 'uploadImage'], $request);
+        }
+
+        if (!$request->hasFile('file')) {
+            return [
+                'code' => 2,
+                'msg' => '非法请求'
+            ];
+        }
+        $file = $request->file('file');
+        if (!$this->isValidFile($file)) {
+            return [
+                'code' => 3,
+                'msg' => '文件不合要求'
+            ];
+        }
+
+        $result = $file->store('file/' . date('Ym'), config('light.neditor.disk'));
+        if (!$result) {
+            return [
+                'code' => 3,
+                'msg' => '上传失败'
+            ];
+        }
+
+        return [
+            'code' => 200,
+            'state' => 'SUCCESS', // 兼容ueditor
+            'msg' => '',
+            'url' => Storage::disk(config('light.neditor.disk'))->url($result),
+        ];
+    }
+
     protected function isValidImage(UploadedFile $file)
     {
+        $c = config('light.neditor.upload');
+        $config = [
+            'maxSize' => $c['imageMaxSize'],
+            'AllowFiles' => $c['imageAllowFiles'],
+        ];
+
+        return $this->isValidUploadedFile($file, $config);
+    }
+
+    protected function isValidVideo(UploadedFile $file)
+    {
+        $c = config('light.neditor.upload');
+        $config = [
+            'maxSize' => $c['videoMaxSize'],
+            'AllowFiles' => $c['videoAllowFiles'],
+        ];
+
+        return $this->isValidUploadedFile($file, $config);
+    }
+
+    protected function isValidFile(UploadedFile $file)
+    {
+        $c = config('light.neditor.upload');
+        $config = [
+            'maxSize' => $c['fileMaxSize'],
+            'AllowFiles' => $c['fileAllowFiles'],
+        ];
+
+        return $this->isValidUploadedFile($file, $config);
+    }
+
+    protected function isValidUploadedFile(UploadedFile $file, array $config)
+    {
         if (!$file->isValid() ||
-            $file->getSize() > config('light.neditor.upload.imageMaxSize') ||
+            $file->getSize() > $config['maxSize'] ||
             !in_array(
                 '.' . strtolower($file->getClientOriginalExtension()),
-                config('light.neditor.upload.imageAllowFiles')
+                $config['AllowFiles']
             ) ||
             !in_array(
                 '.' . strtolower($file->guessExtension()),
-                config('light.neditor.upload.imageAllowFiles')
+                $config['AllowFiles']
             )
         ) {
             return false;

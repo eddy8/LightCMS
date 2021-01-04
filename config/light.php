@@ -8,7 +8,7 @@ return [
         'config' => 'config'
     ],
     // 加载数据库自定义配置
-    'light_config' => false,
+    'light_config' => true,
 
     // 系统日志保留时间。单位：天
     'log_reserve_days' => 180,
@@ -92,6 +92,19 @@ return [
         'upload' => [
             'imageMaxSize' => 8 * 1024 * 1024, /* 上传大小限制，单位B */
             'imageAllowFiles' => ['.png', '.jpg', '.jpeg', '.gif', '.bmp', ".webp"], /* 上传图片格式显示 */
+            "videoMaxSize" => 100 * 1024 * 1024, /* 上传大小限制，单位B */
+            "videoAllowFiles" => [
+                ".flv", ".swf", ".mkv", ".avi", ".rm", ".rmvb", ".mpeg", ".mpg",
+                ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid"
+            ], /* 上传视频格式显示 */
+            "fileMaxSize" => 50 * 1024 * 1024, /* 上传大小限制，单位B */
+            "fileAllowFiles" => [
+                ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp",
+                ".flv", ".swf", ".mkv", ".avi", ".rm", ".rmvb", ".mpeg", ".mpg",
+                ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid",
+                ".rar", ".zip", ".tar", ".gz", ".7z", ".bz2", ".cab", ".iso",
+                ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".txt", ".md", ".xml"
+            ], /* 上传文件格式显示 */
         ]
     ],
     'image_upload' => [
