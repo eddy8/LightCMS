@@ -8,7 +8,7 @@ return [
         'config' => 'config'
     ],
     // 加载数据库自定义配置
-    'light_config' => true,
+    'light_config' => false,
 
     // 系统日志保留时间。单位：天
     'log_reserve_days' => 180,
