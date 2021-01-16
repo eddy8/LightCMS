@@ -14,7 +14,7 @@ class AddRouteParamsToMenusTable extends Migration
     public function up()
     {
         Schema::table('menus', function (Blueprint $table) {
-            $table->string('route_params')->default('')->comment('路由参数');
+            $table->string('route_params', 91)->default('')->comment('路由参数');
             $table->dropUnique('menus_route_unique');
             $table->unique(['route', 'route_params']);
         });
