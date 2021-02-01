@@ -21,6 +21,7 @@ class UserRepository
             ->orderBy('id', 'desc')
             ->paginate($perPage);
         $data->transform(function ($item) {
+            xssFilter($item);
             $item->editUrl = route('admin::user.edit', ['id' => $item->id]);
             $item->deleteUrl = route('admin::user.delete', ['id' => $item->id]);
             $item->statusText = $item->status == User::STATUS_ENABLE ?
