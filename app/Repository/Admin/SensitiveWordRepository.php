@@ -21,6 +21,7 @@ class SensitiveWordRepository
             ->orderBy('id', 'desc')
             ->paginate($perPage);
         $data->transform(function ($item) {
+            xssFilter($item);
             $item->editUrl = route('admin::SensitiveWord.edit', ['id' => $item->id]);
             $item->deleteUrl = route('admin::SensitiveWord.delete', ['id' => $item->id]);
             return $item;
