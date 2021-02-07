@@ -188,3 +188,12 @@ function checkSensitiveWords(string $text, $type = 'join', $mode = null)
     }
     return array_merge($return, $result['exclusive']);
 }
+
+function isWebp($data)
+{
+    if (strncmp(substr($data, 8, 7), "WEBPVP8", 7) === 0) {
+        return true;
+    }
+
+    return false;
+}
