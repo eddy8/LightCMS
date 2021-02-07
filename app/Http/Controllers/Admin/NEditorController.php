@@ -236,28 +236,24 @@ class NEditorController extends Controller
                 return false;
             }
 
-            if (extension_loaded('curl')) {
-                $ch = curl_init();
-                $options =  [
-                    CURLOPT_URL => $url,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.2 (KHTML, like Gecko) Chrome/22.0.1216.0 Safari/537.2'
-                ];
-                curl_setopt_array($ch, $options);
-                $data = curl_exec($ch);
-                curl_close($ch);
-                if (!$data) {
-                    return false;
-                }
+            $ch = curl_init();
+            $options =  [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.2 (KHTML, like Gecko) Chrome/22.0.1216.0 Safari/537.2'
+            ];
+            curl_setopt_array($ch, $options);
+            $data = curl_exec($ch);
+            curl_close($ch);
+            if (!$data) {
+                return false;
+            }
 
-                if (isWebp($data)) {
-                    $image = Image::make(imagecreatefromwebp($url));
-                    $extension = 'webp';
-                } else {
-                    $image = Image::make($data);
-                }
+            if (isWebp($data)) {
+                $image = Image::make(imagecreatefromwebp($url));
+                $extension = 'webp';
             } else {
-                $image = Image::make($url);
+                $image = Image::make($data);
             }
         } catch (NotReadableException $e) {
             return false;
