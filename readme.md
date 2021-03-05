@@ -53,6 +53,7 @@ master    |   6.x | 建议使用
 * Mbstring PHP Extension
 * Tokenizer PHP Extension
 * XML PHP Extension
+* GD PHP Extension
 
 **注意事项**
 
