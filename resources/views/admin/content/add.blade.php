@@ -315,7 +315,11 @@
                                                         accept: "video",
                                                         elem: '#file-upload-{{ $field->name }}' //绑定元素
                                                         ,url: "{{ route('admin::neditor.serve', ['type' => 'uploadvideo']) }}" //上传接口
+                                                        ,before: function(obj) {
+                                                            layer.load()
+                                                        }
                                                         ,done: function(res){
+                                                            layer.closeAll('loading');
                                                             if (res.code != 200) {
                                                                 layer.msg(res.msg)
                                                                 return;
@@ -324,6 +328,7 @@
                                                             $('#video-'+'{{ $field->name }}').attr('src', res.url);
                                                         }
                                                         ,error: function(){
+                                                            layer.closeAll('loading');
                                                             layer.msg('上传失败')
                                                         }
                                                     });
@@ -355,7 +360,11 @@
                                                         accept: "file",
                                                         elem: '#file-upload-{{ $field->name }}' //绑定元素
                                                         ,url: "{{ route('admin::neditor.serve', ['type' => 'uploadfile']) }}" //上传接口
+                                                        ,before: function(obj) {
+                                                            layer.load()
+                                                        }
                                                         ,done: function(res){
+                                                            layer.closeAll('loading');
                                                             if (res.code != 200) {
                                                                 layer.msg(res.msg)
                                                                 return;
@@ -363,6 +372,7 @@
                                                             $('input[name={{ $field->name }}]').val(res.url);
                                                         }
                                                         ,error: function(){
+                                                            layer.closeAll('loading');
                                                             layer.msg('上传失败')
                                                         }
                                                     });
