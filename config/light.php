@@ -80,6 +80,8 @@ return [
         'inputTags' => '标签输入框',
         'upload' => '图片上传（单图）',
         'uploadMulti' => '图片上传（多图）',
+        'uploadVideo' => '视频上传',
+        'uploadAttachment' => '附件上传',
         'datetime' => '日期时间',
         'date' => '日期',
         'reference_category' => '引用分类数据',

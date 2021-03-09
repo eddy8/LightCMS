@@ -298,6 +298,82 @@
                                     </div>
                                 </div>
                                 @break
+                            @case('uploadVideo')
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block">
+                                        <button type="button" class="layui-btn" id="file-upload-{{ $field->name }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled style="background-color: gray" @endif>
+                                            <i class="layui-icon">&#xe67c;</i>上传视频
+                                        </button>
+                                        <script type="text/javascript">
+                                            addLoadEvent(function () {
+                                                layui.use('upload', function(){
+                                                    var upload = layui.upload;
+
+                                                    //执行实例
+                                                    var uploadInst = upload.render({
+                                                        accept: "video",
+                                                        elem: '#file-upload-{{ $field->name }}' //绑定元素
+                                                        ,url: "{{ route('admin::neditor.serve', ['type' => 'uploadvideo']) }}" //上传接口
+                                                        ,done: function(res){
+                                                            if (res.code != 200) {
+                                                                layer.msg(res.msg)
+                                                                return;
+                                                            }
+                                                            $('input[name={{ $field->name }}]').val(res.url);
+                                                            $('#video-'+'{{ $field->name }}').attr('src', res.url);
+                                                        }
+                                                        ,error: function(){
+                                                            layer.msg('上传失败')
+                                                        }
+                                                    });
+                                                });
+                                            });
+                                        </script>
+                                        <div style="float: left;width: 50%">
+                                        <input type="input" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? $field->form_default_value  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif></div>
+                                        <div>
+                                            <video style="max-width: 200px;height: auto" src="{{ $model->{$field->name} ?? $field->form_default_value  }}" controls="controls" id="video-{{ $field->name }}"></video>
+                                        </div>
+                                    </div>
+                                </div>
+                                @break
+                            @case('uploadAttachment')
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block">
+                                        <button type="button" class="layui-btn" id="file-upload-{{ $field->name }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled style="background-color: gray" @endif>
+                                            <i class="layui-icon">&#xe67c;</i>上传附件
+                                        </button>
+                                        <script type="text/javascript">
+                                            addLoadEvent(function () {
+                                                layui.use('upload', function(){
+                                                    var upload = layui.upload;
+
+                                                    //执行实例
+                                                    var uploadInst = upload.render({
+                                                        accept: "file",
+                                                        elem: '#file-upload-{{ $field->name }}' //绑定元素
+                                                        ,url: "{{ route('admin::neditor.serve', ['type' => 'uploadfile']) }}" //上传接口
+                                                        ,done: function(res){
+                                                            if (res.code != 200) {
+                                                                layer.msg(res.msg)
+                                                                return;
+                                                            }
+                                                            $('input[name={{ $field->name }}]').val(res.url);
+                                                        }
+                                                        ,error: function(){
+                                                            layer.msg('上传失败')
+                                                        }
+                                                    });
+                                                });
+                                            });
+                                        </script>
+                                        <div style="float: left;width: 50%">
+                                        <input type="input" name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif autocomplete="off" class="layui-input" value="{{ $model->{$field->name} ?? $field->form_default_value  }}" @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif></div>
+                                    </div>
+                                </div>
+                                @break
                             @case('upload')
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
