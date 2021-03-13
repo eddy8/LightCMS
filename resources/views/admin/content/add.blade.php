@@ -214,6 +214,32 @@
                                     </div>
                                 </div>
                                 @break
+                                @case('grade')
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block">
+                                        <div id="grade-container-{{ $field->name }}"></div>
+                                        <input type="hidden" id="grade-input-{{ $field->name }}" name="{{ $field->name }}" value="{{ $model->{$field->name} ?? $field->form_default_value }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
+                                        <script>
+                                            addLoadEvent(function () {
+                                                layui.use(['rate'], function() {
+                                                    var rate = layui.rate;
+                                                    rate.render({
+                                                        elem: '#grade-container-{{ $field->name }}'
+                                                        ,length: {{ intval($field->form_params) > 0 ? intval($field->form_params) : 5 }}
+                                                        ,value: {{ $model->{$field->name} ?? $field->form_default_value }} //初始值
+                                                        ,text: true //开启文本
+                                                        ,choose: function(value){
+                                                            $('#grade-input-{{ $field->name }}').val(value);
+                                                        }
+                                                        @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) ,readonly: true, @endif
+                                                    });
+                                                });
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                                @break
                             @case('markdown')
                                 @if(!isset($markdown_init))
                                     @php
