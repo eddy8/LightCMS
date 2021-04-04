@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\MenuUpdated' => [
             'App\Listeners\FlushMenuTreeCache',
         ],
+        'Illuminate\Auth\Events\Login' => [
+            'App\Listeners\UpdateUserLastLogin'
+        ]
     ];
 
     /**
