@@ -19,7 +19,7 @@ class AdminUserRepository
     public static function list($perPage, $condition = [])
     {
         $data = AdminUser::query()
-            ->select('id', 'name', 'created_at', 'updated_at', 'status')
+            ->select('id', 'name', 'created_at', 'updated_at', 'status', 'last_login')
             ->where(function ($query) use ($condition) {
                 Searchable::buildQuery($query, $condition);
             })
