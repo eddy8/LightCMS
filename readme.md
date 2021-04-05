@@ -167,6 +167,7 @@ App\Events\ContentCreating    |   Illuminate\Http\Request $request, App\Model\Ad
 App\Events\ContentCreated    |   App\Model\Admin\Content $content, App\Model\Admin\Entity $entity |  新增内容后  |
 App\Events\ContentUpdating    |   Illuminate\Http\Request $request, App\Model\Admin\Entity $entity |  更新内容前  |
 App\Events\ContentUpdated    |   Array $id, App\Model\Admin\Entity $entity |  更新内容后  | $id 为更新内容的 ID 合集
+App\Events\ContentDeleting    |   Illuminate\Support\Collection $contents, App\Model\Admin\Entity $entity |  删除内容前  | $contents 为被删除内容的 App\Model\Admin\Content 对象合集
 App\Events\ContentDeleted    |   Illuminate\Support\Collection $contents, App\Model\Admin\Entity $entity |  删除内容后  | $contents 为被删除内容的 App\Model\Admin\Content 对象合集
 
 ### 模型字段表单类型相关说明
