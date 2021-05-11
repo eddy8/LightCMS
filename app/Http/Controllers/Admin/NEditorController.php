@@ -256,7 +256,7 @@ class NEditorController extends Controller
                 $resource = @imagecreatefromstring($data);
 
                 if ($resource === false) {
-                     throw new NotReadableException(
+                    throw new NotReadableException(
                         "Unable to init from given binary data."
                     );
                 }
