@@ -43,6 +43,7 @@ class AdminUser extends Authenticatable
         'name' => '用户名',
         'statusText' => '状态',
         'roleNames' => '角色',
+        'last_login' => '上次登录',
     ];
 
     public function comments()

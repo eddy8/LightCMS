@@ -8,6 +8,7 @@ namespace App\Http\Controllers\Admin;
 use App\Events\ContentCreated;
 use App\Events\ContentCreating;
 use App\Events\ContentDeleted;
+use App\Events\ContentDeleting;
 use App\Events\ContentUpdated;
 use App\Events\ContentUpdating;
 use App\Http\Controllers\Controller;
@@ -258,6 +259,7 @@ class ContentController extends Controller
     {
         try {
             $content = ContentRepository::findOrFail($id);
+            event(new ContentDeleting(collect([$content]), $this->entity));
             ContentRepository::delete($id);
             event(new ContentDeleted(collect([$content]), $this->entity));
 
@@ -299,6 +301,7 @@ class ContentController extends Controller
         switch ($type) {
             case 'delete':
                 $contents = ContentRepository::model()->whereIn('id', $ids)->get();
+                event(new ContentDeleting($contents, $this->entity));
                 ContentRepository::model()->whereIn('id', $ids)->delete();
                 event(new ContentDeleted($contents, $this->entity));
                 break;
