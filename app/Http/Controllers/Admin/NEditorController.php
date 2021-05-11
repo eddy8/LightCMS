@@ -253,7 +253,15 @@ class NEditorController extends Controller
                 $image = Image::make(imagecreatefromwebp($url));
                 $extension = 'webp';
             } else {
-                $image = Image::make($data);
+                $resource = @imagecreatefromstring($data);
+
+                if ($resource === false) {
+                     throw new NotReadableException(
+                        "Unable to init from given binary data."
+                    );
+                }
+                $image = Image::make($resource);
+                $image->mime = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $data);
             }
         } catch (NotReadableException $e) {
             return false;
