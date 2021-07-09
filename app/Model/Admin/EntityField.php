@@ -5,6 +5,8 @@
 
 namespace App\Model\Admin;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class EntityField extends Model
 {
     const SHOW_ENABLE = 1;
@@ -21,7 +23,7 @@ class EntityField extends Model
 
     protected $guarded = [];
 
-    public function entity()
+    public function entity(): BelongsTo
     {
         return $this->belongsTo('App\Model\Admin\Entity', 'entity_id');
     }

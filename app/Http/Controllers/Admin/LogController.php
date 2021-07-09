@@ -47,18 +47,4 @@ class LogController extends Controller
 
         return $data;
     }
-
-    /**
-     * 编辑日志
-     *
-     * @param int $id
-     * @return View
-     */
-    public function edit($id)
-    {
-        $this->breadcrumb[] = ['title' => '编辑日志', 'url' => ''];
-
-        $model = LogRepository::find($id);
-        return view('admin.log.add', ['id' => $id, 'model' => $model, 'breadcrumb' => $this->breadcrumb]);
-    }
 }
