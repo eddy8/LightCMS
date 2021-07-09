@@ -60,7 +60,7 @@ class MenuRepository
     public static function delete($id)
     {
         // 不能删除非空的父菜单
-        if (!Menu::query()->where('pid', $id)->get()->isEmpty()) {
+        if (Menu::query()->where('pid', $id)->first()) {
             throw new \RuntimeException('不能直接删除非空的父菜单，请先删除当前菜单的所有子菜单');
         }
         return Menu::destroy($id);

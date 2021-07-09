@@ -51,7 +51,8 @@ class CommentController extends BaseController
                 'msg' => 'invalid pid',
             ];
         }
-        if ($pid > 0 && !($parentComment = \App\Repository\Admin\CommentRepository::find($pid))) {
+        $parentComment = \App\Repository\Admin\CommentRepository::find($pid);
+        if ($pid > 0 && !$parentComment) {
             return [
                 'code' => 8,
                 'msg' => '引用评论不存在',

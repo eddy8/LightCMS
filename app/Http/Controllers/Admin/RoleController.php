@@ -134,7 +134,7 @@ class RoleController extends Controller
     /**
      * 角色管理-分配权限
      *
-     * @param $id
+     * @param int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function permission($id)
@@ -153,7 +153,7 @@ class RoleController extends Controller
      * 角色管理-更新权限
      *
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @return array
      */
     public function updatePermission(Request $request, $id)

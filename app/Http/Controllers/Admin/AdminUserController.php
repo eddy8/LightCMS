@@ -138,7 +138,7 @@ class AdminUserController extends Controller
     /**
      * 管理员管理-分配角色
      *
-     * @param $id
+     * @param int $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function role($id)
@@ -159,7 +159,7 @@ class AdminUserController extends Controller
      * 管理员管理-更新用户角色
      *
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @return array
      */
     public function updateRole(Request $request, $id)

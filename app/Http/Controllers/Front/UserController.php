@@ -149,7 +149,7 @@ class UserController extends BaseController
     public function weiboAuth()
     {
         $socialite = new SocialiteManager(config('light.auth_login'));
-        return $socialite->driver('weibo')->redirect();
+        return redirect($socialite->create('weibo')->redirect());
     }
 
     public function weiboCallback()
@@ -160,7 +160,7 @@ class UserController extends BaseController
     public function qqAuth()
     {
         $socialite = new SocialiteManager(config('light.auth_login'));
-        return $socialite->driver('qq')->redirect();
+        return redirect($socialite->create('qq')->redirect());
     }
 
     public function qqCallback()
@@ -171,7 +171,7 @@ class UserController extends BaseController
     public function wechatAuth()
     {
         $socialite = new SocialiteManager(config('light.auth_login'));
-        return $socialite->driver('wechat')->redirect();
+        return redirect($socialite->create('wechat')->redirect());
     }
 
     public function wechatCallback()
@@ -193,7 +193,8 @@ class UserController extends BaseController
     {
         try {
             $socialite = new SocialiteManager(config('light.auth_login'));
-            $user = $socialite->driver($type)->user();
+            $code = request()->query('code');
+            $user = $socialite->create($type)->userFromCode($code);
 
             $openId = (string)$user->getId();
             $siteUser = UserAuth::query()->where('openid', $openId)->first();

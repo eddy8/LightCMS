@@ -67,22 +67,22 @@ class EntityFieldRepository
 
     public static function getFields($entityId)
     {
-        return  EntityField::query()->select('name')->where('entity_id', $entityId)->get()
+        return  EntityField::query()->select('name')->where('entity_id', $entityId)
             ->pluck('name')->toArray();
     }
 
     public static function getSaveFields($entityId)
     {
         return  EntityField::query()->select('name')->where('entity_id', $entityId)
-            ->whereNotIn('form_type', ['inputTags'])->get()->pluck('name')->toArray();
+            ->whereNotIn('form_type', ['inputTags'])->pluck('name')->toArray();
     }
 
     public static function getUpdateFields($entityId)
     {
-        return  EntityField::query()->select('name')->where('entity_id', $entityId)
+        return  EntityField::query()->select('name', 'form_type')->where('entity_id', $entityId)
             ->where('is_edit', EntityField::EDIT_ENABLE)
             ->whereNotIn('form_type', ['inputTags'])
-            ->get()->pluck('form_type', 'name')->toArray();
+            ->pluck('form_type', 'name')->toArray();
     }
 
     public static function getInputTagsField($entityId)

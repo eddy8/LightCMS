@@ -21,7 +21,7 @@ class UserRepository
 
     public static function createAuth($userId, \Overtrue\Socialite\User $user)
     {
-        $type = strtolower($user->getProviderName());
+        $type = strtolower($user->getProvider()::NAME);
         if (!isset(UserAuth::AUTH_TYPE_NAME[$type])) {
             throw new \InvalidArgumentException('三方授权类型未注册');
         }

@@ -14,7 +14,7 @@ class Authorization
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param   string
+     * @param   string $guard
      * @return mixed
      */
     public function handle($request, Closure $next, $guard)

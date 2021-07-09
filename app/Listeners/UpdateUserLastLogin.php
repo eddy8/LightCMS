@@ -24,18 +24,18 @@ class UpdateUserLastLogin
     /**
      * Handle the event.
      *
-     * @param  object  $event
+     * @param  \Illuminate\Auth\Events\Login  $event
      * @return void
      */
     public function handle(Login $event)
     {
         if ($event->guard === 'member') {
             User::query()
-                ->where('id', $event->user->id)
+                ->where('id', $event->user->getAuthIdentifier())
                 ->update(['last_login' => Carbon::now()]);
         } elseif ($event->guard === 'admin') {
             AdminUser::query()
-                ->where('id', $event->user->id)
+                ->where('id', $event->user->getAuthIdentifier())
                 ->update(['last_login' => Carbon::now()]);
         }
     }
