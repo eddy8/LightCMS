@@ -44,7 +44,7 @@ class CommentController extends BaseController
                 'msg' => '评论内容过长',
             ];
         }
-        $pid = (int) $request->post('pid', 0);
+        $pid = (int) $request->post('pid');
         if ($pid < 0) {
             return [
                 'code' => 7,

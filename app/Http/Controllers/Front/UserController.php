@@ -9,9 +9,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Requests\Front\LoginRequest;
 use App\Model\Front\User;
-use Auth;
-use Overtrue\Socialite\AuthorizeFailedException;
-use Overtrue\Socialite\InvalidStateException;
+use Illuminate\Support\Facades\Auth;
+use Overtrue\Socialite\Exceptions\AuthorizeFailedException;
+use Overtrue\Socialite\Exceptions\InvalidTokenException;
 use Overtrue\Socialite\SocialiteManager;
 use Illuminate\Auth\Events\Registered;
 
@@ -208,7 +208,7 @@ class UserController extends BaseController
             return redirect(route('member::login.show'));
         } catch (AuthorizeFailedException $e) {
             return redirect(route('member::login.show'))->withErrors('授权失败');
-        } catch (InvalidStateException $e) {
+        } catch (InvalidTokenException $e) {
             return redirect(route('member::login.show'))->withErrors('invalid state');
         }
     }
