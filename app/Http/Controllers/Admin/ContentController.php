@@ -227,7 +227,10 @@ class ContentController extends Controller
                     $tagIds[] = $tag->id;
                 }
                 if ($tagIds) {
-                    ContentTag::where('entity_id', $entity)->where('content_id', $id)->whereNotIn('tag_id', $tagIds)->delete();
+                    ContentTag::where('entity_id', $entity)
+                        ->where('content_id', $id)
+                        ->whereNotIn('tag_id', $tagIds)
+                        ->delete();
                 }
             }
 
@@ -321,7 +324,10 @@ class ContentController extends Controller
         $entityRequestClass = '\\App\\Http\\Requests\\Admin\\Entity\\' .
             Str::ucfirst(Str::singular($this->entity->table_name)) . 'Request';
         if (class_exists($entityRequestClass)) {
-            $entityRequestClass::capture()->setContainer(app())->setRedirector(app()->make('redirect'))->validateResolved();
+            $entityRequestClass::capture()
+                ->setContainer(app())
+                ->setRedirector(app()->make('redirect'))
+                ->validateResolved();
         }
     }
 

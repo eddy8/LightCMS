@@ -237,10 +237,11 @@ class NEditorController extends Controller
             }
 
             $ch = curl_init();
+            $ua = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.2 (KHTML, like Gecko) Chrome/22.0.1216.0 Safari/537.2';
             $options =  [
                 CURLOPT_URL => $url,
                 CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.2 (KHTML, like Gecko) Chrome/22.0.1216.0 Safari/537.2'
+                CURLOPT_USERAGENT => $ua
             ];
             curl_setopt_array($ch, $options);
             $data = curl_exec($ch);
