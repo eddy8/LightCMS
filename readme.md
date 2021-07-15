@@ -169,6 +169,8 @@ App\Events\ContentUpdating    |   Illuminate\Http\Request $request, App\Model\Ad
 App\Events\ContentUpdated    |   Array $id, App\Model\Admin\Entity $entity |  更新内容后  | $id 为更新内容的 ID 合集
 App\Events\ContentDeleting    |   Illuminate\Support\Collection $contents, App\Model\Admin\Entity $entity |  删除内容前  | $contents 为被删除内容的 App\Model\Admin\Content 对象合集
 App\Events\ContentDeleted    |   Illuminate\Support\Collection $contents, App\Model\Admin\Entity $entity |  删除内容后  | $contents 为被删除内容的 App\Model\Admin\Content 对象合集
+App\Events\ContentCreateShow    |   App\Model\Admin\Entity $entity, App\Foundation\ViewData $viewData |  新增内容表单展示前  | 通过调用$viewData的addCss、addJs、addTemplate方法，注入自定义css文件、js文件、模板至新增表单中
+App\Events\ContentEditShow    |   App\Model\Admin\Entity $entity, Illuminate\Database\Eloquent\Model $model, App\Foundation\ViewData $viewData |  更新内容表单展示前  | 通过调用$viewData的addCss、addJs、addTemplate方法，注入自定义css文件、js文件、模板至更新表单中
 
 ### 模型字段表单类型相关说明
 对于支持远程搜索的`select`表单类型，后端 API 搜索接口需返回的数据格式如下所示。code为0时, 表示正常, 反之异常。

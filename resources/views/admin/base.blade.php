@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/public/vendor/layui-v2.4.5/css/layui.css" media="all">
     <link rel="stylesheet" href="/public/admin/css/lightCMSAdmin.css" media="all">
     @yield('css')
+    @yield('head-js')
 </head>
 <body class="layui-layout-body">
 @php

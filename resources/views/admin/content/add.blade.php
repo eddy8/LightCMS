@@ -1,6 +1,14 @@
 @extends('admin.base')
 @section('css')
     <link rel="stylesheet" type="text/css" href="/public/vendor/zoom/zoom.css">
+    @foreach($viewData->getCss() as $css)
+    <link rel="stylesheet" type="text/css" href="{{$css}}">
+    @endforeach
+@endsection
+@section('head-js')
+    @foreach($viewData->getJs() as $js)
+    <script src="{{$js}}"></script>
+    @endforeach
 @endsection
 @section('content')
     <style>
@@ -569,6 +577,9 @@
                                 @break
 
                         @endswitch
+                    @endforeach
+                    @foreach($viewData->getIncludeTemplate() as $template)
+                        @include($template)
                     @endforeach
                 <div class="layui-form-item">
                     <div class="layui-input-block">

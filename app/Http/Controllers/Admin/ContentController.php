@@ -6,11 +6,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Events\ContentCreated;
+use App\Events\ContentCreateShow;
 use App\Events\ContentCreating;
 use App\Events\ContentDeleted;
 use App\Events\ContentDeleting;
+use App\Events\ContentEditShow;
 use App\Events\ContentUpdated;
 use App\Events\ContentUpdating;
+use App\Foundation\ViewData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ContentRequest;
 use App\Model\Admin\Content;
@@ -102,12 +105,15 @@ class ContentController extends Controller
         $this->breadcrumb[] = ['title' => "新增{$this->entity->name}内容", 'url' => ''];
         $view = $this->getAddOrEditViewPath();
 
+        $viewData = new ViewData();
+        event(new ContentCreateShow($this->entity, $viewData));
         return view($view, [
             'breadcrumb' => $this->breadcrumb,
             'entity' => $entity,
             'entityModel' => $this->entity,
             'entityFields' => EntityFieldRepository::getByEntityId($entity),
-            'autoMenu' => EntityRepository::systemMenu()
+            'autoMenu' => EntityRepository::systemMenu(),
+            'viewData' => $viewData,
         ]);
     }
 
@@ -180,6 +186,8 @@ class ContentController extends Controller
         $view = $this->getAddOrEditViewPath();
         $model = ContentRepository::find($id);
 
+        $viewData = new ViewData();
+        event(new ContentEditShow($this->entity, $model, $viewData));
         return view($view, [
             'id' => $id,
             'model' => $model,
@@ -187,7 +195,8 @@ class ContentController extends Controller
             'entity' => $entity,
             'entityModel' => $this->entity,
             'entityFields' => EntityFieldRepository::getByEntityId($entity),
-            'autoMenu' => EntityRepository::systemMenu()
+            'autoMenu' => EntityRepository::systemMenu(),
+            'viewData' => $viewData,
         ]);
     }
 
