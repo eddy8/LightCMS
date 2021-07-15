@@ -2,12 +2,20 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Events\ContentCreated;
+use App\Events\ContentCreating;
+use App\Events\ContentDeleted;
+use App\Events\ContentDeleting;
+use App\Events\ContentEditShow;
+use App\Events\ContentUpdated;
+use App\Events\ContentUpdating;
 use App\Model\Admin\AdminUser;
 use App\Model\Admin\Entity;
 use App\Model\Admin\EntityField;
 use App\Repository\Admin\EntityRepository;
 use App\Repository\Admin\ContentRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 use Illuminate\Database\Schema\Blueprint;
@@ -94,6 +102,7 @@ class EntityFieldControllerTest extends TestCase
 
     public function testEntityContentCanBeCreatedAndEditedAndListedAndDeleted()
     {
+        Event::fake();
         // 字段可编辑
         $this->createEntityField(true, true);
         $data = [
@@ -104,6 +113,8 @@ class EntityFieldControllerTest extends TestCase
         $response = $this->actingAs($this->user, 'admin')
             ->post('/admin/entity/' . $this->entity->id . '/contents', $data);
         $response->assertJson(['code' => 0]);
+        Event::assertDispatched(ContentCreating::class);
+        Event::assertDispatched(ContentCreated::class);
 
         $updateData = [
             'title' => '测试修改标题',
@@ -113,6 +124,8 @@ class EntityFieldControllerTest extends TestCase
         $response = $this->actingAs($this->user, 'admin')
             ->put('/admin/entity/' . $this->entity->id . '/contents/1', $updateData);
         $response->assertJson(['code' => 0]);
+        Event::assertDispatched(ContentUpdating::class);
+        Event::assertDispatched(ContentUpdated::class);
         $this->assertEquals('tag1,tag3', ContentRepository::tagNames($this->entity->id, 1));
         $this->assertDatabaseHas($this->entity->table_name, ['title' => $updateData['title']]);
 
@@ -126,6 +139,8 @@ class EntityFieldControllerTest extends TestCase
         $response = $this->actingAs($this->user, 'admin')
             ->post('/admin/entity/' . $this->entity->id . '/contents/1', ['_method' => 'DELETE']);
         $response->assertJson(['code' => 0]);
+        Event::assertDispatched(ContentDeleting::class);
+        Event::assertDispatched(ContentDeleted::class);
     }
 
     public function testEntityContentCanNotBeEditedWhenFieldIsNotEditable()
@@ -181,6 +196,8 @@ class EntityFieldControllerTest extends TestCase
 
     public function testEntityFieldFormDefaultValueIsOK()
     {
+        Event::fake();
+
         $this->createEntityField(true, true);
         $response = $this->actingAs($this->user, 'admin')
             ->get(route('admin::content.create', ['entity' => $this->entity->id]));
@@ -198,6 +215,7 @@ class EntityFieldControllerTest extends TestCase
             ->get(route('admin::content.edit', ['entity' => $this->entity->id, 'id' => 1]));
         $response->assertSee('<option value="0"  selected >男', false);
         $response->assertSee('value="测试标题"', false);
+        Event::assertDispatched(ContentEditShow::class);
     }
 
     public function testEntityFieldSelectMultiOfUnsignedIntegerIsOK()
