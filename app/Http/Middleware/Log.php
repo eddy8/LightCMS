@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use App\Repository\Admin\LogRepository;
 use Carbon\Carbon;
 use Closure;
-use function GuzzleHttp\Psr7\build_query;
+use GuzzleHttp\Psr7\Query;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\WriteSystemLog;
 
@@ -35,7 +35,7 @@ class Log
         if (isset($input['password'])) {
             $input['password'] = '******';
         }
-        $data['data'] = build_query($input, false);
+        $data['data'] = Query::build($input, false);
 
         if (config('light.log_async_write')) {
             $data['updated_at'] = $data['created_at'] = Carbon::now();
