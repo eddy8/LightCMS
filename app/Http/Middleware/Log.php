@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Closure;
 use GuzzleHttp\Psr7\Query;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Jobs\WriteSystemLog;
 
 class Log
@@ -28,9 +29,13 @@ class Log
                 $data['user_name'] = $user->name;
             }
         }
-        $data['url'] = $request->url();
-        $data['ua'] = $request->userAgent();
-        $data['ip'] = (string) $request->getClientIp();
+
+        $route = Route::current();
+        $data['route_name'] = (string) $route->getName();
+
+        $data['url'] = mb_substr($request->url(), 0, 191);
+        $data['ua'] = mb_substr((string) $request->userAgent(), 0, 512);
+        $data['ip'] = mb_substr((string) $request->getClientIp(), 0, 15);
         $input = $request->all();
         if (isset($input['password'])) {
             $input['password'] = '******';

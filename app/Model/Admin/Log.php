@@ -13,12 +13,14 @@ class Log extends Model
         'user_name' => '用户',
         'url' => 'URL',
         'data' => 'data',
+        'route_name' => '路由名称',
     ];
 
     public static $listField = [
         'user_name' => '用户',
         'url' => 'URL',
         'data' => 'data',
+        'route_name' => '路由名称',
         'ip' => 'IP',
         'ua' => 'userAgent',
     ];
