@@ -118,4 +118,30 @@ class CategoryRepository
                 return $data;
             })->sortBy('order');
     }
+
+    /**
+     * 获取分类数组，key为分类ID，value为分类名称
+     *
+     * @return array
+     */
+    public static function idMapNameArr(): array
+    {
+        return Category::query()->pluck('name', 'id')->toArray();
+    }
+
+    /**
+     * 获取分类表单（select）配置
+     *
+     * @param string $title 展示标题
+     * @return array
+     */
+    public static function selectForm(string $title = '分类'): array
+    {
+        return [ // key 为字段名称，value 为相关配置
+            'showType' => 'select',
+            'searchType' => '=',
+            'title' => $title,
+            'enums' => self::idMapNameArr(),
+        ];
+    }
 }

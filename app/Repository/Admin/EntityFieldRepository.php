@@ -96,4 +96,28 @@ class EntityFieldRepository
     {
         return in_array($formType, ['inputTags'], true);
     }
+
+    /**
+     * 获取指定字段的枚举值，展示 select 表单用
+     *
+     * @param int $entityId 模型ID
+     * @param string $fieldName 字段名
+     * @return array
+     */
+    public static function formEnums(int $entityId, string $fieldName): array
+    {
+        $field = EntityField::query()
+            ->where('entity_id', $entityId)
+            ->where('name', $fieldName)
+            ->first();
+        if (!$field) {
+            throw new \InvalidArgumentException('字段不存在：{$fieldName}');
+        }
+        $fieldArr = parseEntityFieldParams($field->form_params);
+        $enums = [];
+        foreach ($fieldArr as $v) {
+            $enums[$v[0]] = $v[1];
+        }
+        return $enums;
+    }
 }
