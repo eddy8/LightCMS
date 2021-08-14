@@ -5,6 +5,8 @@ use App\Foundation\Tire;
 use Illuminate\Support\Facades\Cache;
 use App\Model\Admin\SensitiveWord;
 use App\Model\Admin\Config as SiteConfig;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * 直接从数据库获取系统后台配置
@@ -196,4 +198,60 @@ function isWebp($data)
     }
 
     return false;
+}
+
+/**
+ * 发送 http 请求
+ * @param string $url 目标 url
+ * @param string $method 方法
+ * @param array $options http 选项
+ * @param int $retry 重试次数
+ * @return \Psr\Http\Message\ResponseInterface|null
+ * @throws GuzzleException
+ */
+function sendHttpRequest(string $url, string $method = 'GET', array $options = [], int $retry = 3)
+{
+    $response = null;
+    $client = new Client(['timeout' => 5]);
+    for ($i = 1; $i <= $retry; $i++) {
+        try {
+            $response = $client->request($method, $url, $options);
+            return $response;
+        } catch (GuzzleException $e) {
+            if ($i === $retry) {
+                throw $e;
+            }
+            usleep($i * 100000);
+            continue;
+        }
+    }
+
+    return $response;
+}
+
+/**
+ * @param string $url
+ * @param $content
+ * @return \Psr\Http\Message\ResponseInterface
+ * @throws GuzzleException
+ */
+function sendDingGroupMessage(string $url, $content): \Psr\Http\Message\ResponseInterface
+{
+    $client = new Client(['timeout' => 10]);
+
+    if (is_array($content)) {
+        $data = $content;
+    } else {
+        $data = [
+            'msgtype' => 'text',
+            'text' => [
+                'content' => $content
+            ],
+            'at' => [
+                'isAtAll' => true
+            ]
+        ];
+    }
+
+    return $client->post($url, ['json' => $data]);
 }
