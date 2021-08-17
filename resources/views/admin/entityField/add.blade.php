@@ -135,6 +135,13 @@
                                 <input type="checkbox" name="is_required" lay-skin="switch" lay-text="是|否" value="1" @if(!isset($model) || isset($model) && $model->is_required == App\Model\Admin\EntityField::REQUIRED_ENABLE) checked @endif>
                             </div>
                         </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">列表展示</label>
+                            <div class="layui-input-inline">
+                                <input type="checkbox" name="is_list_display" lay-skin="switch" lay-text="是|否" value="1" @if(isset($model) && $model->is_list_display == App\Model\Admin\EntityField::SHOW_LIST) checked @endif>
+                            </div>
+                        </div>
                     </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">

@@ -120,4 +120,19 @@ class EntityFieldRepository
         }
         return $enums;
     }
+
+    /**
+     * 获取列表中展示字段
+     *
+     * @param int $entityId 实体ID
+     * @return array
+     */
+    public static function listDisplayFields(int $entityId): array
+    {
+        return  EntityField::query()
+            ->select('name', 'form_name')
+            ->where('entity_id', $entityId)
+            ->where('is_list_display', EntityField::SHOW_LIST)
+            ->pluck('form_name', 'name')->toArray();
+    }
 }

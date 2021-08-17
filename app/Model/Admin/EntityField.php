@@ -21,6 +21,9 @@ class EntityField extends Model
     const REQUIRED_ENABLE = 1;
     const REQUIRED_DISABLE = 0;
 
+    const SHOW_LIST = 1;
+    const SHOW_NOT_LIST = 0;
+
     protected $guarded = [];
 
     public function entity(): BelongsTo
@@ -38,6 +41,7 @@ class EntityField extends Model
             'title' => '行内展示', 'sort' => true, 'templet' => '#isShowInlineTemplet', 'event' => 'showInlineEvent'
         ],
         'is_show' => ['title' => '显示', 'templet' => '#isShowTemplet', 'event' => 'showEvent'],
+        'is_list_display' => ['title' => '列表显示', 'templet' => '#isShowList', 'event' => 'showListEvent'],
         'order' => ['title' => '排序', 'sort' => true, 'edit' => true, 'width' => 80],
     ];
 
