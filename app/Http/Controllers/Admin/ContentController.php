@@ -62,7 +62,7 @@ class ContentController extends Controller
         }
 
         $this->breadcrumb[] = ['title' => $this->entity->name . '内容列表', 'url' => ''];
-        Content::$listField = EntityFieldRepository::listDisplayFields($entity);
+        Content::$listField = array_merge(EntityFieldRepository::listDisplayFields($entity), Content::$listField);
         return view('admin.content.index', [
             'breadcrumb' => $this->breadcrumb,
             'entity' => $entity,
