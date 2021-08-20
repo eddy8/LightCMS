@@ -133,6 +133,8 @@ class EntityFieldRepository
             ->select('name', 'form_name')
             ->where('entity_id', $entityId)
             ->where('is_list_display', EntityField::SHOW_LIST)
+            ->orderBy('list_sort')
+            ->orderBy('id')
             ->pluck('form_name', 'name')->toArray();
     }
 }
