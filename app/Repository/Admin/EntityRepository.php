@@ -137,7 +137,7 @@ class EntityRepository
     public static function systemMenu()
     {
         $entities = Entity::query()->where('is_show_content_manage', Entity::CONTENT_MANAGE_YES)
-            ->pluck('name', 'id')->all();
+            ->orderBy('sort')->pluck('name', 'id')->all();
         $autoMenu = [];
         foreach ($entities as $k => $v) {
             $autoMenu[] = [

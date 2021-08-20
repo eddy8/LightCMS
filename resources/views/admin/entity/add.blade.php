@@ -36,6 +36,12 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">排序</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="sort" autocomplete="off" class="layui-input" value="{{ $model->sort ?? 0  }}">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">内部模型</label>
                         <div class="layui-input-inline">
                             <input type="radio" name="is_internal" value="1" title="是"  @if(!isset($model) || isset($model) && $model->is_internal == App\Model\Admin\Entity::INTERNAL_YES) checked @endif>
