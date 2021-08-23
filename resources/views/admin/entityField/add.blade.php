@@ -176,7 +176,7 @@
                                 <option value="datetime" @if(isset($model) && $model->show_type == 'datetime') selected @endif>日期时间范围</option>
                             </select>
                         </div>
-                        <div class="layui-form-mid layui-word-aux">模糊查询即为数据库的Like查询</div>
+                        <div class="layui-form-mid layui-word-aux">下拉选择的选项数据来源于表单参数值。对于表单类型为引用分类数据，系统自动处理，无需单独设置</div>
                     </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
