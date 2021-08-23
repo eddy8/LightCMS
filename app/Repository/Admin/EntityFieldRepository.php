@@ -152,14 +152,16 @@ class EntityFieldRepository
             ->where('is_enable_search', EntityField::SEARCH_ENABLE)
             ->orderBy('list_sort')
             ->get()
-            ->each(function ($item) use (&$searchField) {
+            ->each(function ($item) use (&$searchField, $entityId) {
                 $searchField[$item->name] = [
                     'showType' => $item->show_type,
                     'searchType' => $item->search_type,
                     'title' => $item->form_name,
                 ];
                 if ($item->show_type === 'select') {
-                    $searchField[$item->name]['enums'] = array_column(parseEntityFieldParams($item->form_params), 1, 0);
+                    $searchField[$item->name]['enums'] = $item->form_type === 'reference_category' ?
+                        CategoryRepository::idMapNameArr($entityId) :
+                        array_column(parseEntityFieldParams($item->form_params), 1, 0);
                 }
             });
         return $searchField;

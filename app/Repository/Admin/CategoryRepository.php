@@ -124,9 +124,11 @@ class CategoryRepository
      *
      * @return array
      */
-    public static function idMapNameArr(): array
+    public static function idMapNameArr(int $entityId = 0): array
     {
-        return Category::query()->pluck('name', 'id')->toArray();
+        return Category::query()->when($entityId > 0, function ($query) use ($entityId) {
+            return $query->where('model_id', $entityId);
+        })->pluck('name', 'id')->toArray();
     }
 
     /**
