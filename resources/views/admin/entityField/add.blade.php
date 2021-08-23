@@ -150,6 +150,34 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">启用搜索</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="is_enable_search" lay-skin="switch" lay-text="是|否" value="1" @if(isset($model) && $model->is_enable_search == App\Model\Admin\EntityField::SEARCH_ENABLE) checked @endif>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">搜索方式</label>
+                        <div class="layui-input-inline" style="width: 400px">
+                            <select name="search_type" lay-verify="required" lay-filter="form_type">
+                                <option value="like" @if(isset($model) && $model->search_type == 'like') selected @endif>模糊查询</option>
+                                <option value="=" @if(isset($model) && $model->search_type == '=') selected @endif>精确查询</option>
+                            </select>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">模糊查询即为数据库的Like查询</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">搜索表单</label>
+                        <div class="layui-input-inline" style="width: 400px">
+                            <select name="show_type" lay-verify="required" lay-filter="form_type">
+                                <option value="input" @if(isset($model) && $model->show_type == 'input') selected @endif>输入值（input）</option>
+                                <option value="select" @if(isset($model) && $model->show_type == 'select') selected @endif>下拉选择（select）</option>
+                                <option value="datetime" @if(isset($model) && $model->show_type == 'datetime') selected @endif>日期时间范围</option>
+                            </select>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">模糊查询即为数据库的Like查询</div>
+                    </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button class="layui-btn" lay-submit lay-filter="formAdminUser" id="submitBtn">提交</button>

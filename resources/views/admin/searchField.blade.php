@@ -33,6 +33,13 @@
                         </select>
                     </div>
                 </div>
+            @elseif($v['showType'] === 'input')
+                <div class="layui-inline">
+                    <label class="layui-form-label">{{ $v['title'] }}</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="{{ $k }}" autocomplete="off" class="layui-input" value="{{ request()->get($k) }}">
+                    </div>
+                </div>
             @elseif($v['showType'] === 'datetime')
                 <div class="layui-inline">
                     <label class="layui-form-label">{{ $v['title'] }}</label>

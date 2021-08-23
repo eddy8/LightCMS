@@ -24,6 +24,9 @@ class EntityField extends Model
     const SHOW_LIST = 1;
     const SHOW_NOT_LIST = 0;
 
+    const SEARCH_ENABLE = 1;
+    const SEARCH_DISABLE = 0;
+
     protected $guarded = [];
 
     public function entity(): BelongsTo

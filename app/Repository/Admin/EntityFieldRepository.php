@@ -137,4 +137,31 @@ class EntityFieldRepository
             ->orderBy('id')
             ->pluck('form_name', 'name')->toArray();
     }
+
+    /**
+     * 获取指定模型的搜索项配置
+     *
+     * @param int $entityId
+     * @return array
+     */
+    public static function searchableFields(int $entityId): array
+    {
+        $searchField = [];
+        EntityField::query()
+            ->where('entity_id', $entityId)
+            ->where('is_enable_search', EntityField::SEARCH_ENABLE)
+            ->orderBy('list_sort')
+            ->get()
+            ->each(function ($item) use (&$searchField) {
+                $searchField[$item->name] = [
+                    'showType' => $item->show_type,
+                    'searchType' => $item->search_type,
+                    'title' => $item->form_name,
+                ];
+                if ($item->show_type === 'select') {
+                    $searchField[$item->name]['enums'] = array_column(parseEntityFieldParams($item->form_params), 1, 0);
+                }
+            });
+        return $searchField;
+    }
 }

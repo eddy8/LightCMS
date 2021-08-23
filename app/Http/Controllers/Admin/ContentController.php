@@ -63,12 +63,18 @@ class ContentController extends Controller
 
         $this->breadcrumb[] = ['title' => $this->entity->name . '内容列表', 'url' => ''];
         Content::$listField = array_merge(EntityFieldRepository::listDisplayFields($entity), Content::$listField);
+        $this->setSearchField($entity);
         return view('admin.content.index', [
             'breadcrumb' => $this->breadcrumb,
             'entity' => $entity,
             'entityModel' => $this->entity,
             'autoMenu' => EntityRepository::systemMenu()
         ]);
+    }
+
+    private function setSearchField(int $entity)
+    {
+        Content::$searchField = array_merge(EntityFieldRepository::searchableFields($entity), Content::$searchField);
     }
 
     /**
@@ -89,6 +95,7 @@ class ContentController extends Controller
         $this->formNames = array_merge(['created_at', 'light_sort_fields'], EntityFieldRepository::getFields($entity));
         $condition = $request->only($this->formNames);
 
+        $this->setSearchField($entity);
         $data = ContentRepository::list($entity, $perPage, $condition);
 
         return $data;
