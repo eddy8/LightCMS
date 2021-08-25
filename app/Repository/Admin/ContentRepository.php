@@ -5,6 +5,7 @@
 
 namespace App\Repository\Admin;
 
+use App\Events\ContentListDataReturning;
 use App\Model\Admin\Content;
 use App\Model\Admin\ContentTag;
 use App\Model\Admin\Entity;
@@ -48,6 +49,8 @@ class ContentRepository
             $item->commentListUrl = route('admin::comment.index', ['content_id' => $item->id, 'entity_id' => $entity]);
             return $item;
         });
+
+        event(new ContentListDataReturning($entity, $data));
 
         return [
             'code' => 0,

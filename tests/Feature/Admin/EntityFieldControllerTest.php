@@ -9,6 +9,8 @@ use App\Events\ContentDeleting;
 use App\Events\ContentEditShow;
 use App\Events\ContentUpdated;
 use App\Events\ContentUpdating;
+use App\Events\ContentListDataReturning;
+use App\Events\ContentListShow;
 use App\Model\Admin\AdminUser;
 use App\Model\Admin\Entity;
 use App\Model\Admin\EntityField;
@@ -130,9 +132,14 @@ class EntityFieldControllerTest extends TestCase
         $this->assertDatabaseHas($this->entity->table_name, ['title' => $updateData['title']]);
 
         $response = $this->actingAs($this->user, 'admin')
+            ->get('/admin/entity/' . $this->entity->id . '/contents');
+        Event::assertDispatched(ContentListShow::class);
+
+        $response = $this->actingAs($this->user, 'admin')
             ->get(
                 '/admin/entity/' . $this->entity->id . '/contents/list/?action=search&title=' . urlencode($updateData['title'])
             );
+        Event::assertDispatched(ContentListDataReturning::class);
         $response->assertJson(['code' => 0]);
         $response->assertJsonFragment(['title' => $updateData['title']]);
 

@@ -230,8 +230,10 @@ function sendHttpRequest(string $url, string $method = 'GET', array $options = [
 }
 
 /**
+ * 发送钉钉群消息
+ *
  * @param string $url
- * @param $content
+ * @param mixed $content
  * @return \Psr\Http\Message\ResponseInterface
  * @throws GuzzleException
  */

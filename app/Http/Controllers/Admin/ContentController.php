@@ -11,6 +11,7 @@ use App\Events\ContentCreating;
 use App\Events\ContentDeleted;
 use App\Events\ContentDeleting;
 use App\Events\ContentEditShow;
+use App\Events\ContentListShow;
 use App\Events\ContentUpdated;
 use App\Events\ContentUpdating;
 use App\Foundation\ViewData;
@@ -64,6 +65,7 @@ class ContentController extends Controller
         $this->breadcrumb[] = ['title' => $this->entity->name . '内容列表', 'url' => ''];
         Content::$listField = array_merge(EntityFieldRepository::listDisplayFields($entity), Content::$listField);
         $this->setSearchField($entity);
+        event(new ContentListShow($entity));
         return view('admin.content.index', [
             'breadcrumb' => $this->breadcrumb,
             'entity' => $entity,
