@@ -23,6 +23,7 @@ Route::group(
 
             Route::get('/index', 'HomeController@showIndex')->name('index');
             Route::get('/aggregation', 'HomeController@showAggregation')->name('aggregation');
+            Route::get('/tips', 'HomeController@showTips')->name('tips');
 
             //NEditor路由
             Route::post('/neditor/serve/{type}', 'NEditorController@serve')->name('neditor.serve');

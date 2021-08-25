@@ -14,7 +14,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        'App\Exceptions\InvalidAppDataException'
     ];
 
     /**

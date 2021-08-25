@@ -32,4 +32,12 @@ class HomeController extends Controller
     {
         return view('admin.home.content', ['autoMenu' => EntityRepository::systemMenu()]);
     }
+
+    /**
+     * 基础功能-提示页面
+     */
+    public function showTips()
+    {
+        return view('admin.home.tips', ['autoMenu' => EntityRepository::systemMenu()]);
+    }
 }
