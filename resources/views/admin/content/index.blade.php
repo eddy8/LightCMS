@@ -35,6 +35,13 @@
             </form>
         </div>
         <div class="layui-card-body">
+            @isset(App\Model\Admin\Content::$btnField)
+            <div>
+            @foreach(App\Model\Admin\Content::$btnField as $v)
+                <a target="{{ $v['target'] ?? '' }}" href="{{ $v['url'] }}" class="layui-btn layui-btn-sm layui-btn-normal {{ $v['class'] ?? '' }}" title="{{ $v['description'] ?? '' }}">{{ $v['title'] }}</a>
+            @endforeach
+            </div>
+            @endisset
             <table class="layui-table" lay-data="{url:'{{ route('admin::content.list', ['entity' => $entity]) }}?{{ request()->getQueryString() }}', page:true, limit:50, id:'test', toolbar:'<div><a href=\'{{ route('admin::content.create', ['entity' => $entity]) }}\'><i class=\'layui-icon layui-icon-add-1\'></i><span class=\'layui-badge\'>新增{{ $entityModel->name }}内容</span></a></div>'}" lay-filter="test">
                 <thead>
                 <tr>

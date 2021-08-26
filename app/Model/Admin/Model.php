@@ -51,4 +51,11 @@ class Model extends BaseModel
      * @var array
      */
     public static $sortFields = [];
+
+    /**
+     * 列表页按钮
+     *
+     * @var array
+     */
+    public static $btnField = [];
 }

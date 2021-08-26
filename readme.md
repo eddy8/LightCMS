@@ -276,7 +276,23 @@ App\Events\ContentListDataReturning    |   int $entityId, Illuminate\Contracts\P
     ];
 ```
 
+### 按钮字段（$btnField）配置说明
+通过配置按钮字段，可以很方便的在模型的列表页自定义操作按钮。如下是一个示例配置：
+```php
+    public static $btnField = [
+        [
+            'title' => 'Google',
+            'description' => '搜索引擎',
+            'url' => 'https://www.google.com',
+            'target' => '_blank',
+            'class' => '',
+        ],
+    ];
+```
+
 > 小提示：如果你是自定义模型，建议自定义模型继承`App\Model\Admin\Model`模型，方便对上述配置项进行自定义。
+
+> 通过监听特定的事件来配置上述属性，可以方便的自定义各种展示效果。
 
 ## 系统日志
 `lightCMS`集成了一套简单的日志系统，默认情况下记录后台的所有操作相关信息，具体实现可以参考`Log`中间件。
