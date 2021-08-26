@@ -21,7 +21,7 @@ var ajax_options = {
             layer.msg('资源不存在', {icon: 5});
             return false;
         } else if (resp.status === 401) {
-            layer.msg('请先登录', {shift: 6});
+            layer.msg('权限不足或未登录', {shift: 6});
             return false;
         } else if (resp.status === 429) {
             layer.msg('访问过于频繁，请稍后再试', {shift: 6});
