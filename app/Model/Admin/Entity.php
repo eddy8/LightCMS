@@ -22,6 +22,7 @@ class Entity extends Model
         'name' => '名称',
         'table_name' => '数据库表名',
         'description' => '描述',
+        'sort' => ['title' => '排序', 'sort' => true, 'edit' => true, 'width' => 80],
     ];
 
     public function fields()
