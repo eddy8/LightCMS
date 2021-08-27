@@ -282,7 +282,7 @@ class EntityFieldController extends Controller
             $entityField = EntityField::query()->findOrFail($id);
 
             $data = $request->only(
-                ['is_show', 'is_edit', 'is_required', 'order', 'is_show_inline', 'is_list_display']
+                ['is_show', 'is_edit', 'is_required', 'order', 'is_show_inline', 'is_list_display', 'list_sort']
             );
             foreach ($data as $key => $value) {
                 $entityField->$key = $value;

@@ -82,7 +82,7 @@
                 url: '{{ route('admin::entityField.listUpdate', ['id' => '__replace_id']) }}'.replace('__replace_id', obj.data.id),
                 method: 'put',
                 dataType: 'json',
-                data: {order: obj.value},
+                data: {[obj.field]: obj.value},
                 success: function (result) {
                     if (result.code !== 0) {
                         layer.msg(result.msg, {shift: 3});

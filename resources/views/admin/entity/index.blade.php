@@ -29,6 +29,14 @@
     <a href="<% d.contentUrl %>" class="layui-table-link" title="字段管理" style="margin-left: 5px">内容管理</a>
 </script>
 
+<script type="text/html" id="isShowContentManage">
+    <input data-id="<% d.id %>" type="checkbox" name="is_show_content_manage" lay-skin="switch" lay-text="是|否"
+    <%# if (d.is_show_content_manage == 1) { %>
+    checked
+    <%# } %>
+    >
+</script>
+
 @section('js')
     <script>
         var laytpl = layui.laytpl;
@@ -50,6 +58,29 @@
                 method: 'put',
                 dataType: 'json',
                 data: {sort: obj.value},
+                success: function (result) {
+                    if (result.code !== 0) {
+                        layer.msg(result.msg, {shift: 3});
+                        return false;
+                    }
+                    layer.msg(result.msg, {icon: 1});
+                }
+            });
+        });
+
+        table.on('tool(test)', function (obj) {
+            var event = obj.event, tr = obj.tr;
+            var maps = {
+                showContentManageEvent: "is_show_content_manage"
+            };
+
+            var key = maps[event];
+            var val = tr.find("input[name='" + key + "']").prop('checked') ? 1 : 0;
+            $.ajax({
+                url: '{{ route('admin::entity.listUpdate', ['id' => '__replace_id']) }}'.replace('__replace_id', obj.data.id),
+                method: 'put',
+                dataType: 'json',
+                data: {[key]: val},
                 success: function (result) {
                     if (result.code !== 0) {
                         layer.msg(result.msg, {shift: 3});

@@ -22,6 +22,7 @@ class Entity extends Model
         'name' => '名称',
         'table_name' => '数据库表名',
         'description' => '描述',
+        'is_show_content_manage' => ['title' => '列表显示', 'templet' => '#isShowContentManage', 'event' => 'showContentManageEvent'],
         'sort' => ['title' => '排序', 'sort' => true, 'edit' => true, 'width' => 80],
     ];
 

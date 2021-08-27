@@ -45,7 +45,8 @@ class EntityField extends Model
         ],
         'is_show' => ['title' => '显示', 'templet' => '#isShowTemplet', 'event' => 'showEvent'],
         'is_list_display' => ['title' => '列表显示', 'templet' => '#isShowList', 'event' => 'showListEvent'],
-        'order' => ['title' => '排序', 'sort' => true, 'edit' => true, 'width' => 80],
+        'order' => ['title' => '表单排序', 'sort' => true, 'edit' => true, 'width' => 100],
+        'list_sort' => ['title' => '列表排序', 'sort' => true, 'edit' => true, 'width' => 100],
     ];
 
     public static $searchField = [

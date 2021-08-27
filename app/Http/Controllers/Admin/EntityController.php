@@ -227,7 +227,7 @@ class EntityController extends Controller
     }
 
     /**
-     * 模型管理-字段快捷更新接口
+     * 模型管理-模型字段快捷更新接口
      *
      * @param Request $request
      * @param int $id
