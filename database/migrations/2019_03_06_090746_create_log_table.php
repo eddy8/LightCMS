@@ -20,7 +20,7 @@ class CreateLogTable extends Migration
             $table->string('url')->default('');
             $table->text('data');
             $table->string('ip', 15)->default('');
-            $table->string('ua')->default('');
+            $table->string('ua', 512)->default('');
             $table->tinyInteger('type')->default(0);
             $table->timestamps();
         });
