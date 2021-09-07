@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
-    <title>LightCMS</title>
+    <title>访问异常 - {{ config('app.name') }}</title>
     <meta name="keywords" content="LightCMS">
     <meta name="description" content="LightCMS">
     <meta name="renderer" content="webkit">
