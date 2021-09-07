@@ -15,11 +15,16 @@
     $user = \Auth::guard('admin')->user();
     $isSuperAdmin = in_array($user->id, config('light.superAdmin'));
 @endphp
+<div id="LAY_app">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <div class="layui-logo">{{ config('app.name') }} 管理后台</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
-        <ul class="layui-nav layui-layout-left">
+        <ul class="layui-nav layui-layout-left nav-menu">
+            <li class="layui-nav-item layadmin-flexible" lay-unselect>
+                <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+                  <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+                </a>
+            </li>
             @foreach(App\Repository\Admin\MenuRepository::allRoot() as $v)
                 @if($isSuperAdmin || $user->can($v->name))
                     <li class="layui-nav-item @if(!empty($light_menu) && $v->id == $light_menu['id']) layui-this @endif"><a href="{{ $v->url }}">{{ $v->name }}</a></li>
@@ -38,15 +43,23 @@
             </li>
             <li class="layui-nav-item"><a href="{{ route('admin::logout') }}">退了</a></li>
         </ul>
+        <ul class="layui-nav hamburger">
+            <li class="layui-nav-item">
+            <a href="javascript:;" layadmin-event="horizontal-flexible" title="顶部导航">
+                    <i class="layui-icon layui-icon-shrink-right" id="LAY_app_horizontal_flexible"></i>
+            </a>
+            </li>
+        </ul>
     </div>
 
-    <div class="layui-side layui-bg-black">
+    <div class="layui-side layui-side-menu layui-bg-black">
         <div class="layui-side-scroll">
+            <div class="layui-logo">{{ config('app.name') }} 管理后台</div>
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
                 @isset($light_menu['children'])
                 @foreach($light_menu['children']->groupBy('group') as $k => $menu)
-                    @if($k != '')
+                    @if($k != '' && collect($menu)->where('status', App\Model\Admin\Menu::STATUS_ENABLE)->count() > 0)
                 <li class="layui-nav-item layui-nav-itemed">
                     @foreach($menu as $sub)
                         @if(intval($sub['status']) === App\Model\Admin\Menu::STATUS_ENABLE && ($isSuperAdmin || $user->can($sub['name'])))
@@ -80,7 +93,7 @@
         </div>
     </div>
 
-    <div class="layui-body">
+    <div class="layui-body body-z">
         <!-- 内容主体区域 -->
         <div style="padding: 15px;">
             @yield('content')
@@ -92,8 +105,24 @@
         © {{ config('app.name') }}
     </div>
 </div>
+</div>
 <script src="/public/vendor/layui-v2.4.5/layui.all.js"></script>
 <script src="/public/admin/js/admin.js"></script>
+<script type="text/javascript">
+    $('body').on("click", "*[layadmin-event]", function(e) {
+        var e = $(this).attr('layadmin-event');
+        if (e === 'flexible') {
+            if ($(window).width() > 768) {
+                $('#LAY_app').toggleClass('layadmin-side-shrink');
+            } else {
+                $('#LAY_app').toggleClass('layadmin-side-spread-sm');
+            }
+        } else if (e === 'horizontal-flexible') {
+            $('div.layui-header').toggleClass('nav-height');
+            $('div.layui-body').toggleClass('body-z');
+        }
+    });
+</script>
 @yield('js')
 </body>
 </html>

@@ -9,3 +9,137 @@
 .light-danger {
     color: #FF5722;
 }
+.layui-layout-admin .layui-header .layui-nav .layui-nav-item,.layui-layout-admin .layui-logo {
+    height: 50px;
+    line-height: 50px
+}
+.layui-layout-admin .layui-logo {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1002;
+    width: 220px;
+    height: 60px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-weight: 300;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #23262E;
+}
+
+.layui-layout-admin .layui-side {
+    width: 220px;
+    top: 0;
+    z-index: 1001;
+}
+.layadmin-pagetabs,.layui-layout-admin .layui-body,.layui-layout-admin .layui-footer,.layui-layout-admin .layui-header .layui-layout-right,.layui-layout-admin .layui-header .layui-nav .layui-nav-item,.layui-layout-admin .layui-layout-left,.layui-layout-admin .layui-logo,.layui-layout-admin .layui-side {
+    transition: all .3s;
+    -webkit-transition: all .3s
+}
+@media screen and (max-width: 992px) {
+    .layui-layout-admin .layui-side {
+        transform:translate3d(-220px,0,0);
+        -webkit-transform: translate3d(-220px,0,0);
+        width: 220px
+    }
+
+    .layadmin-pagetabs,.layui-layout-admin .layui-body,.layui-layout-admin .layui-footer,.layui-layout-admin .layui-layout-left {
+        left: 0
+    }
+}
+
+.layui-side-menu .layui-nav {
+    width: 220px;
+    margin-top: 60px;
+    background: 0 0
+}
+
+.layadmin-side-spread-sm .layadmin-pagetabs,.layadmin-side-spread-sm .layui-layout-admin .layui-body,.layadmin-side-spread-sm .layui-layout-admin .layui-footer,.layadmin-side-spread-sm .layui-layout-admin .layui-layout-left {
+    left: 0;
+    transform: translate3d(220px,0,0);
+    -webkit-transform: translate3d(220px,0,0)
+}
+
+.layadmin-side-spread-sm .layui-layout-admin .layui-layout-right {
+    transform: translate3d(220px,0,0);
+    -webkit-transform: translate3d(220px,0,0)
+}
+
+.layadmin-side-spread-sm .layui-side {
+    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0)
+}
+
+.layadmin-side-spread-sm .layadmin-body-shade {
+    display: block
+}
+
+.layadmin-side-shrink .layui-layout-admin .layui-logo {
+    width: 60px;
+}
+
+.layadmin-side-shrink .layui-layout-admin .layui-logo span {
+    display: none
+}
+
+.layadmin-side-shrink .layui-side {
+    left: 0;
+    width: 60px
+}
+
+.layadmin-side-shrink .layadmin-pagetabs,.layadmin-side-shrink .layui-layout-admin .layui-body,.layadmin-side-shrink .layui-layout-admin .layui-footer,.layadmin-side-shrink .layui-layout-admin .layui-layout-left {
+    left: 60px
+}
+
+.layadmin-side-shrink .layui-side-menu .layui-nav {
+    position: static;
+    width: 60px
+}
+
+.layadmin-side-shrink .layui-side-menu .layui-nav-item {
+    position: static
+}
+
+.layadmin-side-shrink .layui-side-menu .layui-nav-item>a {
+    padding-right: 0
+}
+
+.layadmin-side-shrink .layui-side-menu .layui-nav-item cite,.layadmin-side-shrink .layui-side-menu .layui-nav>.layui-nav-item>.layui-nav-child,.layadmin-side-shrink .layui-side-menu .layui-nav>.layui-nav-item>a .layui-nav-more {
+    display: none;
+    padding: 8px 0;
+    width: 200px
+}
+
+.layadmin-side-shrink .layui-side-menu .layui-nav>.layui-nav-itemed>a {
+    background: rgba(0,0,0,.3)
+}
+
+.hamburger {
+  display: none;
+}
+
+.nav-height {
+    height: 280px;
+}
+
+@media only screen and (max-width: 768px) {
+    .layui-layout-right {
+        display: none;
+    }
+    .hamburger {
+        display: block;
+        position: absolute!important;
+        right: 0;
+        top: 0;
+        cursor: pointer;
+    }
+    .layui-card-body {
+        margin-top: 100px;
+    }
+    .body-z {
+        z-index: 9999;
+    }
+}
+
