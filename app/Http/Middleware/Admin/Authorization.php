@@ -32,17 +32,16 @@ class Authorization
         }
 
         $routeParams = $route->parameters();
-        if (empty($routeParams)) {
-            return $next($request);
-        }
-        foreach ($routeParams as $k => $v) {
-            $val = "{$k}:{$v}";
-            break;
-        }
+        if (!empty($routeParams)) {
+            foreach ($routeParams as $k => $v) {
+                $val = "{$k}:{$v}";
+                break;
+            }
 
-        $permission = Menu::where('route', $routeName)->where('route_params', $val)->first();
-        if ($permission && $user->can($permission->name)) {
-            return $next($request);
+            $permission = Menu::where('route', $routeName)->where('route_params', $val)->first();
+            if ($permission && $user->can($permission->name)) {
+                return $next($request);
+            }
         }
 
         if ($request->expectsJson()) {
