@@ -28,12 +28,14 @@ class AuthorizationTest extends TestCase
 
     public function testUserVistEntityListPage()
     {
-        factory(Entity::class, 1)->create();
-        $testUrl = '/admin/entities';
+        factory(Entity::class, 2)->create();
+        $testUrl = '/admin/entities/1/edit';
+        $testUrl2 = '/admin/entities/2/edit';
 
+        // 超管可直接访问
         $response = $this->actingAs($this->superUser, 'admin')->get($testUrl);
         $response->assertStatus(200);
-
+        // 普通用户无权限
         $response = $this->actingAs($this->user, 'admin')->get($testUrl);
         $response->assertStatus(401);
 
@@ -41,9 +43,8 @@ class AuthorizationTest extends TestCase
         $response = $this->actingAs($this->superUser, 'admin')->post(
             '/admin/menus',
             [
-                'name' => '模型列表',
-                'route' => 'admin::entity.index',
-                'url' => '/admin/entities'
+                'name' => '编辑模型页面',
+                'route' => 'admin::entity.edit',
             ]
         );
         $response->assertStatus(200);
@@ -51,7 +52,7 @@ class AuthorizationTest extends TestCase
         $response->assertStatus(200);
         $response = $this->actingAs($this->superUser, 'admin')->put(
             '/admin/roles/1/permission',
-            ['permission' => [1 => '模型列表']]
+            ['permission' => [1 => '编辑模型页面']]
         );
         $response->assertStatus(200);
         $response = $this->actingAs($this->superUser, 'admin')->put(
@@ -61,6 +62,53 @@ class AuthorizationTest extends TestCase
         $response->assertStatus(200);
         $response = $this->actingAs($this->user, 'admin')->get($testUrl);
         $response->assertStatus(200);
+
+        // 带参数路由
+        $response = $this->actingAs($this->superUser, 'admin')->post(
+            '/admin/menus',
+            [
+                'route_params' => 'id:1',
+                'name' => 'ID=1编辑模型页面',
+                'route' => 'admin::entity.edit',
+            ]
+        );
+        $response->assertStatus(200);
+        $response = $this->actingAs($this->superUser, 'admin')->post(
+            '/admin/menus',
+            [
+                'route_params' => 'id:2',
+                'name' => 'ID=2编辑模型页面',
+                'route' => 'admin::entity.edit',
+            ]
+        );
+        $response->assertStatus(200);
+        // 参数ID为1、为2都可访问
+        $response = $this->actingAs($this->user, 'admin')->get($testUrl);
+        $response->assertStatus(200);
+        $response = $this->actingAs($this->user, 'admin')->get($testUrl2);
+        $response->assertStatus(200);
+
+        // 参数ID为1可访问，为2不可访问
+        $response = $this->actingAs($this->superUser, 'admin')->put(
+            '/admin/roles/1/permission',
+            ['permission' => [2 => 'ID=1编辑模型页面']]
+        );
+        $response->assertStatus(200);
+        $response = $this->actingAs($this->user, 'admin')->get($testUrl);
+        $response->assertStatus(200);
+        $response = $this->actingAs($this->user, 'admin')->get($testUrl2);
+        $response->assertStatus(401);
+
+        // 参数ID为2可访问，为1不可访问
+        $response = $this->actingAs($this->superUser, 'admin')->put(
+            '/admin/roles/1/permission',
+            ['permission' => [3 => 'ID=2编辑模型页面']]
+        );
+        $response->assertStatus(200);
+        $response = $this->actingAs($this->user, 'admin')->get($testUrl2);
+        $response->assertStatus(200);
+        $response = $this->actingAs($this->user, 'admin')->get($testUrl);
+        $response->assertStatus(401);
     }
 
     public function tearDown(): void
