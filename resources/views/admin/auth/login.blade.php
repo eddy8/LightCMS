@@ -28,6 +28,7 @@
                 <label class="lightcms-user-login-icon layui-icon layui-icon-password" for="login-password"></label>
                 <input type="password" name="password" id="login-password" lay-verify="required" placeholder="密码" class="layui-input">
             </div>
+            @if(config('light.enable_captcha'))
             <div class="layui-form-item">
                 <div class="layui-row">
                     <div class="layui-col-xs7">
@@ -41,6 +42,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             <div class="layui-form-item">
                 <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="login-submit" type="submit">登 录</button>
             </div>

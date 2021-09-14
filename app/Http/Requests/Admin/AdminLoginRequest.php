@@ -23,11 +23,15 @@ class AdminLoginRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rule = [
             'name' => 'required',
             'password' => 'required',
-            'captcha' => 'required|captcha'
         ];
+        if (config('light.enable_captcha')) {
+            $rule['captcha'] = 'required|captcha';
+        }
+
+        return $rule;
     }
 
     /**

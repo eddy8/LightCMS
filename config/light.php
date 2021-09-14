@@ -129,5 +129,8 @@ return [
             'client_secret' => env('WECHAT_CLIENT_SECRET', ''),
             'redirect' => env('WECHAT_REDIRECT', ''),
         ],
-    ]
+    ],
+
+    // 后台登录验证码
+    'enable_captcha' => true,
 ];
