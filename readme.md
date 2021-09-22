@@ -172,7 +172,7 @@ App\Events\ContentDeleted    |   Illuminate\Support\Collection $contents, App\Mo
 App\Events\ContentCreateShow    |   App\Model\Admin\Entity $entity, App\Foundation\ViewData $viewData |  新增内容表单展示前  | 通过调用$viewData的addCss、addJs、addTemplate方法，注入自定义css文件、js文件、模板至新增表单中
 App\Events\ContentEditShow    |   App\Model\Admin\Entity $entity, Illuminate\Database\Eloquent\Model $model, App\Foundation\ViewData $viewData |  更新内容表单展示前  | 通过调用$viewData的addCss、addJs、addTemplate方法，注入自定义css文件、js文件、模板至更新表单中
 App\Events\ContentListShow    |   int $entityId |  内容列表页展示前  | 一般用于自定义内容列表页展示字段、搜索字段等
-App\Events\ContentListDataReturning    |   int $entityId, Illuminate\Contracts\Pagination\Paginator $data |  新增内容后  | 一般用于自定义内容列表页数据接口返回数据
+App\Events\ContentListDataReturning    |   int $entityId, Illuminate\Contracts\Pagination\Paginator $data |  内容列表页数据接口返回内容前  | 一般用于自定义内容列表页数据接口返回数据
 
 ### 模型字段表单类型相关说明
 对于支持远程搜索的`select`表单类型，后端 API 搜索接口需返回的数据格式如下所示。code为0时, 表示正常, 反之异常。
