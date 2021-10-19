@@ -604,11 +604,19 @@
         form.on('submit(formAdminUser)', function(data){
             window.onbeforeunload = null;
             window.form_submit = $('#submitBtn');
-            form_submit.prop('disabled', true);
+            var originBtnText = form_submit.text();
+
             $.ajax({
                 url: data.form.action,
                 data: data.field,
+                beforeSend: function () {
+                    form_submit.text("处理中...");
+                    form_submit.prop('disabled', true);
+                    layer.load(2);
+                },
                 success: function (result) {
+                    form_submit.text(originBtnText);
+
                     if (result.code !== 0) {
                         form_submit.prop('disabled', false);
                         layer.msg(result.msg, {shift: 6});
@@ -622,7 +630,13 @@
                             location.href = result.redirect;
                         }
                     });
-                }
+                },
+                error: function () {
+                    form_submit.prop('disabled', false);
+                    form_submit.text(originBtnText);
+                    layer.closeAll('loading');
+                    layer.msg('请求失败，请重试', {shift: 6});
+                },
             });
 
             return false;
