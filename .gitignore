@@ -13,3 +13,4 @@ yarn-error.log
 /.phpintel
 /public/upload/
 /composer.lock
+.phpunit.result.cache

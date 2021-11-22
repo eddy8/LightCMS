@@ -189,6 +189,11 @@ class ContentController extends Controller
      */
     public function edit($entity, $id)
     {
+        $result = $this->useUserDefinedEditHandler($entity, $id);
+        if (!is_null($result)) {
+            return $result;
+        }
+
         $this->breadcrumb[] = ['title' => "编辑{$this->entity->name}内容", 'url' => ''];
         $view = $this->getAddOrEditViewPath();
         $model = ContentRepository::find($id);
@@ -345,6 +350,15 @@ class ContentController extends Controller
                 ->setRedirector(app()->make('redirect'))
                 ->validateResolved();
         }
+    }
+
+    protected function useUserDefinedEditHandler($entity, $id)
+    {
+        $entityControllerClass = $this->userDefinedHandlerExists('edit');
+        if ($entityControllerClass === false) {
+            return null;
+        }
+        return call_user_func([new $entityControllerClass, 'edit'], $entity, $id);
     }
 
     protected function useUserDefinedSaveHandler($request, $entity)
