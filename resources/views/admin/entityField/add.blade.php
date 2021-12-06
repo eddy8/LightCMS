@@ -83,6 +83,17 @@
                         <div class="layui-form-mid layui-word-aux"><span style="color:#FF5722">下拉选择（远程搜索）、下拉选择（多选，远程搜索）只支持行内展示</span></div>
                     </div>
                     <div class="layui-form-item">
+                        <label class="layui-form-label">引用分类数据模型</label>
+                        <div class="layui-input-inline" style="width: 400px">
+                            <select name="category_entity_id" lay-verify="required" lay-filter="category_entity_id">
+                                @foreach(\App\Repository\Admin\EntityRepository::all() as $v)
+                                    <option value="{{ $v->id }}" @if(isset($model) && $model->category_entity_id == $v->id) selected @endif>{{ $v->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux"><span style="color:#FF5722">表单类型为引用分类数据时可用</span></div>
+                    </div>
+                    <div class="layui-form-item">
                         <label class="layui-form-label">表单备注</label>
                         <div class="layui-input-block">
                             <input type="text" name="form_comment" autocomplete="off" class="layui-input" value="{{ $model->form_comment ?? ''  }}">

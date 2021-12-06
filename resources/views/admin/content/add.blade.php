@@ -157,7 +157,7 @@
                                                 <label class="layui-form-label">{{ $inlineField->form_name }}</label>
                                                 <div class="layui-input-inline" style="z-index: {{99999 - ($inlineField->order + $inlineField->id)}}">
                                                     <select name="{{ $inlineField->name }}" @if($inlineField->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $inlineField->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
-                                                        @foreach(App\Repository\Admin\CategoryRepository::tree($entityModel->id) as $v)
+                                                        @foreach(App\Repository\Admin\CategoryRepository::tree($inlineField->category_entity_id > 0 ? $inlineField->category_entity_id : $entityModel->id) as $v)
                                                             @include('admin.category', [$v, 'fieldName' => $inlineField->name])
                                                         @endforeach
                                                     </select>
@@ -411,7 +411,7 @@
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
                                     <div class="layui-input-block" style="width: 400px;z-index: {{99999 - ($field->order + $field->id)}}">
                                         <select name="{{ $field->name }}" @if($field->is_required == \App\Model\Admin\EntityField::REQUIRED_ENABLE) required  lay-verify="required" @endif @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE) disabled @endif>
-                                            @foreach(App\Repository\Admin\CategoryRepository::tree($entityModel->id) as $v)
+                                            @foreach(App\Repository\Admin\CategoryRepository::tree($field->category_entity_id > 0 ? $field->category_entity_id : $entityModel->id) as $v)
                                                 @include('admin.category', [$v, 'fieldName' => $field->name])
                                             @endforeach
                                         </select>
