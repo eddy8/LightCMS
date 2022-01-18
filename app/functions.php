@@ -257,3 +257,14 @@ function sendDingGroupMessage(string $url, $content): \Psr\Http\Message\Response
 
     return $client->post($url, ['json' => $data]);
 }
+
+/**
+ * 处理零宽字符
+ *
+ * @param string $string
+ * @return string
+ */
+function removeZeroWidthCharacters($string)
+{
+    return preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $string);
+}
