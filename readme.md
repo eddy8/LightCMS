@@ -4,7 +4,7 @@
 ## 项目简介
 `lightCMS`是一个轻量级的`CMS`系统，也可以作为一个通用的后台管理框架使用。`lightCMS`集成了用户管理、权限管理、日志管理、菜单管理等后台管理框架的通用功能，同时也提供模型管理、分类管理等`CMS`系统中常用的功能。`lightCMS`的**代码一键生成**功能可以快速对特定模型生成增删改查代码，极大提高开发效率。
 
-`lightCMS`基于`Laravel 8.x`开发，前端框架基于`layui`。
+`lightCMS`基于`Laravel 9.x`开发，前端框架基于`layui`。
 
 演示站点：[LightCMS Demo](http://lightcms.bituier.com/admin/login)。登录信息：admin/admin。请勿存储/删除重要数据，数据库会定时重置。
 
@@ -14,9 +14,11 @@
 
 分支名称 | Laravel版本 | 维护中 | 备注
 :-: | :-: | :-: | :-:
-master    |   6.x | 是 |
+
+9.x    |   9.x | 是 | 建议使用
 8.x    |   8.x | 是 | 建议使用
-7.x    |   7.x | 是 |
+7.x    |   7.x | 否 |
+master |   6.x | 否 |
 5.5    |   5.5 | 否 |
 
 ## 功能点一览
@@ -45,9 +47,9 @@ master    |   6.x | 是 |
 ![系统管理](https://user-images.githubusercontent.com/2555476/54804599-0ea20e00-4caf-11e9-8d10-526aca358916.png)
 
 ## 系统环境
-`linux/windows & nginx/apache/iis & mysql 5.5+ & php 7.4.0+`
+`linux/windows & nginx/apache/iis & mysql 5.5+ & php 8.0.2+`
 
-* PHP >= 7.4.0
+* PHP >= 8.0.2
 * OpenSSL PHP Extension
 * PDO PHP Extension
 * Mbstring PHP Extension
