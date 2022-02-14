@@ -1,6 +1,6 @@
 language: php
 php:
-  - '7.4'
+  - '8.0.2'
 cache:
   directories:
     - $HOME/.composer/cache
