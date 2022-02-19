@@ -378,10 +378,11 @@ LightCMS中图片默认上传到本地服务器。如果有自定义需求，比
 ### 用户注册登录
 `LightCMS`集成了一套简单的用户注册登录系统，支持微信、QQ、微博三方登录。三方登录相关配置请参考`config/light.php`。
 
-## TODO
-* 模版管理+模版标签
-
-## 完善中。。。
-
 ## 说明
 有问题可以提 issue ，为项目贡献代码可以提 pull request
+
+## Project supported by JetBrains
+
+Many thanks to Jetbrains for kindly providing a license for me to work on this and other open-source projects.
+
+[![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://www.jetbrains.com/?from=https://github.com/eddy8)
