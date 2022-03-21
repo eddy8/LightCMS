@@ -55,6 +55,13 @@
                     </div>
 
                     <div class="layui-form-item">
+                        <label class="layui-form-label">导航</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="is_nav" title="显示" lay-skin="primary" value="1" @if(isset($model) && $model->is_nav == 1) checked @endif>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
                         <label class="layui-form-label">标题</label>
                         <div class="layui-input-block">
                             <input type="text" name="title" autocomplete="off" class="layui-input" value="{{ $model->title ?? ''  }}" placeholder="title">
