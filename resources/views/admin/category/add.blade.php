@@ -48,6 +48,13 @@
                     </div>
 
                     <div class="layui-form-item">
+                        <label class="layui-form-label">标识</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="identity" required  lay-verify="required" autocomplete="off" class="layui-input" value="{{ $model->identity ?? '' }}">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
                         <label class="layui-form-label">标题</label>
                         <div class="layui-input-block">
                             <input type="text" name="title" autocomplete="off" class="layui-input" value="{{ $model->title ?? ''  }}" placeholder="title">

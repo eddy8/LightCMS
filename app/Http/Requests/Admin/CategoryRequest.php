@@ -32,6 +32,7 @@ class CategoryRequest extends FormRequest
             'title' => 'max:255',
             'keywords' => 'max:255',
             'description' => 'max:255',
+            'identity' => 'required|max:50|unique:categories,identity,' . $this->id
         ];
     }
 
