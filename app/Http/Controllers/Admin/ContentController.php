@@ -31,6 +31,7 @@ use App\Model\Admin\Tag;
 use App\Model\Admin\ContentTag;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class ContentController extends Controller
 {
@@ -329,6 +330,20 @@ class ContentController extends Controller
         $message = '';
         switch ($type) {
             case 'delete':
+                $password = $request->post('password');
+                if (!$password) {
+                    return [
+                        'code' => 1,
+                        'msg' => '密码不能为空',
+                    ];
+                }
+                if (!Auth::guard('admin')->attempt(['id' => $request->user()->id, 'password' => $password])) {
+                    return [
+                        'code' => 2,
+                        'msg' => '密码错误',
+                    ];
+                }
+
                 $contents = ContentRepository::model()->whereIn('id', $ids)->get();
                 event(new ContentDeleting($contents, $this->entity));
 

@@ -55,7 +55,7 @@
                 </thead>
             </table>
             <div>
-                <form class="layui-form" method="post" action="{{ route('admin::content.batch', ['entity' => $entity]) }}">
+                <form id="batch-form" class="layui-form" method="post" action="{{ route('admin::content.batch', ['entity' => $entity]) }}">
                     <div class="layui-inline">
                         <label class="layui-form-label">操作类型</label>
                         <div class="layui-input-inline">
@@ -125,9 +125,7 @@
         var form = layui.form,
             table = layui.table;
         form.on('submit(form-batch)', function(data){
-            if(!confirm('确定执行批量操作？')){
-                return false;
-            }
+            var batchDom = $('#batch-form select[name=type]').find("option:selected");
             var checkStatus = table.checkStatus('test'),
                 ids = [];
 
@@ -141,6 +139,45 @@
             data.field.ids = ids;
 
             window.form_submit = $('#batchBtn');
+
+            if (batchDom.attr('value') === 'delete') {
+                layer.confirm('请谨慎操作！确定要批量删除？', function(index){
+                    layer.prompt({
+                        formType: 1,
+                        title: '请输入登录密码',
+                    }, function(value, index, elem){
+                        data.field.password = value;
+                        $.ajax({
+                            url: data.form.action,
+                            data: data.field,
+                            success: function (result) {
+                                if (result.code !== 0) {
+                                    form_submit.prop('disabled', false);
+                                    layer.msg(result.msg, {shift: 6});
+                                    return false;
+                                }
+                                layer.msg(result.msg, {icon: 1}, function () {
+                                    if (result.reload) {
+                                        location.reload();
+                                    }
+                                    if (result.redirect) {
+                                        location.href = '{!! url()->previous() !!}';
+                                    }
+                                });
+                            }
+                        });
+                        layer.close(index);
+                    });
+
+                    layer.close(index);
+                });
+                return false;
+            } else {
+                if(!confirm('确定执行批量 ' + batchDom.text() + ' 操作？')){
+                    return false;
+                }
+            }
+
             form_submit.prop('disabled', true);
             $.ajax({
                 url: data.form.action,
