@@ -17,7 +17,7 @@ class CategoryController extends Controller
 {
     protected $formNames = [
         'name', 'pid', 'order', 'title', 'keywords',
-        'description', 'model_id', 'identity', 'is_nav'
+        'description', 'model_id', 'identity', 'is_nav', 'url'
     ];
 
     protected array $formDefaultValue = ['is_nav' => 0];

@@ -32,7 +32,8 @@ class CategoryRequest extends FormRequest
             'title' => 'max:255',
             'keywords' => 'max:255',
             'description' => 'max:255',
-            'identity' => 'required|max:50|unique:categories,identity,' . $this->id
+            'identity' => 'required|max:50|unique:categories,identity,' . $this->id,
+            'url' => 'max:255',
         ];
     }
 
@@ -46,6 +47,7 @@ class CategoryRequest extends FormRequest
         return [
             'name.required' => '名称不能为空',
             'name.max' => '名称长度不能大于50',
+            'identity.unique' => '标识已存在',
         ];
     }
 }

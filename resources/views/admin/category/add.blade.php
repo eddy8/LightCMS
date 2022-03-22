@@ -55,6 +55,13 @@
                     </div>
 
                     <div class="layui-form-item">
+                        <label class="layui-form-label">URL</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="url" class="layui-input" value="{{ $model->url ?? '' }}" placeholder="自定义访问URL，可留空">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
                         <label class="layui-form-label">导航</label>
                         <div class="layui-input-block">
                             <input type="checkbox" name="is_nav" title="显示" lay-skin="primary" value="1" @if(isset($model) && $model->is_nav == 1) checked @endif>
