@@ -284,7 +284,12 @@ class ContentController extends Controller
         try {
             $content = ContentRepository::findOrFail($id);
             event(new ContentDeleting(collect([$content]), $this->entity));
+
+            DB::beginTransaction();
             ContentRepository::delete($id);
+            ContentTag::query()->where('content_id', $id)->where('entity_id', $entity)->delete();
+            DB::commit();
+
             event(new ContentDeleted(collect([$content]), $this->entity));
 
             return [
@@ -326,7 +331,12 @@ class ContentController extends Controller
             case 'delete':
                 $contents = ContentRepository::model()->whereIn('id', $ids)->get();
                 event(new ContentDeleting($contents, $this->entity));
+
+                DB::beginTransaction();
                 ContentRepository::model()->whereIn('id', $ids)->delete();
+                ContentTag::query()->whereIn('content_id', $ids)->where('entity_id', $this->entity->id)->delete();
+                DB::commit();
+
                 event(new ContentDeleted($contents, $this->entity));
                 break;
             default:
