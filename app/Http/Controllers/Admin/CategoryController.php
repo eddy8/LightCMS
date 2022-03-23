@@ -10,6 +10,7 @@ use App\Http\Requests\Admin\CategoryRequest;
 use App\Repository\Admin\CategoryRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -85,6 +86,7 @@ class CategoryController extends Controller
     {
         try {
             CategoryRepository::add(array_merge($this->formDefaultValue, $request->only($this->formNames)));
+            Cache::forget('category:tree');
             return [
                 'code' => 0,
                 'msg' => '新增成功',
@@ -131,6 +133,7 @@ class CategoryController extends Controller
         $data = array_merge($this->formDefaultValue, $request->only($this->formNames));
         try {
             CategoryRepository::update($id, $data);
+            Cache::forget('category:tree');
             return [
                 'code' => 0,
                 'msg' => '编辑成功',

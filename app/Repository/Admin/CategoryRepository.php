@@ -7,6 +7,8 @@ namespace App\Repository\Admin;
 
 use App\Model\Admin\Category;
 use App\Repository\Searchable;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryRepository
 {
@@ -92,9 +94,9 @@ class CategoryRepository
     {
         if (is_null($all)) {
             if (is_null($entity_id)) {
-                $all = Category::select('id', 'pid', 'name', 'order')->get();
+                $all = Category::query()->get();
             } else {
-                $all = Category::select('id', 'pid', 'name', 'order')->where('model_id', $entity_id)->get();
+                $all = Category::query()->where('model_id', $entity_id)->get();
             }
         }
         return $all->where('pid', $pid)
@@ -106,6 +108,7 @@ class CategoryRepository
                     'pid' => $model->pid,
                     'path' => $path,
                     'order' => $model->order,
+                    'all' => $model->toArray(),
                 ];
 
                 $child = $all->where('pid', $model->id);
@@ -145,5 +148,101 @@ class CategoryRepository
             'title' => $title,
             'enums' => self::idMapNameArr(),
         ];
+    }
+
+    public static function cacheTree()
+    {
+        return Cache::rememberForever('category:tree', function () {
+            return self::tree();
+        });
+    }
+
+    /**
+     * 获取指定层级的所有分类，根分类层级为 0
+     *
+     * @param int $level
+     * @param null $tree
+     * @return Collection
+     */
+    public static function levelCategories(int $level = 0, $tree = null): Collection
+    {
+        if (is_null($tree)) {
+            $tree = self::cacheTree();
+        }
+        $data = new Collection();
+        foreach ($tree as $v) {
+            if ($v['level'] === $level) {
+                $data->push($v);
+            }
+            if ($v['level'] < $level && isset($v['children'])) {
+                $result = self::levelCategories($level, $v['children']);
+                foreach ($result as $vv) {
+                    $data->push($vv);
+                }
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 获取指定分类的所有叶子节点分类，$categoryId 为 0 时获取所有叶子节点分类
+     *
+     * @param int $categoryId
+     * @param null $tree
+     * @return Collection
+     */
+    public static function leafCategories(int $categoryId = 0, $tree = null): Collection
+    {
+        if (is_null($tree)) {
+            $tree = self::cacheTree();
+        }
+        $data = new Collection();
+        foreach ($tree as $v) {
+            if ($categoryId > 0 && $v['id'] === $categoryId) {
+                if (!isset($v['children'])) {
+                    return $data;
+                }
+                return self::leafCategories($categoryId, $v['children']);
+            }
+            if (isset($v['children'])) {
+                $result = self::leafCategories($categoryId, $v['children']);
+                foreach ($result as $vv) {
+                    $data->push($vv);
+                }
+            } else {
+                if ($categoryId === 0 || ($categoryId > 0 && in_array($categoryId, $v['path']))) {
+                    $data->push($v);
+                }
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 获取指定分类的所有父级分类，没有父分类时返回空数组
+     *
+     * @param int $categoryId
+     * @param null $tree
+     * @return array
+     */
+    public static function parentCategories(int $categoryId, $tree = null): array
+    {
+        if (is_null($tree)) {
+            $tree = self::cacheTree();
+        }
+
+        foreach ($tree as $v) {
+            if ($v['id'] === $categoryId) {
+                return $v['path'];
+            }
+            if (isset($v['children'])) {
+                $result = self::parentCategories($categoryId, $v['children']);
+                if (!empty($result)) {
+                    return $result;
+                }
+            }
+        }
+
+        return [];
     }
 }
