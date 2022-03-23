@@ -374,6 +374,37 @@ LightCMS中图片默认上传到本地服务器。如果有自定义需求，比
 
 应用场景：在应用程序中抛出该异常，框架会自动跳转到信息提示页面，提示内容为自定义异常内容。一般用于应用运行时错误的页面提示。
 
+***
+`App\Repository\Admin\CategoryRepository`类中与分类操作相关的方法：
+```
+/**
+ * 获取指定层级的所有分类，根分类层级为 0
+ *
+ * @param int $level
+ * @param null $tree
+ * @return Collection
+ */
+public static function levelCategories(int $level = 0, $tree = null): Collection
+
+/**
+ * 获取指定分类的所有叶子节点分类，$categoryId 为 0 时获取所有叶子节点分类
+ *
+ * @param int $categoryId
+ * @param null $tree
+ * @return Collection
+ */
+public static function leafCategories(int $categoryId = 0, $tree = null): Collection
+
+/**
+ * 获取指定分类的所有父级分类，没有父分类时返回空数组
+ *
+ * @param int $categoryId
+ * @param null $tree
+ * @return array
+ */
+public static function parentCategories(int $categoryId, $tree = null): array
+```
+
 ## 前台相关
 ### 用户注册登录
 `LightCMS`集成了一套简单的用户注册登录系统，支持微信、QQ、微博三方登录。三方登录相关配置请参考`config/light.php`。
