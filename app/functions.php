@@ -7,6 +7,8 @@ use App\Model\Admin\SensitiveWord;
 use App\Model\Admin\Config as SiteConfig;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Intervention\Image\Facades\Image;
+use Intervention\Image\Exception\NotReadableException;
 
 /**
  * 直接从数据库获取系统后台配置
@@ -267,4 +269,62 @@ function sendDingGroupMessage(string $url, $content): \Psr\Http\Message\Response
 function removeZeroWidthCharacters($string)
 {
     return preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $string);
+}
+
+/**
+ * 抓取远程图片数据
+ *
+ * @param string $url
+ * @return array
+ */
+function fetchImageFile(string $url)
+{
+    try {
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException('invalid url');
+        }
+
+        $ch = curl_init();
+        $ua = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.2 (KHTML, like Gecko) Chrome/22.0.1216.0 Safari/537.2';
+        $options =  [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_USERAGENT => $ua,
+            CURLOPT_TIMEOUT => 7,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+        ];
+        curl_setopt_array($ch, $options);
+        $data = curl_exec($ch);
+        if ($data === false) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            throw new RuntimeException('curl request failed. ' . $error);
+        }
+        curl_close($ch);
+
+        if (isWebp($data)) {
+            $image = Image::make(imagecreatefromwebp($url));
+            $extension = 'webp';
+        } else {
+            $resource = @imagecreatefromstring($data);
+
+            if ($resource === false) {
+                throw new NotReadableException(
+                    "Unable to init from given binary data."
+                );
+            }
+            $image = Image::make($resource);
+            $image->mime = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $data);
+        }
+    } catch (NotReadableException $e) {
+        throw $e;
+    }
+
+    $mime = $image->mime();
+    return [
+        'extension' => $extension ?? ($mime ? strtolower(explode('/', $mime)[1]) : ''),
+        'data' => $data
+    ];
 }

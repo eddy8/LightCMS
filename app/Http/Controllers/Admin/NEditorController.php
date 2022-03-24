@@ -12,8 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
-use Intervention\Image\Exception\NotReadableException;
+use Exception;
 
 class NEditorController extends Controller
 {
@@ -83,8 +82,12 @@ class NEditorController extends Controller
         $files = array_unique((array) $request->post('file'));
         $urls = [];
         foreach ($files as $v) {
-            $image = $this->fetchImageFile($v);
-            if (!$image || !$image['extension'] || !$this->isAllowedImageType($image['extension'])) {
+            try {
+                $image = fetchImageFile($v);
+                if (!$image['extension'] || !$this->isAllowedImageType($image['extension'])) {
+                    continue;
+                }
+            } catch (Exception $e) {
                 continue;
             }
 
@@ -227,52 +230,6 @@ class NEditorController extends Controller
         }
 
         return true;
-    }
-
-    protected function fetchImageFile($url)
-    {
-        try {
-            if (!filter_var($url, FILTER_VALIDATE_URL)) {
-                return false;
-            }
-
-            $ch = curl_init();
-            $ua = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.2 (KHTML, like Gecko) Chrome/22.0.1216.0 Safari/537.2';
-            $options =  [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_USERAGENT => $ua
-            ];
-            curl_setopt_array($ch, $options);
-            $data = curl_exec($ch);
-            curl_close($ch);
-            if (!$data) {
-                return false;
-            }
-
-            if (isWebp($data)) {
-                $image = Image::make(imagecreatefromwebp($url));
-                $extension = 'webp';
-            } else {
-                $resource = @imagecreatefromstring($data);
-
-                if ($resource === false) {
-                    throw new NotReadableException(
-                        "Unable to init from given binary data."
-                    );
-                }
-                $image = Image::make($resource);
-                $image->mime = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $data);
-            }
-        } catch (NotReadableException $e) {
-            return false;
-        }
-
-        $mime = $image->mime();
-        return [
-            'extension' => $extension ?? ($mime ? strtolower(explode('/', $mime)[1]) : ''),
-            'data' => $data
-        ];
     }
 
     protected function isAllowedImageType($extension)
