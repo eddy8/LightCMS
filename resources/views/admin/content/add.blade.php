@@ -289,7 +289,7 @@
                                 <script>
                                     //实例化编辑器
                                     //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
-                                    var ue_{{ $field->name }} = UE.getEditor('editor-{{ $field->name }}', {autoFloatEnabled:false});
+                                    var ue_{{ $field->name }} = UE.getEditor('editor-{{ $field->name }}', {autoFloatEnabled:false, catchRemoteImageEnable: {{  config('light.neditor.catchRemoteImageEnable') ? "true" : "false" }}});
                                     ue_{{ $field->name }}.ready(function(){
                                         ue_{{ $field->name }}.focus();
                                         @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE)

@@ -105,7 +105,8 @@ return [
                 ".rar", ".zip", ".tar", ".gz", ".7z", ".bz2", ".cab", ".iso",
                 ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".txt", ".md", ".xml"
             ], /* 上传文件格式显示 */
-        ]
+        ],
+        'catchRemoteImageEnable' => false, // 是否启用粘贴内容时图片自动保存到本地
     ],
     'image_upload' => [
         'driver' => 'local', // local 表示上传到本地服务器。上传到其它服务器请设置自定义名称
