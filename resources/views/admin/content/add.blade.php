@@ -320,7 +320,7 @@
                                             document.getElementById('jsoneditor-{{ $field->name }}'),
                                             {
                                                 @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE)
-                                                mode: 'preview',
+                                                mode: 'view',
                                                 modes: ['view', 'preview'],
                                                 @else
                                                 mode: 'tree',
