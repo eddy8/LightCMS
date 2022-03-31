@@ -298,6 +298,42 @@
                                     });
                                 </script>
                                 @break
+                            @case('jsonEditor')
+                                @if(!isset($jsoneditor_init))
+                                    @php
+                                        $jsoneditor_init = true
+                                    @endphp
+
+                                    <link href="https://cdn.jsdelivr.net/npm/jsoneditor@9.7.4/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
+                                    <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/jsoneditor@9.7.4/dist/jsoneditor.min.js"></script>
+                                @endif
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-block">
+                                        <div id="jsoneditor-{{ $field->name }}" style="width: 100%; height: 400px;"></div>
+                                        <input type="hidden" name="{{ $field->name }}" id="input-jsoneditor-{{ $field->name }}" value="{{ $model->{$field->name} ?? $field->form_default_value }}">
+                                    </div>
+                                </div>
+                                    <script>
+                                        // create the editor
+                                        var editor = new JSONEditor(
+                                            document.getElementById('jsoneditor-{{ $field->name }}'),
+                                            {
+                                                @if(isset($model) && $field->is_edit == \App\Model\Admin\EntityField::EDIT_DISABLE)
+                                                mode: 'preview',
+                                                modes: ['view', 'preview'],
+                                                @else
+                                                mode: 'tree',
+                                                modes: ['code', 'form', 'text', 'tree', 'view', 'preview'],
+                                                @endif
+                                                onChangeText: function (jsonString) {
+                                                    document.getElementById('input-jsoneditor-{{ $field->name }}').value = jsonString;
+                                                }
+                                            }
+                                        );
+                                        editor.set({!! $model->{$field->name} ?? $field->form_default_value !!});
+                                    </script>
+                                @break
                             @case('password')
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>

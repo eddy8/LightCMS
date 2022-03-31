@@ -83,7 +83,8 @@ return [
         'datetime' => '日期时间',
         'date' => '日期',
         'reference_category' => '引用分类数据',
-        'reference_admin_user' => '引用管理员数据'
+        'reference_admin_user' => '引用管理员数据',
+        'jsonEditor' => 'JSON编辑器',
     ],
 
     // NEditor相关
