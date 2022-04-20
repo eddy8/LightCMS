@@ -652,7 +652,7 @@
                 },
                 success: function (result) {
                     form_submit.text(originBtnText);
-
+                    layer.closeAll('loading');
                     if (result.code !== 0) {
                         form_submit.prop('disabled', false);
                         layer.msg(result.msg, {shift: 6});
