@@ -179,12 +179,14 @@
             }
 
             form_submit.prop('disabled', true);
+            form_submit.addClass('layui-btn-disabled');
             $.ajax({
                 url: data.form.action,
                 data: data.field,
                 success: function (result) {
+                    form_submit.prop('disabled', false);
+                    form_submit.removeClass('layui-btn-disabled');
                     if (result.code !== 0) {
-                        form_submit.prop('disabled', false);
                         layer.msg(result.msg, {shift: 6});
                         return false;
                     }
