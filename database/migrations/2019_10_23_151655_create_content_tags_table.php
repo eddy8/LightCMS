@@ -20,8 +20,8 @@ class CreateContentTagsTable extends Migration
             $table->bigInteger('tag_id')->unsigned();
             $table->timestamps();
 
-            $table->index('entity_id', 'content_id');
-            $table->index('entity_id', 'tag_id');
+            $table->index(['entity_id', 'content_id']);
+            $table->index(['entity_id', 'tag_id']);
         });
     }
 
