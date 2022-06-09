@@ -97,6 +97,11 @@ server {
     location / {
         try_files $uri $uri/ /index.php?$query_string;
     }
+    
+    location ~* \.(txt|doc|pdf|rar|gz|zip|docx|exe|xlsx|ppt|pptx)$ {
+        add_header Content-Disposition Attachment;
+        add_header X-Content-Type-Options nosniff;
+    }
 
     location ~ \.php$ {
         fastcgi_pass 127.0.0.1:9000;
