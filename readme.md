@@ -68,7 +68,7 @@ master |   6.x | 否 |
 ```bash
 cd /data/www
 git clone git@github.com:eddy8/LightCMS.git
-cd lightCMS
+cd LightCMS
 composer install
 ```
 ### 系统配置并初始化
@@ -93,6 +93,8 @@ server {
     server_name light.com;
     root /data/www/lightCMS/public;
     index index.php index.html index.htm;
+    
+    add_header X-Frame-Options "SAMEORIGIN";
 
     location / {
         try_files $uri $uri/ /index.php?$query_string;
@@ -107,7 +109,7 @@ server {
         fastcgi_pass 127.0.0.1:9000;
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        #不同配置对应不同的环境配置文件。比如此处应用会加载.env.pro文件，默认不配置会加载.env文件。此处可根据项目需要自行配制。
+        #不同配置对应不同的环境配置文件。比如此处应用会加载.env.pro文件，默认不配置会加载.env文件。此处可根据项目需要自行配置。
         #fastcgi_param   APP_ENV pro;
         include fastcgi_params;
     }
