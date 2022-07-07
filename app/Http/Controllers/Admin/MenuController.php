@@ -186,6 +186,13 @@ class MenuController extends Controller
         $addNum = 0;
         $updateNum = 0;
 
+        if (extension_loaded('opcache') && opcache_get_configuration()['directives']['opcache.save_comments'] == false) {
+            return [
+                'code' => 3,
+                'msg' => '请先启用 OPcache 扩展的 opcache.save_comments 选项',
+            ];
+        }
+
         foreach (Route::getRoutes()->getRoutesByName() as $k => $v) {
             if (Str::startsWith($k, 'admin::')) {
                 // 取方法的第一行注释作为菜单的名称、分组名。格式：分组名称-菜单名称。未写分组名称，则注释直接作为菜单名称。未写注释则选用uri作为菜单名称。
