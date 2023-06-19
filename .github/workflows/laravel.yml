@@ -2,9 +2,9 @@ name: Laravel
 
 on:
   push:
-    branches: [ 9.x ]
+    branches: [ 10.x ]
   pull_request:
-    branches: [ 9.x ]
+    branches: [ 10.x ]
 
 jobs:
   laravel-tests:
@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
       with:
-        php-version: '8.0.2'
+        php-version: '8.1.16'
     - uses: actions/checkout@v2
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
