@@ -304,8 +304,8 @@
                                         $jsoneditor_init = true
                                     @endphp
 
-                                    <link href="https://cdn.jsdelivr.net/npm/jsoneditor@9.7.4/dist/jsoneditor.min.css" rel="stylesheet" type="text/css">
-                                    <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/jsoneditor@9.7.4/dist/jsoneditor.min.js"></script>
+                                    <link href="https://cdn.staticfile.org/jsoneditor/9.7.4/jsoneditor.min.css" rel="stylesheet" type="text/css">
+                                    <script type="text/javascript" charset="utf-8" src="https://cdn.staticfile.org/jsoneditor/9.7.4/jsoneditor.min.js"></script>
                                 @endif
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">{{ $field->form_name }}</label>
