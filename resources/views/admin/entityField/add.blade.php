@@ -174,9 +174,10 @@
                             <select name="search_type" lay-verify="required" lay-filter="form_type">
                                 <option value="like" @if(isset($model) && $model->search_type == 'like') selected @endif>模糊查询</option>
                                 <option value="=" @if(isset($model) && $model->search_type == '=') selected @endif>精确查询</option>
+                                <option value="IN" @if(isset($model) && $model->search_type == 'IN') selected @endif>IN 查询</option>
                             </select>
                         </div>
-                        <div class="layui-form-mid layui-word-aux">模糊查询即为数据库的Like查询</div>
+                        <div class="layui-form-mid layui-word-aux">模糊查询即为数据库的 Like 查询，IN 查询支持查询半角逗号分隔的多个值</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">搜索表单</label>
