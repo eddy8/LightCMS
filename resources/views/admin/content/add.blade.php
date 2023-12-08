@@ -222,6 +222,30 @@
                                     </div>
                                 </div>
                                 @break
+                            @case('colorPicker')
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">{{ $field->form_name }}</label>
+                                    <div class="layui-input-inline" style="width: 120px;">
+                                        <input type="text" name="{{ $field->name }}" class="layui-input" id="{{ $field->name }}" value="{{ $model->{$field->name} ?? $field->form_default_value }}" placeholder="请选择颜色">
+                                    </div>
+                                    <div class="layui-inline" style="left: -11px;">
+                                        <div id="color-picker-{{ $field->name }}"></div>
+                                    </div>
+                                </div>
+                                <script>
+                                    //表单赋值
+                                    addLoadEvent(function () {
+                                        var colorpicker = layui.colorpicker;
+                                        colorpicker.render({
+                                            elem: '#color-picker-{{ $field->name }}'
+                                            ,color: '{{ $model->{$field->name} ?? $field->form_default_value }}'
+                                            ,done: function(color){
+                                                $('#{{ $field->name }}').val(color);
+                                            }
+                                        });
+                                    });
+                                </script>
+                                @break;
                             @case('markdown')
                                 @if(!isset($markdown_init))
                                     @php
