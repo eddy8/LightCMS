@@ -239,6 +239,8 @@
                                         colorpicker.render({
                                             elem: '#color-picker-{{ $field->name }}'
                                             ,color: '{{ $model->{$field->name} ?? $field->form_default_value }}'
+                                            ,predefine: true
+                                            ,colors:['#FFB800','#FF5722','#01AAED','#2F4056']
                                             ,done: function(color){
                                                 $('#{{ $field->name }}').val(color);
                                             }
