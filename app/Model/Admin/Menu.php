@@ -65,13 +65,13 @@ class Menu extends Model implements PermissionContract
     /**
      * Find a permission by its id.
      */
-    public static function findById(int $id, $guardName): PermissionContract
+    public static function findById(int|string $id, $guardName): PermissionContract
     {
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
         $permission = static::getPermissions(['id' => $id, 'guard_name' => $guardName])->first();
 
         if (! $permission) {
-            throw PermissionDoesNotExist::withId($id);
+            throw PermissionDoesNotExist::withId($id, $guardName);
         }
 
         return $permission;

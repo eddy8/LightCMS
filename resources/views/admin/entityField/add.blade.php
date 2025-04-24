@@ -37,8 +37,8 @@
                             <input type="number" name="field_length" value="" placeholder="对于char、string类型的字段，请在此输入字段长度" class="layui-input">
                             </div>
                             <div id="float_length" style="display: none">
-                            <input type="number" name="field_total" value="" placeholder="对于浮点数类型的字段，请在此输入总位数" class="layui-input">
-                            <input type="number" name="field_scale" value="" placeholder="对于浮点数类型的字段，请在此输入小数位数" class="layui-input">
+                            <input type="number" name="field_total" value="" placeholder="Decimal类型输入总位数 ｜ float类型输入精度" class="layui-input">
+                            <input type="number" name="field_scale" value="" placeholder="Decimal类型输入小数位数" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-mid layui-word-aux"><a style="color:#FF5722" target="_blank" href="https://laravel.com/docs/5.5/migrations#columns">以MySQL数据库为例：string类型对应VARCHAR；char类型对应CHAR</a></div>
@@ -236,7 +236,7 @@
             if (data.value === 'char' || data.value === 'string') {
                 $('#str_length').show();
                 $('#float_length').hide();
-            } else if (data.value === 'float' || data.value === 'double' || data.value === 'decimal' || data.value === 'unsignedDecimal') {
+            } else if (data.value === 'float' || data.value === 'decimal') {
                     $('#str_length').hide();
                     $('#float_length').show();
             } else {

@@ -36,7 +36,6 @@ return [
         'float',
         'double',
         'decimal',
-        'unsignedDecimal',
         'date',
         'dateTime',
         'dateTimeTz',

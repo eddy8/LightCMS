@@ -139,9 +139,24 @@ class EntityFieldController extends Controller
                         $table->$m($data['name'])
                             ->comment($data['comment'])
                             ->default(intval($data['default_value']));
-                    } elseif (in_array($m, ['float', 'double', 'decimal', 'unsignedDecimal'])) {
+                    } elseif (in_array($m, ['decimal'])) {
                         if ($total > 0 && $scale > 0 && $total > $scale) {
                             $table->$m($data['name'], $total, $scale)
+                                ->comment($data['comment'])
+                                ->default(doubleval($data['default_value']));
+                        } else {
+                            $table->$m($data['name'])
+                                ->comment($data['comment'])
+                                ->default(doubleval($data['default_value']));
+                        }
+                    } elseif (in_array($m, ['double'])) {
+                        $table->$m($data['name'])
+                                ->comment($data['comment'])
+                                ->default(doubleval($data['default_value']));
+                    } elseif (in_array($m, ['float'])) {
+                        if ($total > 0) {
+                            // precision
+                            $table->$m($data['name'], $total)
                                 ->comment($data['comment'])
                                 ->default(doubleval($data['default_value']));
                         } else {
