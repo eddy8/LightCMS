@@ -9,11 +9,11 @@
         "php": "^8.2",
         "doctrine/dbal": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^11.31",
+        "laravel/framework": "^12.0",
         "laravel/helpers": "^1.1",
         "laravel/legacy-factories": "^1.0",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9",
+        "laravel/tinker": "^2.10.1",
         "laravel/ui": "^4.2",
         "mews/captcha": "^3.2.7",
         "overtrue/socialite": "^4.0",
@@ -21,12 +21,12 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
-        "laravel/pail": "^1.1",
+        "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.13",
-        "laravel/sail": "^1.26",
+        "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.1",
-        "phpunit/phpunit": "^11.0.1"
+        "nunomaduro/collision": "^8.6",
+        "phpunit/phpunit": "^11.5.3"
     },
     "autoload": {
         "psr-4": {
