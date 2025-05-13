@@ -37,6 +37,19 @@ Route::delete('/{{-$model_plural-}}/{id}', '{{-$model_uc_first-}}Controller@dele
                     <input type="text" name="created_at" class="layui-input" id="created_at" value="{{ request()->get('created_at') }}">
                 </div>
             </div>
+            @if(!empty(App\Model\Admin\{{-$model_uc_first-}}::$sortFields))
+            <div class="layui-inline">
+                <label class="layui-form-label">排序</label>
+                <div class="layui-input-inline">
+                    <select name="light_sort_fields">
+                        <option value="" @if(!request()->has('light_sort_fields')) selected @endif>请选择</option>
+                        @foreach(App\Model\Admin\{{-$model_uc_first-}}::$sortFields as $ik => $iv)
+                            <option value="{{ $ik }}" @if(request()->has('light_sort_fields') && request()->get('light_sort_fields') !== "" && request()->get('light_sort_fields') == $ik) selected @endif>{{ $iv }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            @endif
             <div class="layui-inline">
                 <button class="layui-btn layuiadmin-btn-list" lay-filter="form-search" id="submitBtn">
                     <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
@@ -186,11 +199,20 @@ class {{-$model_uc_first-}}Repository
 
     public static function list($perPage, $condition = [])
     {
+        $sortField = 'id';
+        $sortType = 'desc';
+        if (isset($condition['light_sort_fields'])) {
+            $tmp = explode(',', $condition['light_sort_fields']);
+            $sortField = isset($tmp[0]) && ($tmp[0] != '') ? $tmp[0] : $sortField;
+            $sortType = isset($tmp[1]) && in_array($tmp[1], ['asc', 'desc'], true) ? $tmp[1] : $sortType;
+            unset($condition['light_sort_fields']);
+        }
+
         $data = {{-$model_uc_first-}}::query()
             ->where(function ($query) use ($condition) {
                 Searchable::buildQuery($query, $condition);
             })
-            ->orderBy('id', 'desc')
+            ->orderBy($sortField, $sortType)
             ->paginate($perPage);
         $data->transform(function ($item) {
             $item->editUrl = route('admin::{{-$model-}}.edit', ['id' => $item->id]);
@@ -331,6 +353,7 @@ class {{-$model_uc_first-}}Controller extends Controller
     public function list(Request $request)
     {
         $perPage = (int) $request->get('limit', 50);
+        $this->formNames = array_merge(['created_at', 'light_sort_fields', 'id'], $this->formNames);
         $condition = $request->only($this->formNames);
 
         $data = {{-$model_uc_first-}}Repository::list($perPage, $condition);
@@ -450,6 +473,10 @@ class {{-$model_uc_first-}} extends Model
 {
     const STATUS_ENABLE = 1;
     const STATUS_DISABLE = 0;
+
+    public static $searchField = [];
+    public static $listField = [];
+    public static $sortFields = [];
 
     protected $guarded = [];
 }
