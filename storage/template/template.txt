@@ -106,7 +106,8 @@ Route::delete('/{{-$model_plural-}}/{id}', '{{-$model_uc_first-}}Controller@dele
                                 location.reload();
                             }
                             if (result.redirect) {
-                                location.href = '{!! url()->previous() !!}';
+                                const redirectUrl = @json(url()->previous());
+safeRedirect(redirectUrl);
                             }
                         });
                     }
@@ -169,7 +170,8 @@ Route::delete('/{{-$model_plural-}}/{id}', '{{-$model_uc_first-}}Controller@dele
                             location.reload();
                         }
                         if (result.redirect) {
-                            location.href = '{!! url()->previous() !!}';
+                            const redirectUrl = @json(url()->previous());
+safeRedirect(redirectUrl);
                         }
                     });
                 }

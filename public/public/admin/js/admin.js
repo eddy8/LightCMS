@@ -46,3 +46,16 @@ var ajax_options = {
     },
 };
 $.ajaxSetup(ajax_options);
+
+function safeRedirect(url) {
+    try {
+        const u = new URL(url, location.origin);
+        if (u.origin === location.origin) {
+            location.href = u.href;
+        } else {
+            location.href = '/';
+        }
+    } catch {
+        location.href = '/';
+    }
+}

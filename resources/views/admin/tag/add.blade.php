@@ -47,7 +47,8 @@
                             location.reload();
                         }
                         if (result.redirect) {
-                            location.href = '{!! url()->previous() !!}';
+                            const redirectUrl = @json(url()->previous());
+safeRedirect(redirectUrl);
                         }
                     });
                 }
