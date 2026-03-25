@@ -423,6 +423,9 @@ public static function parentCategories(int $categoryId, $tree = null): array
 ## 说明
 有问题可以提 issue ，为项目贡献代码可以提 pull request
 
+## 其它
+摸鱼专用：[OnlineRetroGame](https://onlineretrogame.com)
+
 ## Project supported by JetBrains
 
 Many thanks to Jetbrains for kindly providing a license for me to work on this and other open-source projects.
