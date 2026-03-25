@@ -239,20 +239,25 @@ class ContentController extends Controller
             $inputTagsField = EntityFieldRepository::getInputTagsField($entity);
             $tags = null;
             if ($inputTagsField && intval($inputTagsField->is_edit) === EntityField::EDIT_ENABLE) {
-                $tags = json_decode($request->post($inputTagsField->name), true);
+                $tags = $request->post($inputTagsField->name);
             }
-            if (is_array($tags)) {
-                $tagIds = [];
-                foreach ($tags as $v) {
-                    $tag = Tag::firstOrCreate(['name' => $v['value']]);
-                    ContentTag::firstOrCreate(['entity_id' => $entity, 'content_id' => $id, 'tag_id' => $tag->id]);
-                    $tagIds[] = $tag->id;
-                }
-                if ($tagIds) {
-                    ContentTag::where('entity_id', $entity)
-                        ->where('content_id', $id)
-                        ->whereNotIn('tag_id', $tagIds)
-                        ->delete();
+            if ($tags === '') {
+                ContentTag::where('entity_id', $entity)->where('content_id', $id)->delete();
+            } else {
+                $tags = json_decode($tags, true);
+                if (is_array($tags)) {
+                    $tagIds = [];
+                    foreach ($tags as $v) {
+                        $tag = Tag::firstOrCreate(['name' => $v['value']]);
+                        ContentTag::firstOrCreate(['entity_id' => $entity, 'content_id' => $id, 'tag_id' => $tag->id]);
+                        $tagIds[] = $tag->id;
+                    }
+                    if ($tagIds) {
+                        ContentTag::where('entity_id', $entity)
+                            ->where('content_id', $id)
+                            ->whereNotIn('tag_id', $tagIds)
+                            ->delete();
+                    }
                 }
             }
 
