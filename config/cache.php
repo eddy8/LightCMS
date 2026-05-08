@@ -81,11 +81,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | This option controls which PHP classes may be unserialized from cached
-    | values. A false value prevents arbitrary object unserialization.
+    | values. A true value allows cached objects to be restored.
     |
     */
 
-    'serializable_classes' => false,
+    'serializable_classes' => true,
 
     /*
     |--------------------------------------------------------------------------
